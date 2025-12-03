@@ -1,15 +1,15 @@
 h1{
-    color:aqua;
+    color: rgb(170, 130, 222);
     text-align: center;
 }
 
 h2{
-    color: purple;
+    color: rgb(170, 130, 222);
     text-align: center;
 }
 
 .itprof{
-    border: 2px solid purple;
+    border: 2px solid rgb(170, 130, 222);
     padding: 20px;
     margin: 20px;
     border-radius: 10px;

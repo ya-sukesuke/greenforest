@@ -8,7 +8,6 @@ document.getElementById("imgInput").addEventListener("change", function (e) {
 });
 
 const ageSelect = document.getElementById("ageSelect");
-
 for (let age = 0; age <= 30; age++) {
   const option = document.createElement("option");
   option.value = age;
