@@ -1,0 +1,52 @@
+.bg_pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffff;
+  opacity: 0.4;
+  z-index: -1;
+}
+.Polka_v2 {
+  background-image:  radial-gradient(#67d1ff 2px, transparent 2px), radial-gradient(#67d1ff 2px, #ffffff 2px);
+  background-size: 40px 40px;
+  background-position: 0 0,20px 20px;
+}
+
+
+h1{
+    color: rgb(71, 196, 100);
+    text-align: center;
+}
+
+h2{
+    color: rgb(71, 196, 100);
+    text-align: center;
+}
+
+.itprof{
+    border: 2px solid rgb(71, 196, 100);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hidden {
+    display: none;
+}
+.img-preview {
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+#meBio{
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+}
