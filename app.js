@@ -6,11 +6,3 @@ document.getElementById("imgInput").addEventListener("change", function (e) {
     preview.src = URL.createObjectURL(file);
     preview.classList.remove("hidden");
 });
-
-const ageSelect = document.getElementById("ageSelect");
-for (let age = 0; age <= 30; age++) {
-  const option = document.createElement("option");
-  option.value = age;
-  option.textContent = `${age}歳`;
-  ageSelect.appendChild(option);
-}
