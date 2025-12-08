@@ -9,6 +9,7 @@ const viewer = document.getElementById('viewer');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const flipBtn = document.getElementById('flipBtn');
+const saveBtn = document.getElementById('saveBtn');
 
 let index = 0;
 let currentCard = null;
@@ -109,7 +110,9 @@ function updateButtons(){
 nextBtn.addEventListener('click', goNext);
 prevBtn.addEventListener('click', goPrev);
 flipBtn.addEventListener('click', () => flip(currentCard));
-
+saveBtn.addEventListener('click', () => {
+  saveBtn.classList.toggle('active');
+});
 
 /* スワイプ操作 */
 let startX = null;
