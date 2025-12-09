@@ -76,17 +76,17 @@ function changeCard(newIndex, outClass, inClass){
   isAnimating = true;
 
   const newCard = makeCard(words[newIndex], inClass);
-  viewer.appendChild(newCard);
 
   requestAnimationFrame(()=>{
     currentCard.classList.add(outClass);
+    currentCard.remove();
+    viewer.appendChild(newCard);
     newCard.classList.add('enter');
     newCard.style.transform = 'rotateY(0deg)';
     newCard.style.opacity = '1';
   });
 
   setTimeout(()=>{
-    currentCard.remove();
     newCard.classList.remove(inClass,'enter');
     newCard.classList.add('current');
 
