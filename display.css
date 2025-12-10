@@ -122,3 +122,8 @@ body {
     font-weight: 600;
     font-size: 1em;
 }
+
+.plf{
+    white-space: pre-wrap;
+    text-align: left;
+}

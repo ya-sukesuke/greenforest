@@ -1,9 +1,29 @@
-/* --- 単語データ（ここを編集） --- */
-const words = [
-  {photo: '/Users/ya-/Downloads/犬.png', kind: '犬', breed: 'ゴールデンレトリバー', plf: '2001,12,08生まれ、オス、体重30kg、性格は温厚で人懐っこい。'},
-  {photo: '/Users/ya-/Downloads/猫.png', kind: '猫', breed: 'スコティッシュフォールド', plf: '2003,05,15生まれ、メス、体重4kg、性格はおとなしくて甘えん坊。'},
-];
-/* ---------------------------------- */
+/* --- 保存済みプロフィールを読み込む --- */
+let profiles = JSON.parse(localStorage.getItem("profiles"));
+
+if (!profiles || profiles.length === 0) {
+  alert("表示するプロフィールがありません。先に登録してください。");
+  profiles = [];
+}
+
+/* --- display.js が使う形式に変換 --- */
+const words = profiles.map(p => ({
+  id: p.id,
+  photo: p.image || "",
+  kind: p.type,
+  breed: p.breed,
+  plf: `
+【名前】${p.name}
+【性別】${p.gender}
+【年齢】${p.age}歳${p.month}ヶ月
+【誕生日】${p.birthday}
+【保護日】${p.protect_day}
+
+【紹介文】
+  ${p.bio}
+  `.trim()
+}));
+
 
 const viewer = document.getElementById('viewer');
 const prevBtn = document.getElementById('prevBtn');
@@ -30,6 +50,7 @@ function makeCard(item, pos){
   c.className = 'card ' + (pos || '');
   c.innerHTML = `
     <div class="inner front">
+      <div class="id">ID: ${escapeHtml(String(item.id || ''))}</div>
       <img class="photo" src="${escapeHtml(item.photo)}" alt="${escapeHtml(item.kind)}">
       <div class="kind">${escapeHtml(item.kind)}</div>
       <div class="breed">${escapeHtml(item.breed || '')}</div>
