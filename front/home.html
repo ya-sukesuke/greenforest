@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!--ヘッダーを読み込む-->
+
+  <link rel="stylesheet" href="header_style.css">
+
+    <!--ヘッダーを読み込む-->
+
+  <style>
+    .text-1{
+        position: absolute;  
+        top: 50%;             
+        left: 50%;          
+        transform: translate(-50%, -50%); 
+        font-size: 24px;
+        color: black;
+    }
+  </style>
+
+</head>
+
+
+<body>
+    
+    <!--ヘッダーを読み込む-->
+
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <!--ヘッダーを読み込む-->
+
+    <h1 class="text-1">ホーム画面</h1>
+</body>
+
+</html>

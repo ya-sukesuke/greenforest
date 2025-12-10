@@ -1,5 +1,11 @@
 <html lang="ja">
 <head>
+    <!--ヘッダーを読み込む-->
+
+  <link rel="stylesheet" href="header_style.css">
+
+    <!--ヘッダーを読み込む-->
+
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>マッチングサイト</title>
@@ -10,6 +16,20 @@
 <div class="bg_pattern Polka_v2"></div>
 
 <body>
+
+    <!--ヘッダーを読み込む-->
+
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <!--ヘッダーを読み込む-->
+    
 <header class="site-header">
     <h1>犬猫マッチング</h1>
     <div class="controls">
