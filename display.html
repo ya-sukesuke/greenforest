@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+
+    <!--ヘッダーを読み込む-->
+
+  <link rel="stylesheet" href="header_style.css">
+
+    <!--ヘッダーを読み込む-->
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>マッチングサイト</title>
     <link rel="stylesheet" href="display.css">
 </head>
 <body>
+
+    <!--ヘッダーを読み込む-->
+
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <!--ヘッダーを読み込む-->
+    
     <h1></h1>
     <div class="wrap">
         <div style="text-align:center;">
