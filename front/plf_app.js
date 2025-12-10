@@ -22,7 +22,7 @@ for (let m = 0; m <= 11; m++) {
     const option = document.createElement("option");
     option.value = m;
     option.textContent = `${m}ヶ月`;
-    monthSelect.appendChild(option);
+     monthSelect.appendChild(option);
 }
 
 // ---------- Base64 変換 ----------
