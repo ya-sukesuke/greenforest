@@ -51,25 +51,21 @@ function saveProfileData(profile) {
 
 // ---------- フォームリセット ----------
 function resetForm() {
-    // テキスト・日付入力のクリア
     document.getElementById("Name").value = "";
     document.getElementById("Breed").value = "";
     document.getElementById("ProtectDay").value = "";
     document.getElementById("birthday").value = "";
     document.getElementById("meBio").value = "";
 
-    // セレクトボックス初期化
     document.querySelectorAll(".selectbox-2 select")[0].value = "";
     document.querySelectorAll(".selectbox-2 select")[1].value = "";
-    document.getElementById("ageSelect").value = "0";
-    document.getElementById("manthSelect").value = "0";
+    ageSelect.value = 0;
+    manthSelect.value = 0;
 
-    // 画像プレビュークリア
     const preview = document.getElementById("imgPreview");
     preview.src = "";
     preview.classList.add("hidden");
 
-    // ファイル選択クリア
     document.getElementById("imgInput").value = "";
 }
 
@@ -115,3 +111,17 @@ document.getElementById("saveProfile").addEventListener("click", async () => {
     
     resetForm();
 });
+
+
+
+
+
+// ---------- 削除（任意） ----------
+async function deleteProfileById(targetId) {
+  let profiles = JSON.parse(localStorage.getItem("profiles")) || [];
+
+  profiles = profiles.filter(p => p.id !== targetId);
+  localStorage.setItem("profiles", JSON.stringify(profiles));
+
+  alert(`ID ${targetId} を削除しました`);
+}

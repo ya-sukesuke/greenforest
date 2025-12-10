@@ -6,7 +6,7 @@ if (!profiles || profiles.length === 0) {
   profiles = [];
 }
 
-/* --- display.js が使う形式に変換 --- */
+/* --- Base64 をそのまま使う形式に変換 --- */
 const words = profiles.map(p => ({
   id: p.id,
   photo: p.image || "",
@@ -24,18 +24,7 @@ const words = profiles.map(p => ({
   `.trim()
 }));
 
-
-const viewer = document.getElementById('viewer');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const flipBtn = document.getElementById('flipBtn');
-const saveBtn = document.getElementById('saveBtn');
-
-let index = 0;
-let currentCard = null;
-let isAnimating = false;
-
-/* HTML特殊文字を安全に */
+/* --- HTML エスケープ（画像には使わない） --- */
 function escapeHtml(s){
   if(!s) return '';
   return s.replace(/&/g,'&amp;')
@@ -44,26 +33,61 @@ function escapeHtml(s){
           .replace(/"/g,'&quot;');
 }
 
-/* カード生成 */
+const viewer = document.getElementById('viewer');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const flipBtn = document.getElementById('flipBtn');
+
+let index = 0;
+let currentCard = null;
+let isAnimating = false;
+
+/* --- カード作成（画像は escape しない） --- */
 function makeCard(item, pos){
   const c = document.createElement('div');
   c.className = 'card ' + (pos || '');
-  c.innerHTML = `
-    <div class="inner front">
-      <div class="id">ID: ${escapeHtml(String(item.id || ''))}</div>
-      <img class="photo" src="${escapeHtml(item.photo)}" alt="${escapeHtml(item.kind)}">
-      <div class="kind">${escapeHtml(item.kind)}</div>
-      <div class="breed">${escapeHtml(item.breed || '')}</div>
-    </div>
-    <div class="inner back">
-      <div class="plf">${escapeHtml(item.plf)}</div>
-    </div>
-  `;
+  const img = document.createElement('img');
+  img.className = 'photo';
+  img.src = item.photo;
+  img.alt = escapeHtml(item.kind);
+
+  img.onerror = () => {
+    img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="16"%3E画像なし%3C/text%3E%3C/svg%3E';
+  };
+
+  const frontDiv = document.createElement('div');
+  frontDiv.className = 'inner front';
+
+  // ID
+  const idDiv = document.createElement('div');
+  idDiv.className = 'id';
+  idDiv.textContent = `ID: ${escapeHtml(String(item.id))}`;
+  frontDiv.appendChild(idDiv);
+
+  // 画像（ID の下に配置）
+  frontDiv.appendChild(img);
+
+  // 種類と品種
+  const kindDiv = document.createElement('div');
+  kindDiv.className = 'kind';
+  kindDiv.textContent = escapeHtml(item.kind);
+  frontDiv.appendChild(kindDiv);
+
+  const breedDiv = document.createElement('div');
+  breedDiv.className = 'breed';
+  breedDiv.textContent = escapeHtml(item.breed || '');
+  frontDiv.appendChild(breedDiv);
+  const backDiv = document.createElement('div');
+  backDiv.className = 'inner back';
+  backDiv.innerHTML = `<div class="plf">${escapeHtml(item.plf).replace(/\n/g, "<br>")}</div>`;
+
+  c.appendChild(frontDiv);
+  c.appendChild(backDiv);
   c.addEventListener('click', () => flip(c));
   return c;
 }
 
-/* 初期表示 */
+/* --- 最初のカード表示 --- */
 function renderInitial(){
   viewer.innerHTML = "";
   const card = makeCard(words[index]);
@@ -74,25 +98,24 @@ function renderInitial(){
 }
 renderInitial();
 
-/* 次へ */
+/* --- 次へ --- */
 function goNext(){
   if(isAnimating) return;
-  
+
   if(index >= words.length - 1){
-    // 最後のカードなら最初に戻す
     changeCard(0, 'to-left', 'from-right');
   } else {
     changeCard(index + 1, 'to-left', 'from-right');
   }
 }
 
-/* 前へ */
+/* --- 前へ --- */
 function goPrev(){
   if(isAnimating || index <= 0) return;
   changeCard(index - 1, 'to-right', 'from-left');
 }
 
-/* カード切り替え共通処理 */
+/* --- カード切り替え --- */
 function changeCard(newIndex, outClass, inClass){
   isAnimating = true;
 
@@ -103,14 +126,11 @@ function changeCard(newIndex, outClass, inClass){
     currentCard.remove();
     viewer.appendChild(newCard);
     newCard.classList.add('enter');
-    newCard.style.transform = 'rotateY(0deg)';
-    newCard.style.opacity = '1';
   });
 
   setTimeout(()=>{
     newCard.classList.remove(inClass,'enter');
     newCard.classList.add('current');
-
     currentCard = newCard;
     index = newIndex;
     isAnimating = false;
@@ -118,39 +138,22 @@ function changeCard(newIndex, outClass, inClass){
   }, 520);
 }
 
-/* 裏返す */
+/* --- 裏返す --- */
 function flip(card){
-  card.classList.toggle('flipped');}
+  card.classList.toggle('flipped');
+}
 
-/* ボタン更新 */
+/* --- ボタン更新 --- */
 function updateButtons(){
   prevBtn.disabled = (index === 0);
 }
 
-/* クリックイベント */
+/* --- イベント --- */
 nextBtn.addEventListener('click', goNext);
 prevBtn.addEventListener('click', goPrev);
 flipBtn.addEventListener('click', () => flip(currentCard));
-saveBtn.addEventListener('click', () => {
-  saveBtn.classList.toggle('active');
-});
 
-/* スワイプ操作 */
-let startX = null;
-viewer.addEventListener('touchstart', e=>{
-  if(e.touches[0]) startX = e.touches[0].clientX;
-});
-viewer.addEventListener('touchend', e=>{
-  if(startX === null) return;
-  const dx = e.changedTouches[0].clientX - startX;
-  if(Math.abs(dx) > 40){
-    if(dx < 0) goNext();
-    else goPrev();
-  }
-  startX = null;
-});
-
-/* キーボード操作 */
+/* --- キーボード操作 --- */
 document.addEventListener('keydown', e=>{
   if(e.key === 'ArrowLeft') goPrev();
   else if(e.key === 'ArrowRight') goNext();
@@ -159,4 +162,3 @@ document.addEventListener('keydown', e=>{
     flip(currentCard);
   }
 });
-
