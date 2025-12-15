@@ -6,13 +6,20 @@ if (!profiles || profiles.length === 0) {
   profiles = [];
 }
 
+/* --- プロフィール保存関数(お気に入り登録) --- */
+function saveProfileData(profile) {
+    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+    GoodProfiles.push(profile);
+    localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+}
+
 /* --- Base64 をそのまま使う形式に変換 --- */
 const words = profiles.map(p => ({
   id: p.id,
   photo: p.image || "",
   kind: p.type,
   breed: p.breed,
-  plf: `
+  plf: `      
 【名前】${p.name}
 【性別】${p.gender}
 【年齢】${p.age}歳${p.month}ヶ月
@@ -155,6 +162,7 @@ prevBtn.addEventListener('click', goPrev);
 flipBtn.addEventListener('click', () => flip(currentCard));
 saveBtn.addEventListener('click', () => {
   saveBtn.classList.toggle('active');
+
 });
 
 /* --- キーボード操作 --- */
