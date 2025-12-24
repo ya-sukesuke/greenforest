@@ -1,6 +1,6 @@
 // 【重要】FastAPIサーバーの POST エンドポイントURL
 // サーバーが http://localhost:8000/ で起動していることを前提
-const API_POST_URL = "http://localhost:8000/add_animal"; 
+const API_POST_URL = "/add_animal"; 
 
 // ---------- 画像プレビュー ----------
 document.getElementById("imgInput").addEventListener("change", function (e) {
@@ -117,11 +117,11 @@ document.getElementById("saveProfile").addEventListener("click", async () => {
     // 4. FastAPIサーバーへ POST リクエストを送信
     try {
         const response = await fetch(API_POST_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(profileData) 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(profileData) 
         });
 
         const result = await response.json(); 

@@ -1,5 +1,5 @@
 // 【重要】FastAPIサーバーの GET エンドポイントURL
-const API_GET_URL = "http://localhost:8000/animals"; 
+const API_GET_URL = "/animals"; 
 
 /* --- データ保存形式を統一するために、wordsはグローバル変数とする --- */
 let words = [];
@@ -104,35 +104,23 @@ function makeCard(item, pos){
 }
 
 /* --- FastAPIからデータを取得し、レンダリングするメイン関数 --- */
-async function fetchDataAndRender() {
+async function fetchAnimals() {
     try {
         const response = await fetch(API_GET_URL);
+        if (!response.ok) throw new Error("データの取得に失敗しました");
+        const data = await response.json();
         
-        if (!response.ok) {
-            throw new Error(`APIアクセス失敗: ${response.statusText}`);
+        // データを表示用フォーマットに変換
+        profiles = data;
+        words = formatDataForDisplay(data);
+        
+        if (words.length > 0) {
+            initViewer();
+        } else {
+            viewer.innerHTML = "<p>登録されている動物がいません。</p>";
         }
-        
-        const apiData = await response.json(); // FastAPIからのデータ（リスト）
-        
-        if (!Array.isArray(apiData) || apiData.length === 0) {
-            alert("表示するプロフィールがありません。先にFastAPIで登録してください。");
-            return;
-        }
-
-        profiles = apiData; // グローバル変数に保存
-        words = formatDataForDisplay(profiles);
-        index = 0;
-        
-        // データの取得と変換が完了したら最初のカードを表示
-        renderInitial(); 
-
     } catch (error) {
-        viewer.innerHTML = `<div style="color: red; padding: 20px;">
-                                データ取得エラー: ${error.message}<br>
-                                FastAPIサーバーが起動し、<br>
-                                'http://localhost:8000/animals'がアクセス可能か確認してください。
-                            </div>`;
-        console.error("Fetch Error:", error);
+        console.error("Error:", error);
     }
 }
 
@@ -234,4 +222,4 @@ document.addEventListener('keydown', e=>{
 
 
 // アプリケーション起動時にデータを取得してレンダリングを開始
-fetchDataAndRender();
+fetchAnimals();
