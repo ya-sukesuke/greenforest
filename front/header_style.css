@@ -33,24 +33,22 @@
   font-size: 20px;
 }
 
-<<<<<<< HEAD
 /* ===== 右：nav（中身は使わない想定） ===== */
 .header nav{
   grid-column: 3;
 }
-=======
-    .header .login{
-      background-color: white;
-      color: #a5eb9c;
-      padding: 5px 10px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
+
+.header .login{
+  background-color: white;
+  color: #a5eb9c;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
     
-    .header .login:hover{
-      background-color: #e0e0e0;
-    }
->>>>>>> 4f0de776a6efb3459db834f055f2f0921600f18f
+.header .login:hover{
+  background-color: #e0e0e0;
+}
 
 .header nav a{
   color: white;
