@@ -1,13 +1,12 @@
-{
-  "id": "",          
+{         
   "type": "",
   "gender": "",
   "age": "",
   "month": "",
   "name": "",
   "breed": "",
-  "protect_day": "",
   "birthday": "",
+  "protect_day": "",
   "bio": "",
   "image": ""
 }

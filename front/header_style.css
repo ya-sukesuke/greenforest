@@ -1,0 +1,56 @@
+    .header{
+      background-color: #0078d7;
+      color: white;
+      padding: 20px 40px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-family: "MS Mincho",sans-serif;
+    }
+
+    .header-center{
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .header nav a{
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .header nav a:hover{
+      text-decoration: underline;
+    }
+
+    .header .login{
+      background-color: white;
+      color: #0078d7;
+      padding: 5px 10px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    
+    .header .login:hover{
+      background-color: #e0e0e0;
+    }
+
+    body{
+      padding-top: 150px;
+    }
+
+    h1 {
+      color: white;
+    }
