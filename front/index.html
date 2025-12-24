@@ -5,6 +5,7 @@
     <!--ヘッダーを読み込む-->
 
   <link rel="stylesheet" href="header_style.css">
+  <link rel="stylesheet" href="display.css">
 
     <!--ヘッダーを読み込む-->
 
@@ -23,21 +24,35 @@
 
 
 <body>
-    
-    <!--ヘッダーを読み込む-->
+    <header>
+      <div id="header"></div>
+    </header>
+    <main>
+      <div id="main"></div>
+    </main>
+    <footer>
+      <div id="footer"></div>
+    </footer>
 
-    <div id="header-placeholder"></div>
     <script>
-        fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('header-placeholder').innerHTML = data;
-        });
+      fetch("header.html")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("header").innerHTML = html;
+        })
+      
+      fetch("plf_main.html")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("main").innerHTML = html;
+        })
+      
+      fetch("footer.html")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("footer").innerHTML = html;
+        })
     </script>
-
-    <!--ヘッダーを読み込む-->
-
-    <h1 class="text-1">ホーム画面</h1>
 </body>
 
 </html>
