@@ -115,7 +115,7 @@ async function fetchAnimals() {
         words = formatDataForDisplay(data);
         
         if (words.length > 0) {
-            initViewer();
+            renderInitial();
         } else {
             viewer.innerHTML = "<p>登録されている動物がいません。</p>";
         }
