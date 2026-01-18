@@ -1,76 +1,55 @@
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!--ヘッダーを読み込む-->
-
-  <link rel="stylesheet" href="header_style.css">
-
-    <!--ヘッダーを読み込む-->
-
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>マッチングサイト</title>
-<link rel="stylesheet" href="plf_style.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>犬猫マッチング - 登録</title>
+    <link rel="stylesheet" href="header_style.css">
+    <link rel="stylesheet" href="plf_style.css">
 </head>
-
-	
-<div class="bg_pattern Polka_v2"></div>
-
 <body>
-
-    <!--ヘッダーを読み込む-->
-
+    <div class="bg_pattern Polka_v2"></div>
     <div id="header-placeholder"></div>
-    <script>
-        fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('header-placeholder').innerHTML = data;
-        });
-    </script>
 
-    <!--ヘッダーを読み込む-->
-    
-<header class="site-header">
-    <h1>犬猫マッチング</h1>
-    <div class="controls">
-    </div>
-</header>
-
-
-<div class="itprof">
-    <h2>プロフィール</h2>
-    <div class="image-upload-section">
-        <input type="file" id="imgInput" accept="image/*">
-        <div class="img-preview-wrapper">
-        <img id="imgPreview" class="img-preview hidden" />
-        </div>
-    </div>
-
-    
-    <div class="pulldown-wrapper">
-        <label class="selectbox-2">
-            <select>
-                <option>猫</option>
-                <option>犬</option>
-            </select>
-            <select>
-                <option>男の子</option>
-                <option>女の子</option>
-            </select>
-            <select id="ageSelect"></select>
-            <select id="manthSelect"></select>
-        </label>
+    <div class="itprof">
+        <h2>プロフィール登録</h2>
         
+        <div class="image-upload-section">
+            <input type="file" id="imgInput" accept="image/*">
+            <div class="img-preview-wrapper">
+                <img id="imgPreview" class="img-preview hidden" />
+            </div>
+        </div>
+
+        <div class="pulldown-wrapper">
+            <label class="selectbox-2">
+                <select id="typeSelect">
+                    <option value="cat">猫</option>
+                    <option value="dog">犬</option>
+                </select>
+                <select id="genderSelect">
+                    <option value="male">男の子</option>
+                    <option value="female">女の子</option>
+                </select>
+                <select id="ageSelect"></select>
+                <select id="manthSelect"></select>
+            </label>
+        </div>
+
+        <input id="Name" placeholder="名前を入力">
+        <input id="Breed" placeholder="品種を入力">
+        
+        <label class="note">誕生日</label> 
+        <input type="date" id="birthday"><br>
+        
+        <label class="note">保護日</label> 
+        <input type="date" id="ProtectDay">
+        
+        <textarea id="meBio" placeholder="紹介文を入力してください"></textarea>
+        
+        <button id="saveProfile">保存</button>
     </div>
-    <input id="Name" placeholder="名前を入力"></input>
-    <input id="Breed" placeholder="品種を入力"></input>
-    <label class="note">誕生日</label> 
-    <input type="date" id="birthDay"><br></input>
-    <label class="note">保護日</label> 
-    <input type="date" id="protectDay"></input>
-    <textarea id="meBio" placeholder="紹介文"></textarea>
-    <button id="saveProfile">保存</button>
-</div>
-<script src="plf_app.js"></script>
+
+    <script src="/plf_app.js" defer></script>
 </body>
 </html>

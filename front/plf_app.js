@@ -1,146 +1,115 @@
-// 【重要】FastAPIサーバーの POST エンドポイントURL
-// サーバーが http://localhost:8000/ で起動していることを前提
-const API_POST_URL = "/add_animal"; 
+const API_POST_URL = "/add_animal";
 
-// ---------- 画像プレビュー ----------
-document.getElementById("imgInput").addEventListener("change", function (e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const preview = document.getElementById("imgPreview");
-    preview.src = URL.createObjectURL(file);
-    preview.classList.remove("hidden");
-});
-
-// ---------- 年齢セレクト作成 ----------
-const ageSelect = document.getElementById("ageSelect");
-for (let age = 0; age <= 35; age++) {
-    const option = document.createElement("option");
-    option.value = age;
-    option.textContent = `${age}歳`;
-    ageSelect.appendChild(option);
-}
-
-const monthSelect = document.getElementById("manthSelect");
-for (let m = 0; m <= 11; m++) {
-    const option = document.createElement("option");
-    option.value = m;
-    option.textContent = `${m}ヶ月`;
-    monthSelect.appendChild(option); // 'manthSelect'ではなく'monthSelect'が正しい前提で修正
-}
-
-// ---------- Base64 変換 (非同期処理) ----------
+// Base64変換関数
 function toBase64(file) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
+        reader.onerror = (e) => reject(e);
         reader.readAsDataURL(file);
     });
 }
 
-// --- ローカル保存ロジックは削除 (generateIncrementId, saveProfileData) ---
+// --- ここからが「3.」のメイン部分 ---
+async function initApp() {
+    console.log("アプリ初期化開始...");
 
-// ---------- フォームリセット ----------
-function resetForm() {
-    document.getElementById("Name").value = "";
-    document.getElementById("Breed").value = "";
-    document.getElementById("ProtectDay").value = "";
-    document.getElementById("birthday").value = "";
-    document.getElementById("meBio").value = "";
-
-    // セレクトボックスの値をリセット（仮にIDが存在すると想定）
-    const typeSelect = document.querySelector("#typeSelect");
-    if (typeSelect) typeSelect.value = "";
-    const genderSelect = document.querySelector("#genderSelect");
-    if (genderSelect) genderSelect.value = "";
-    
-    ageSelect.value = 0;
-    monthSelect.value = 0; // 'manthSelect'ではなく'monthSelect'が正しい前提で修正
-
-    const preview = document.getElementById("imgPreview");
-    preview.src = "";
-    preview.classList.add("hidden");
-
-    document.getElementById("imgInput").value = "";
-}
-
-
-// ---------- 保存ボタン処理 (FastAPI連携に置き換え) ----------
-document.getElementById("saveProfile").addEventListener("click", async () => {
-
-    // 1. フォームデータの取得
-    // HTMLのセレクタを修正後のものに仮定（document.querySelectorAll(".selectbox-2 select")[x]を避ける）
-    const type = document.querySelector("#typeSelect").value;
-    const gender = document.querySelector("#genderSelect").value;
-    
-    // 値をFastAPIのPydanticモデルに合わせて数値(int)に変換
-    const age = parseInt(document.getElementById("ageSelect").value);
-    const month = parseInt(document.getElementById("manthSelect").value);
-
-    const name = document.getElementById("Name").value;
-    const breed = document.getElementById("Breed").value;
-    const protectDay = document.getElementById("ProtectDay").value;
-    const birthday = document.getElementById("birthday").value;
-    const bio = document.getElementById("meBio").value;
-
-    const file = document.getElementById("imgInput").files[0];
-    
-    // 2. Base64 変換とバリデーション
-    let imageBase64 = "";
-    if (file) {
-      imageBase64 = await toBase64(file);
-    } else {
-        alert("画像ファイルは必須です。");
-        return; 
+    // fetchで読み込まれる「saveProfile」ボタンが現れるまで待機する
+    let saveBtn = null;
+    let retryCount = 0;
+    while (!saveBtn && retryCount < 50) { // 最大5秒間待機
+        saveBtn = document.getElementById("saveProfile");
+        if (!saveBtn) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            retryCount++;
+        }
     }
-    
-    // 必須フィールドの簡易チェック
-    if (!type || !gender || !name || !protectDay || !birthday) {
-        alert("必須項目が入力されていません。");
+
+    if (!saveBtn) {
+        console.error("エラー: 保存ボタンが見つかりませんでした。");
         return;
     }
 
-    // 3. FastAPIのPydanticモデルに一致するデータ構造を作成
-    const profileData = {
-        type,
-        gender,
-        age,
-        month,
-        name,
-        breed,
-        protect_day: protectDay,
-        birthday,
-        bio,
-        image: imageBase64 
-    };
+    console.log("要素を検出しました。セットアップを開始します。");
+    alert("JavaScriptが正常に起動しました！"); // 動作確認用
 
-    // 4. FastAPIサーバーへ POST リクエストを送信
-    try {
-        const response = await fetch(API_POST_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify(profileData) 
+    // --- 以降、これまでのセットアップ処理をここにまとめる ---
+
+    const imgInput = document.getElementById("imgInput");
+    const imgPreview = document.getElementById("imgPreview");
+    const ageSelect = document.getElementById("ageSelect");
+    const monthSelect = document.getElementById("manthSelect");
+
+    // 1. 画像プレビューの設定
+    if (imgInput && imgPreview) {
+        imgInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    imgPreview.src = event.target.result;
+                    imgPreview.classList.remove("hidden");
+                };
+                reader.readAsDataURL(file);
+            }
         });
-
-        const result = await response.json(); 
-
-        if (response.ok) {
-            // サーバー処理成功 (通常 201 Created)
-            alert(`FastAPIサーバーに登録しました！\nUUID: ${result.uuid}`);
-            resetForm();
-        } else {
-            // サーバー側でエラーが発生 (バリデーションエラーなど)
-            let errorMessage = `登録エラー (${response.status}): ${result.detail || result.message || JSON.stringify(result)}`;
-            alert(errorMessage);
-            console.error('API Error:', result);
-        }
-        resetForm();
-
-    } catch (error) {
-        // ネットワークエラー
-        alert("通信エラー: FastAPIサーバーが起動しているか、またはネットワーク接続を確認してください。");
-        console.error('Fetch Error:', error);
     }
-});
+
+    // 2. セレクトボックスの生成
+    if (ageSelect) {
+        for (let i = 0; i <= 35; i++) {
+            ageSelect.add(new Option(`${i}歳`, i));
+        }
+    }
+    if (monthSelect) {
+        for (let i = 0; i <= 11; i++) {
+            monthSelect.add(new Option(`${i}ヶ月`, i));
+        }
+    }
+
+    // 3. 保存ボタンのクリックイベント
+    saveBtn.addEventListener("click", async () => {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "送信中...";
+
+        try {
+            const file = imgInput.files[0];
+            if (!file) throw new Error("画像を選択してください");
+
+            const payload = {
+                type: document.getElementById("typeSelect").value,
+                gender: document.getElementById("genderSelect").value,
+                age: parseInt(ageSelect.value),
+                month: parseInt(monthSelect.value),
+                name: document.getElementById("Name").value,
+                breed: document.getElementById("Breed").value,
+                birthday: document.getElementById("birthday").value,
+                protect_day: document.getElementById("ProtectDay").value,
+                bio: document.getElementById("meBio").value,
+                image: await toBase64(file)
+            };
+
+            const res = await fetch(API_POST_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert("登録が完了しました！");
+                location.reload();
+            } else {
+                const err = await res.json();
+                alert("エラー: " + JSON.stringify(err.detail));
+            }
+        } catch (e) {
+            alert(e.message);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = "保存";
+        }
+    });
+}
+
+// 最後にこの関数を呼び出す
+initApp();
