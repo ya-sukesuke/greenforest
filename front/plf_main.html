@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+
+    <!--ヘッダーを読み込む-->
+
+  <link rel="stylesheet" href="header_style.css">
+  <link rel="stylesheet" href="display.css">
+
+    <!--ヘッダーを読み込む-->
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>犬猫マッチング - 登録</title>
@@ -49,6 +57,14 @@
         
         <button id="saveProfile">保存</button>
     </div>
+
+<script>
+  fetch("header.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("header-placeholder").innerHTML = html;
+    });
+</script>
 
     <script src="/plf_app.js" defer></script>
 </body>
