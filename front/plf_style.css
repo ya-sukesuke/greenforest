@@ -1,29 +1,30 @@
 .bg_pattern {
   position: fixed;
-<<<<<<< HEAD
+
   top: 0; left: 0;
   width: 100vw; height: 100vh;
   background-color: #cbf9ff;
-=======
+
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: #84cbdf;
->>>>>>> e0451fbacbdc3551626d6066a25e561cbf2b9013
+
   opacity: 0.3;
   z-index: -1;
 }
 
-<<<<<<< HEAD
+
 h1, h2 {
     color: rgb(71, 196, 100);
-=======
 
+
+}
 
 h1{
     color: rgb(71, 196, 10);
->>>>>>> e0451fbacbdc3551626d6066a25e561cbf2b9013
+
     text-align: center;
 }
 
