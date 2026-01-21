@@ -29,29 +29,97 @@
             </div>
         </div>
 
+        <input id="Name" placeholder="名前を入力">
+        <input id="Breed" placeholder="品種を入力">
+
         <div class="pulldown-wrapper">
             <label class="selectbox-2">
-                <select id="typeSelect">
-                    <option value="cat">猫</option>
-                    <option value="dog">犬</option>
-                </select>
-                <select id="genderSelect">
-                    <option value="male">男の子</option>
-                    <option value="female">女の子</option>
-                </select>
-                <select id="ageSelect"></select>
-                <select id="manthSelect"></select>
+                <div class="type-group">
+                    <label class="type-option">
+                        <input type="radio" name="type" value="dog" checked>
+                        <span>犬</span>
+                    </label>
+
+                    <label class="type-option">
+                        <input type="radio" name="type" value="cat">
+                        <span>猫</span>
+                    </label>
+                </div>
+
+                <div class="gender-group">
+                    <label class="gender-option">
+                        <input type="radio" name="gender" value="male" checked>
+                        <span>男の子</span>
+                    </label>
+
+                    <label class="gender-option">
+                        <input type="radio" name="gender" value="female">
+                        <span>女の子</span>
+                    </label>
+                </div>
+
+                <div class="disease-group">
+                    <p class="disease-title">病歴</p>
+
+                    <label class="disease-option">
+                        <input type="checkbox" value="fiv">
+                        <span>猫エイズ</span>
+                    </label>
+
+                    <label class="disease-option">
+                        <input type="checkbox" value="felv">
+                        <span>白血病</span>
+                    </label>
+
+                    <label class="disease-option">
+                    <input type="checkbox" id="diseaseOther" value="other">
+                    <span>その他</span>
+                    </label>
+
+                    <input
+                    type="text"
+                    id="otherDiseaseInput"
+                    placeholder="病名を入力"
+                    disabled
+                    class="other-disease-input"
+                    />
+
+
+                    
+                </div>
+
+
             </label>
         </div>
 
-        <input id="Name" placeholder="名前を入力">
-        <input id="Breed" placeholder="品種を入力">
+
         
         <label class="note">誕生日</label> 
         <input type="date" id="birthday"><br>
         
         <label class="note">保護日</label> 
         <input type="date" id="ProtectDay">
+
+        <div class="tension-group">
+        <label for="tensionRange" class="tension-title">
+            緊張の度合い：<span id="tensionValue">3</span>
+        </label>
+
+        <input
+            type="range"
+            id="tensionRange"
+            min="1"
+            max="5"
+            step="1"
+            value="3"
+        />
+
+        <div class="tension-scale">
+            <span>1</span>
+            <span>5</span>
+        </div>
+        </div>
+
         
         <textarea id="meBio" placeholder="紹介文を入力してください"></textarea>
         
@@ -64,6 +132,8 @@
     .then(html => {
       document.getElementById("header-placeholder").innerHTML = html;
     });
+
+    
 </script>
 
     <script src="/plf_app.js" defer></script>
