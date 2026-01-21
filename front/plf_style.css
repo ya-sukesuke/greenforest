@@ -70,23 +70,26 @@ input, select, button {
     font-weight: bold;
 }
 
-/* ===== 性別ラジオボタン ===== */
-
-.gender-group {
+/* ===== 種別 ===== */
+.type-group {
   display: flex;
   gap: 20px;
   margin-bottom: 10px;
 }
 
+.type-option,
 .gender-option {
   display: inline-flex;
-  align-items: center;
+  align-items: center;   /* ← 縦ズレ解消の核心 */
   gap: 6px;
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
+  line-height: 1;        /* ← 微妙な上下ズレ防止 */
 }
 
-.gender-option input[type="radio"] {
+
+.type-option input,
+.gender-option input {
   width: auto;
   margin: 0;
   padding: 0;
@@ -94,57 +97,45 @@ input, select, button {
   accent-color: rgb(71, 196, 100);
 }
 
-/* ===== 犬・猫 ラジオボタン ===== */
-
-.type-group {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 10px;
-}
-
-.type-option {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.type-option input[type="radio"] {
-  width: auto;     /* ← これ超重要 */
-  margin: 0;
-  padding: 0;
-  transform: scale(1.2);
-  accent-color: rgb(71, 196, 100);
-}
-
-/* ===== 病歴チェックボックス ===== */
-
+/* ===== 病歴 ===== */
 .disease-group {
-  margin-bottom: 15px;
+  margin: 15px 0;
 }
 
 .disease-title {
   font-weight: bold;
-  margin-bottom: 6px;
   color: rgb(71, 196, 100);
+  margin-bottom: 8px;
+}
+
+.disease-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 8px;
 }
 
 .disease-option {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-right: 15px;
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
 }
 
-.disease-option input[type="checkbox"] {
-  width: auto;   /* ← input 100% 対策 */
+.disease-option input {
+  width: auto;
   margin: 0;
   padding: 0;
   transform: scale(1.2);
   accent-color: rgb(71, 196, 100);
+}
+
+
+.other-disease-input {
+  flex: 1;
+  padding: 6px;
 }
 
 /* ===== 緊張度ゲージ ===== */
@@ -186,4 +177,37 @@ input, select, button {
   color: #999;
   cursor: not-allowed;
 }
+
+/* ===== 病歴 ===== */
+
+.disease-group {
+  margin-top: 15px;
+}
+
+.disease-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.disease-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+
+.disease-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+}
+
+.other-disease-input {
+  flex: 1;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+
 
