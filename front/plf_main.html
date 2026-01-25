@@ -1,142 +1,160 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>犬猫マッチング - 登録</title>
 
-    <!--ヘッダーを読み込む-->
-
+  <!-- 共通CSS -->
   <link rel="stylesheet" href="header_style.css">
   <link rel="stylesheet" href="display.css">
-
-    <!--ヘッダーを読み込む-->
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>犬猫マッチング - 登録</title>
-    <link rel="stylesheet" href="header_style.css">
-    <link rel="stylesheet" href="plf_style.css">
+  <link rel="stylesheet" href="plf_style.css">
 </head>
+
 <body>
-    <div class="bg_pattern Polka_v2"></div>
-    <div id="header-placeholder"></div>
+  <div class="bg_pattern Polka_v2"></div>
 
-    <div class="itprof">
-        <h2>プロフィール登録</h2>
-        
-        <div class="image-upload-section">
-            <input type="file" id="imgInput" accept="image/*">
-            <div class="img-preview-wrapper">
-                <img id="imgPreview" class="img-preview hidden" />
-            </div>
-        </div>
+  <!-- ヘッダー -->
+  <div id="header-placeholder"></div>
 
-        <input id="Name" placeholder="名前を入力">
-        <input id="Breed" placeholder="品種を入力">
+  <!-- プロフィール登録 -->
+  <div class="itprof">
+    <h2>プロフィール登録</h2>
 
-        <div class="pulldown-wrapper">
-            <label class="selectbox-2">
-                <div class="type-group">
-                    <label class="type-option">
-                        <input type="radio" name="type" value="dog" checked>
-                        <span>犬</span>
-                    </label>
+    <!-- 画像アップロード -->
+    <div class="image-upload-section">
+      <input type="file" id="imgInput" accept="image/*">
+      <div class="img-preview-wrapper">
+        <img id="imgPreview" class="img-preview hidden">
+      </div>
+    </div>
 
-                    <label class="type-option">
-                        <input type="radio" name="type" value="cat">
-                        <span>猫</span>
-                    </label>
-                </div>
+    <!-- 基本情報 -->
+    <input type="text" id="Name" placeholder="名前を入力">
+    <input type="text" id="Breed" placeholder="品種を入力">
 
-                <div class="gender-group">
-                    <label class="gender-option">
-                        <input type="radio" name="gender" value="male" checked>
-                        <span>男の子</span>
-                    </label>
+    <!-- 種別 -->
+    <div class="type-group">
+      <label class="type-option">
+        <input type="radio" name="type" value="dog" checked>
+        <span>犬</span>
+      </label>
 
-                    <label class="gender-option">
-                        <input type="radio" name="gender" value="female">
-                        <span>女の子</span>
-                    </label>
-                </div>
+      <label class="type-option">
+        <input type="radio" name="type" value="cat">
+        <span>猫</span>
+      </label>
+    </div>
 
-                <div class="disease-group">
-                <p class="disease-title">病歴</p>
+    <!-- 性別 -->
+    <div class="gender-group">
+      <label class="gender-option">
+        <input type="radio" name="gender" value="male" checked>
+        <span>男の子</span>
+      </label>
 
-                <!-- 1行目 -->
-                <div class="disease-row">
-                    <label class="disease-option">
-                    <input type="checkbox" value="fiv">
-                    <span>エイズ</span>
-                    </label>
+      <label class="gender-option">
+        <input type="radio" name="gender" value="female">
+        <span>女の子</span>
+      </label>
+    </div>
 
-                    <label class="disease-option">
-                    <input type="checkbox" value="felv">
-                    <span>白血病</span>
-                    </label>
-                </div>
+    <!-- 避妊・去勢 -->
+    <div class="sterilization-group">
+    <p class="sterilization-title">避妊・去勢手術</p>
 
-                <!-- 2行目 -->
-                <div class="disease-row">
-                    <label class="disease-option">
-                    <input type="checkbox" id="diseaseOther" value="other">
-                    <span>その他</span>
-                    </label>
+    <label class="sterilization-option">
+        <input type="radio" name="sterilization" value="not_done" checked>
+        <span>未</span>
+    </label>
 
-                    <input
-                    type="text"
-                    id="otherDiseaseInput"
-                    placeholder="病名を入力"
-                    class="other-disease-input"
-                    />
-                </div>
+    <label class="sterilization-option">
+        <input type="radio" name="sterilization" value="done">
+        <span>済</span>
+    </label>
+    </div>
 
+    <!-- 病歴 -->
+    <div class="disease-group">
+      <p class="disease-title">病歴</p>
 
-            </div>
-        </div>
+      <div class="disease-row">
+        <label class="disease-option">
+          <input type="checkbox" value="fiv">
+          <span>エイズ</span>
+        </label>
 
+        <label class="disease-option">
+          <input type="checkbox" value="felv">
+          <span>白血病</span>
+        </label>
+      </div>
 
-        
-        <label class="note">誕生日</label> 
-        <input type="date" id="birthday"><br>
-        
-        <label class="note">保護日</label> 
-        <input type="date" id="ProtectDay">
-
-        <div class="tension-group">
-        <label for="tensionRange" class="tension-title">
-            緊張の度合い：<span id="tensionValue">3</span>
+      <div class="disease-row">
+        <label class="disease-option">
+          <input type="checkbox" id="diseaseOther" value="other">
+          <span>その他</span>
         </label>
 
         <input
-            type="range"
-            id="tensionRange"
-            min="1"
-            max="5"
-            step="1"
-            value="3"
-        />
-
-        <div class="tension-scale">
-            <span>1</span>
-            <span>5</span>
-        </div>
-        </div>
-
-        
-        <textarea id="meBio" placeholder="紹介文を入力してください"></textarea>
-        
-        <button id="saveProfile">保存</button>
+          type="text"
+          id="otherDiseaseInput"
+          class="other-disease-input"
+          placeholder="病名を入力"
+        >
+      </div>
     </div>
 
-<script>
-  fetch("header.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("header-placeholder").innerHTML = html;
-    });
+    <!-- 日付 -->
+    <label for="birthday" class="note form-title">推定誕生日</label>
+    <input type="date" id="birthday">
 
-    
-</script>
+    <label for="ProtectDay" class="note form-title">保護日</label>
+    <input type="date" id="ProtectDay">
 
-    <script src="/plf_app.js" defer></script>
+    <!-- 緊張度 -->
+    <div class="tension-group">
+      <label for="tensionRange" class="tension-title form-title">
+        緊張の度合い：<span id="tensionValue">3</span>
+      </label>
+
+      <input
+        type="range"
+        id="tensionRange"
+        min="1"
+        max="5"
+        step="1"
+        value="3"
+      >
+    <div class="tension-scale">
+    <div class="tension-label">
+        <span class="tension-num">1</span>
+        <span class="tension-text">パンチ・噛む</span>
+    </div>
+
+    <div class="tension-label">
+        <span class="tension-num">5</span>
+        <span class="tension-text">フレンドリー</span>
+    </div>
+    </div>
+    </div>
+
+    <!-- 紹介文 -->
+    <textarea id="meBio" placeholder="紹介文を入力してください"></textarea>
+
+    <!-- 保存 -->
+    <button id="saveProfile">保存</button>
+  </div>
+
+  <!-- ヘッダー読み込み -->
+  <script>
+    fetch("header.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("header-placeholder").innerHTML = html;
+      });
+  </script>
+
+  <script src="/plf_app.js" defer></script>
 </body>
 </html>
