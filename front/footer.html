@@ -23,6 +23,22 @@
       font-size: 18px;
       line-height: 1.6;
     }
+    footer {
+      background-color: #e6f7ee;
+      color: #2d4d33;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      padding: 20px 0 10px;
+      border-top: 4px solid #a8d9bf;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.6;
+
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+      }
+
 
     footer a {
       color: #2d4d33;
@@ -92,9 +108,9 @@
     </div>
 
     <div>
-      <a href="https://midori-no-mori.jp/" target="_blank">ホーム</a> |
-      <a href="https://midori-no-mori.jp/" target="_blank">お問い合わせ</a> |
-      <a href="#" target="_blank">診療案内</a>
+      <a href="https://midori-no-mori.jp/" target="_blank">緑の森動物病院</a> |
+      <a href="https://midori-no-mori.jp/faq" target="_blank">お問い合わせ</a> |
+      <a href="tps://midori-no-mori.jp/" target="_blank">診療案内</a>
     </div>
 
     <div class="copyright">
@@ -104,3 +120,40 @@
 
 </body>
 </html>
+<div>
+
+<script>
+  const footer = document.querySelector("footer");
+
+  // スマホかどうか判定
+  const isMobile = window.matchMedia("(hover: none)").matches;
+
+  if (isMobile) {
+    // 📱 スマホ：スクロール方向で制御
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY < lastScrollY) {
+        // 上スクロール → 表示
+        footer.style.transform = "translateY(0)";
+      } else {
+        // 下スクロール → 非表示
+        footer.style.transform = "translateY(100%)";
+      }
+      lastScrollY = window.scrollY;
+    });
+
+  } else {
+    // 🖱 PC：カーソルが下に来たら表示
+    window.addEventListener("mousemove", (e) => {
+      const windowHeight = window.innerHeight;
+
+      if (e.clientY > windowHeight - 120) {
+        // 画面下120px以内
+        footer.style.transform = "translateY(0)";
+      } else {
+        footer.style.transform = "translateY(100%)";
+      }
+    });
+  }
+</script>
