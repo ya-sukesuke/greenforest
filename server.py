@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, List, Optional
 from datetime import date
 import uuid
 import os
@@ -24,15 +24,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# --- 1. リクエストモデルの修正 ---
 class AddAnimalRequest(BaseModel):
     type: Literal['dog', 'cat']
     gender: Literal['male', 'female']
-    age: int
-    month: int
+    # JS側の変更に合わせて年齢・ヶ月は任意（Optional）にするか、
+    # JS側で必ず送るように構築する必要があります。
+    age: Optional[int] = 0
+    month: Optional[int] = 0
     name: str
     breed: str
-    birthday: date
-    protect_day: date
+    birthday: str # date型だとフォーマットエラーになりやすいためstrで受け取るのが安全です
+    protect_day: str
+    
+    # 新しく追加されたフィールド
+    operated: Literal['done', 'not_done'] # 避妊・去勢
+    diseases: List[str]                  # 病歴（配列）
+    other_disease: Optional[str] = None  # その他病名
+    tension: int                         # 緊張度 (1-5)
+    
     bio: str
     image: str
 
@@ -57,11 +67,11 @@ def add_animal(request: AddAnimalRequest):
             except json.JSONDecodeError:
                 data = []
 
+    # --- 2. データのダンプと整形 ---
     new_entry = request.model_dump()
-    new_entry['birthday'] = str(new_entry['birthday'])
-    new_entry['protect_day'] = str(new_entry['protect_day'])
     new_entry['uuid'] = new_uuid
     
+    # 画像のデコードと保存
     try:
         if "," in request.image:
             img_binary = base64.b64decode(request.image.split(",")[1])
