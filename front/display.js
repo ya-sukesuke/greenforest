@@ -35,24 +35,30 @@ let isAnimating = false;
 
 /* --- データ変換＆カード表示用のデータを準備する関数 --- */
 function formatDataForDisplay(data) {
-    return data.map(p => ({
-        // p.id の代わりに p.uuid を使用
-        id: p.uuid,
-        // photo の Base64 データは p.image に入っていると仮定
-        photo: p.image || "", 
-        kind: p.type,
-        breed: p.breed,
-        plf: `      
+  return data.map(p => ({
+    id: p.uuid,
+    photo: p.image,
+
+    kind: p.type === "dog" ? "犬" : "猫",
+    breed: p.breed,
+
+    plf: `
 【名前】${p.name}
 【性別】${p.gender === "male" ? "男の子" : "女の子"}
 【年齢】${p.age}歳${p.month}ヶ月
-【誕生日】${p.birthday}
-【保護日】${p.protect_day}
+【避妊・去勢】${p.sterilization === "done" ? "済" : "未"}
+【緊張度】${p.tension}
+
+【病歴】
+${(p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし"}
+
+【推定誕生日】${p.birthday || "不明"}
+【保護日】${p.protect_day || "不明"}
 
 【紹介文】
-  ${p.bio}
-  `.trim()
-    }));
+${p.bio}
+`.trim()
+  }));
 }
 
 /* --- カード作成（画像は escape しない） --- */
@@ -139,7 +145,6 @@ async function fetchAnimals() {
     console.error("Error:", error);
   }
 }
-
 
 /* --- 最初のカード表示 --- */
 function renderInitial(){
