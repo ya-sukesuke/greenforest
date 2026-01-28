@@ -10,7 +10,8 @@ function toBase64(file) {
     });
 }
 
-// --- ここからが「3.」のメイン部分 ---
+
+
 async function initApp() {
     console.log("アプリ初期化開始...");
 
@@ -59,8 +60,10 @@ if (imgInput && imgPreview) {
 
 // 2. 緊張度スライダーの数値表示更新
 if (tensionRange && tensionValue) {
+    // スライダーを動かすたびに実行される
     tensionRange.addEventListener("input", (e) => {
-        tensionValue.textContent = e.target.value;
+        const val = e.target.value;
+        tensionValue.textContent = val; // HTML上の数字（<span id="tensionValue">）を書き換え
     });
 }
 
@@ -81,6 +84,7 @@ saveBtn.addEventListener("click", async () => {
         const type = document.querySelector('input[name="type"]:checked')?.value;
         const gender = document.querySelector('input[name="gender"]:checked')?.value;
         const operated = document.querySelector('input[name="sterilization"]:checked')?.value;
+        const tension = parseInt(document.getElementById("tensionRange").value);
 
         // チェックボックス（病歴）
         const diseases = Array.from(document.querySelectorAll('.disease-group input[type="checkbox"]:checked'))
@@ -102,7 +106,7 @@ saveBtn.addEventListener("click", async () => {
             operated: operated,
             diseases: diseases,
             other_disease: otherDisease,
-            tension: parseInt(tensionRange.value),
+            tension: tension,
             bio: document.getElementById("meBio").value,
             image: await toBase64(file)
         };
