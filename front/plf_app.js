@@ -38,7 +38,7 @@ async function initApp() {
     const imgInput = document.getElementById("imgInput");
     const imgPreview = document.getElementById("imgPreview");
     const ageSelect = document.getElementById("ageSelect");
-    const monthSelect = document.getElementById("manthSelect");
+    const monthSelect = document.getElementById("monthSelect");
 
     // 1. 画像プレビューの設定
     if (imgInput && imgPreview) {
@@ -57,7 +57,7 @@ async function initApp() {
 
     // 2. セレクトボックスの生成
     if (ageSelect) {
-        for (let i = 0; i <= 35; i++) {
+        for (let i = 0; i <= 30; i++) {
             ageSelect.add(new Option(`${i}歳`, i));
         }
     }
@@ -77,17 +77,36 @@ async function initApp() {
             if (!file) throw new Error("画像を選択してください");
 
             const payload = {
-                type: document.getElementById("typeSelect").value,
-                gender: document.getElementById("genderSelect").value,
+                type: document.querySelector('input[name="type"]:checked').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                sterilization: document.querySelector('input[name="sterilization"]:checked').value,
+
                 age: parseInt(ageSelect.value),
                 month: parseInt(monthSelect.value),
+
                 name: document.getElementById("Name").value,
                 breed: document.getElementById("Breed").value,
+
                 birthday: document.getElementById("birthday").value,
                 protect_day: document.getElementById("ProtectDay").value,
+
+                tension: document.getElementById("tensionRange").value,
                 bio: document.getElementById("meBio").value,
+
+                diseases: [
+                ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
+                ].map(cb => {
+                if (cb.value === "other") {
+                    return document.getElementById("otherDiseaseInput").value;
+                }
+                return cb.value === "fiv" ? "エイズ" : "白血病";
+                }),
+
                 image: await toBase64(file)
             };
+
+            // display.html 用に保存
+            localStorage.setItem("animalData", JSON.stringify(payload));
 
             const res = await fetch(API_POST_URL, {
                 method: 'POST',

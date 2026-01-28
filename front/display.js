@@ -35,26 +35,31 @@ let isAnimating = false;
 
 /* --- データ変換＆カード表示用のデータを準備する関数 --- */
 function formatDataForDisplay(data) {
-    return data.map(p => ({
-        // p.id の代わりに p.uuid を使用
-        id: p.uuid,
-        // photo の Base64 データは p.image に入っていると仮定
-        photo: p.image || "", 
-        kind: p.type,
-        breed: p.breed,
-        plf: `      
+  return data.map(p => ({
+    id: p.uuid,
+    photo: p.image,
+
+    kind: p.type === "dog" ? "犬" : "猫",
+    breed: p.breed,
+
+    plf: `
 【名前】${p.name}
-【性別】${p.gender}
+【性別】${p.gender === "male" ? "男の子" : "女の子"}
 【年齢】${p.age}歳${p.month}ヶ月
-【誕生日】${p.birthday}
-【保護日】${p.protect_day}
+【避妊・去勢】${p.sterilization === "done" ? "済" : "未"}
+【緊張度】${p.tension}
+
+【病歴】
+${(p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし"}
+
+【推定誕生日】${p.birthday || "不明"}
+【保護日】${p.protect_day || "不明"}
 
 【紹介文】
-  ${p.bio}
-  `.trim()
-    }));
+${p.bio}
+`.trim()
+  }));
 }
-
 
 /* --- カード作成（画像は escape しない） --- */
 function makeCard(item, pos){
@@ -105,23 +110,40 @@ function makeCard(item, pos){
 
 /* --- FastAPIからデータを取得し、レンダリングするメイン関数 --- */
 async function fetchAnimals() {
-    try {
-        const response = await fetch(API_GET_URL);
-        if (!response.ok) throw new Error("データの取得に失敗しました");
-        const data = await response.json();
-        
-        // データを表示用フォーマットに変換
-        profiles = data;
-        words = formatDataForDisplay(data);
-        
-        if (words.length > 0) {
-            renderInitial();
-        } else {
-            viewer.innerHTML = "<p>登録されている動物がいません。</p>";
-        }
-    } catch (error) {
-        console.error("Error:", error);
+  try {
+    let data = [];
+
+    /* --- ① localStorage からデータ取得 --- */
+    const localData = localStorage.getItem("animalData");
+    if (localData) {
+      const parsed = JSON.parse(localData);
+
+      // FastAPI のデータ構造に寄せる
+      data.push({
+        uuid: "local-" + Date.now(),
+        ...parsed
+      });
     }
+
+    /* --- ② FastAPI から取得（あれば） --- */
+    const response = await fetch(API_GET_URL);
+    if (response.ok) {
+      const apiData = await response.json();
+      data = data.concat(apiData);
+    }
+
+    profiles = data;
+    words = formatDataForDisplay(data);
+
+    if (words.length > 0) {
+      renderInitial();
+    } else {
+      viewer.innerHTML = "<p>登録されている動物がいません。</p>";
+    }
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 
