@@ -22,23 +22,11 @@
       text-align: center;
       font-size: 18px;
       line-height: 1.6;
-    }
-    footer {
-      background-color: #e6f7ee;
-      color: #2d4d33;
-      width: 100%;
-      position: fixed;
-      bottom: 0;
-      padding: 20px 0 10px;
-      border-top: 4px solid #a8d9bf;
-      text-align: center;
-      font-size: 18px;
-      line-height: 1.6;
 
+      /* 最初は隠す */
       transform: translateY(100%);
       transition: transform 0.4s ease;
-      }
-
+    }
 
     footer a {
       color: #2d4d33;
@@ -70,6 +58,7 @@
       border-radius: 50%;
       background: #8b5a2b;
     }
+
     .dog::before, .dog::after {
       content: "";
       width: 18px;
@@ -79,8 +68,9 @@
       top: -6px;
       border-radius: 50%;
     }
+
     .dog::before { left: -2px; }
-    .dog::after { right: -2px; }
+    .dog::after  { right: -2px; }
 
     /* 猫アイコン */
     .cat {
@@ -93,9 +83,9 @@
       font-size: 14px;
       color: #4b5f4a;
     }
-
   </style>
 </head>
+
 <body>
 
   <h1>緑の森動物病院</h1>
@@ -110,7 +100,7 @@
     <div>
       <a href="https://midori-no-mori.jp/" target="_blank">緑の森動物病院</a> |
       <a href="https://midori-no-mori.jp/faq" target="_blank">お問い合わせ</a> |
-      <a href="tps://midori-no-mori.jp/" target="_blank">診療案内</a>
+      <a href="https://midori-no-mori.jp/" target="_blank">診療案内</a>
     </div>
 
     <div class="copyright">
@@ -118,42 +108,41 @@
     </div>
   </footer>
 
+  <script>
+    const footer = document.querySelector("footer");
+
+    // スマホかどうか判定
+    const isMobile = window.matchMedia("(hover: none)").matches;
+
+    if (isMobile) {
+      // 📱 スマホ：スクロール方向で制御
+      let lastScrollY = window.scrollY;
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY < lastScrollY) {
+          // 上スクロール → 表示
+          footer.style.transform = "translateY(0)";
+        } else {
+          // 下スクロール → 非表示
+          footer.style.transform = "translateY(100%)";
+        }
+        lastScrollY = window.scrollY;
+      });
+
+    } else {
+      // 🖱 PC：カーソルが下に来たら表示
+      window.addEventListener("mousemove", (e) => {
+        const windowHeight = window.innerHeight;
+
+        if (e.clientY > windowHeight - 120) {
+          // 画面下120px以内
+          footer.style.transform = "translateY(0)";
+        } else {
+          footer.style.transform = "translateY(100%)";
+        }
+      });
+    }
+  </script>
+
 </body>
 </html>
-<div>
-
-<script>
-  const footer = document.querySelector("footer");
-
-  // スマホかどうか判定
-  const isMobile = window.matchMedia("(hover: none)").matches;
-
-  if (isMobile) {
-    // 📱 スマホ：スクロール方向で制御
-    let lastScrollY = window.scrollY;
-
-    window.addEventListener("scroll", () => {
-      if (window.scrollY < lastScrollY) {
-        // 上スクロール → 表示
-        footer.style.transform = "translateY(0)";
-      } else {
-        // 下スクロール → 非表示
-        footer.style.transform = "translateY(100%)";
-      }
-      lastScrollY = window.scrollY;
-    });
-
-  } else {
-    // 🖱 PC：カーソルが下に来たら表示
-    window.addEventListener("mousemove", (e) => {
-      const windowHeight = window.innerHeight;
-
-      if (e.clientY > windowHeight - 120) {
-        // 画面下120px以内
-        footer.style.transform = "translateY(0)";
-      } else {
-        footer.style.transform = "translateY(100%)";
-      }
-    });
-  }
-</script>
