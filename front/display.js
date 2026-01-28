@@ -35,24 +35,46 @@ let isAnimating = false;
 
 /* --- データ変換＆カード表示用のデータを準備する関数 --- */
 function formatDataForDisplay(data) {
-    return data.map(p => ({
-        // p.id の代わりに p.uuid を使用
-        id: p.uuid,
-        // photo の Base64 データは p.image に入っていると仮定
-        photo: p.image || "", 
-        kind: p.type,
-        breed: p.breed,
-        plf: `      
+    return data.map(p => {
+        // 避妊・去勢の表示変換
+        const operatedText = p.operated === "done" ? "済" : "未";
+        
+        // 病歴の整形
+        let diseaseText = "特になし";
+        if (p.diseases && p.diseases.length > 0) {
+            // 内部的な値を日本語に変換（必要に応じて）
+            const diseaseMap = { fiv: "エイズ", felv: "白血病" };
+            const knownDiseases = p.diseases.map(d => diseaseMap[d] || d);
+            diseaseText = knownDiseases.join(", ");
+        }
+        if (p.other_disease) {
+            diseaseText += diseaseText === "特になし" ? p.other_disease : `、${p.other_disease}`;
+        }
+
+        // 緊張度の視覚化（例：3/5）
+        const tensionText = `${p.tension} / 5 (5に近いほどフレンドリー)`;
+
+        return {
+            id: p.uuid,
+            photo: p.image || "", 
+            kind: p.type === "dog" ? "犬" : "猫",
+            breed: p.breed,
+            plf: `      
 【名前】${p.name}
-【性別】${p.gender}
+【性別】${p.gender === "male" ? "男の子" : "女の子"}
 【年齢】${p.age}歳${p.month}ヶ月
 【誕生日】${p.birthday}
 【保護日】${p.protect_day}
 
+【避妊・去勢】${operatedText}
+【病歴】${diseaseText}
+【フレンドリー度】${tensionText}
+
 【紹介文】
-  ${p.bio}
+${p.bio}
   `.trim()
-    }));
+        };
+    });
 }
 
 
