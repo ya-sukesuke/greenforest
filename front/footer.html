@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>緑の森動物病院</title>
+
   <style>
     body {
       margin: 0;
@@ -39,7 +41,6 @@
       text-decoration: underline;
     }
 
-    /* 動物アイコン */
     .icons {
       display: flex;
       justify-content: center;
@@ -47,7 +48,6 @@
       margin-bottom: 8px;
     }
 
-    /* 犬アイコン */
     .dog, .cat {
       width: 40px;
       height: 40px;
@@ -72,7 +72,6 @@
     .dog::before { left: -2px; }
     .dog::after  { right: -2px; }
 
-    /* 猫アイコン */
     .cat {
       background: #555;
       clip-path: polygon(20% 0%, 40% 20%, 60% 20%, 80% 0%, 100% 40%, 100% 100%, 0% 100%, 0% 40%);
@@ -87,7 +86,6 @@
 </head>
 
 <body>
-
   <h1>緑の森動物病院</h1>
   <p>大切な家族と、森のような安心を。</p>
 
@@ -111,31 +109,26 @@
   <script>
     const footer = document.querySelector("footer");
 
-    // スマホかどうか判定
+    // スマホ判定（hoverできない＝スマホ扱い）
     const isMobile = window.matchMedia("(hover: none)").matches;
 
     if (isMobile) {
-      // 📱 スマホ：スクロール方向で制御
       let lastScrollY = window.scrollY;
 
       window.addEventListener("scroll", () => {
         if (window.scrollY < lastScrollY) {
-          // 上スクロール → 表示
           footer.style.transform = "translateY(0)";
         } else {
-          // 下スクロール → 非表示
           footer.style.transform = "translateY(100%)";
         }
         lastScrollY = window.scrollY;
       });
 
     } else {
-      // 🖱 PC：カーソルが下に来たら表示
       window.addEventListener("mousemove", (e) => {
         const windowHeight = window.innerHeight;
 
         if (e.clientY > windowHeight - 120) {
-          // 画面下120px以内
           footer.style.transform = "translateY(0)";
         } else {
           footer.style.transform = "translateY(100%)";
@@ -143,6 +136,5 @@
       });
     }
   </script>
-
 </body>
 </html>

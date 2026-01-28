@@ -13,6 +13,7 @@
 /* ===== 見出し ===== */
 h1, h2 {
   color: rgb(71, 196, 100);
+  align-items: center;
 }
 
 .itprof h1,
