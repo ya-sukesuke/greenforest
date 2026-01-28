@@ -1,0 +1,9 @@
+footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  transform: translateY(100%);   /* 最初は隠す */
+  transition: transform 0.4s ease; /* アニメーション */
+}
