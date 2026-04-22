@@ -1,7 +1,34 @@
+body {
+  margin: 0;
+  font-family: "Yu Gothic", sans-serif;
+  background-color: #f7f7f7;
+}
+
+/* フッター本体 */
 footer {
-  background: red !important;
-  color: white !important;
-  padding: 30px !important;
-  display: block !important;
-  position: static !important;
+  background-color: #e6f7ee;
+  color: #2b5c3f;
+  padding: 30px 20px;
+  text-align: center;
+
+  /* ここ重要：消えないようにする */
+  display: block;
+  position: static;
+}
+
+/* フッターの中の文字 */
+footer p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+/* フッター内リンク */
+footer a {
+  color: #2b5c3f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
