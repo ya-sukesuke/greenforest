@@ -16,7 +16,8 @@ h1, h2 {
   align-items: center;
 }
 
-h1 {
+.itprof h1,
+.itprof h2 {
   text-align: center;
 }
 
@@ -209,4 +210,23 @@ button {
 label.form-title {
   font-weight: bold;
   color: rgb(71, 196, 100);
+}
+
+/* ===== 推定年齢 ===== */
+
+.age-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.age-group select {
+  width: 70px;
+  padding: 6px;
+}
+
+.age-unit {
+  font-weight: bold;
+  color: #555;
 }
