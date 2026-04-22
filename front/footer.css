@@ -1,34 +1,64 @@
+/* 全体 */
 body {
   margin: 0;
-  font-family: "Yu Gothic", sans-serif;
-  background-color: #f7f7f7;
+  font-family: sans-serif;
+}
+
+/* コンテンツ */
+main {
+  min-height: 200vh;
+  padding: 20px;
+  background: #f7faf7;
 }
 
 /* フッター本体 */
-footer {
-  background-color: #e6f7ee;
-  color: #2b5c3f;
-  padding: 30px 20px;
-  text-align: center;
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 
-  /* ここ重要：消えないようにする */
-  display: block;
-  position: static;
+  background: #dff5e1; /* やわらかい緑 */
+  border-top: 2px solid #a8d5ba;
+
+  transform: translateY(80%); /* 普段は隠す */
+  transition: transform 0.4s ease;
 }
 
-/* フッターの中の文字 */
-footer p {
-  margin: 8px 0;
-  font-size: 16px;
+/* ホバーで出現（PC専用） */
+.footer:hover {
+  transform: translateY(0);
 }
 
-/* フッター内リンク */
-footer a {
-  color: #2b5c3f;
-  text-decoration: none;
-  font-weight: bold;
+/* 中身 */
+.footer-inner {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 
-footer a:hover {
-  text-decoration: underline;
+/* ボタン */
+.footer-btn {
+  background: #8ecfa7;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 20px;
+
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* ホバーでふわっと */
+.footer-btn:hover {
+  background: #76b893;
+  transform: translateY(-2px);
+}
+
+/* 押した感 */
+.footer-btn:active {
+  transform: translateY(0);
 }
