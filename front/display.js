@@ -100,8 +100,10 @@ function makeCard(item, pos){
   return c;
 }
 
-/* --- お気に入り登録・解除を切り替えるメイン関数 --- */
+
+/* --- プロフィール保存関数(お気に入り登録 / 解除のトグル) --- */
 function toggleFavorite(profile) {
+<<<<<<< HEAD
 
     // UUID配列取得
     let favorites = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
@@ -122,6 +124,36 @@ function toggleFavorite(profile) {
         favorites.splice(favoriteIndex, 1);
 
         saveBtn.classList.remove('active');
+=======
+    // ローカルストレージから uuid の配列を取得（なければ空配列）
+    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+    
+    // 【修正】配列内に現在の動物の uuid が含まれているかチェック
+    const index = GoodProfiles.indexOf(profile.uuid);
+    
+    if (index === -1) {
+        // 【1回目：未登録の場合】
+        // ① 配列に uuid だけを追加してローカルストレージに保存
+        GoodProfiles.push(profile.uuid);
+        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+        
+        // ② ボックスの色を反転（activeクラスを付与）
+        saveBtn.classList.add('active');
+        
+        // ③ アラートを出す
+        alert("登録しました");
+    } else {
+        // 【2回目：登録済の場合】
+        // ① 配列から該当の uuid を削除してローカルストレージに保存
+        GoodProfiles.splice(index, 1);
+        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+        
+        // ② 色を元に戻す（activeクラスを除去）
+        saveBtn.classList.remove('active');
+        
+        // ③ アラートを出す
+        alert("削除されました");
+>>>>>>> c652e587edf1a54fcdda22c9d09110cf17cd4ea5
     }
 
     localStorage.setItem(
@@ -136,6 +168,7 @@ function updateSaveButtonState() {
     if (!profiles || !profiles[index]) return;
 
     const currentProfileData = profiles[index];
+<<<<<<< HEAD
 
     let favorites = JSON.parse(
         localStorage.getItem("GoodProfiles")
@@ -145,10 +178,30 @@ function updateSaveButtonState() {
 
     if (isSaved) {
         saveBtn.classList.add('active');
+=======
+    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+    
+    // 【修正】ローカルストレージの配列に現在の uuid が含まれているか確認
+    const isSaved = GoodProfiles.includes(currentProfileData.uuid);
+    
+    if (isSaved) {
+        saveBtn.classList.add('active');    // uuidがあれば色を反転したままにする
+>>>>>>> c652e587edf1a54fcdda22c9d09110cf17cd4ea5
     } else {
         saveBtn.classList.remove('active');
     }
 }
+
+/* --- 【重要】お気に入りボタンのクリックイベント --- */
+saveBtn.addEventListener('click', () => {
+    if (!profiles || !profiles[index]) return;
+    
+    // 現在表示されている動物のデータを取得
+    const currentProfileData = profiles[index];
+    
+    // 登録・解除の切り替え処理を実行
+    toggleFavorite(currentProfileData);
+});
 
 /* --- 既存のカード切り替え関数 (changeCard) の末尾を修正 --- */
 function changeCard(newIndex, outClass, inClass){
