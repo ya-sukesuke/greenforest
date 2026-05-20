@@ -5,14 +5,6 @@ const API_GET_URL = "/animals";
 let words = [];
 let profiles = []; // 元のコードとの互換性のために残すが、サーバーデータが入る
 
-/* --- プロフィール保存関数(お気に入り登録) --- */
-// サーバー連携は実装しないため、元のローカルストレージへの保存ロジックを残します
-function saveProfileData(profile) {
-    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
-    GoodProfiles.push(profile);
-    localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
-    alert("お気に入りとしてローカルに登録しました。");
-}
 
 /* --- HTML エスケープ（画像には使わない） --- */
 function escapeHtml(s){
@@ -107,6 +99,106 @@ function makeCard(item, pos){
   c.addEventListener('click', () => flip(c));
   return c;
 }
+
+/* --- お気に入り登録・解除を切り替えるメイン関数 --- */
+function toggleFavorite(profile) {
+    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+    
+    // すでに保存されているか「名前」でチェック
+    const index = GoodProfiles.findIndex(p => p.name === profile.name);
+    
+    if (index === -1) {
+        // 【1回目：登録されていない場合】
+        // ① ローカルストレージに保存する
+        GoodProfiles.push(profile);
+        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+        
+        // ② ボックスの色を反転する（activeクラスをつける）
+        saveBtn.classList.add('active');
+        
+        // ③ アラートを出す
+        //alert("登録しました");
+    } else {
+        // 【2回目（もう一度押された場合）：すでに登録されている場合】
+        // ① ローカルストレージから削除する
+        GoodProfiles.splice(index, 1);
+        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+        
+        // ② 色を元に戻す（activeクラスを外す）
+        saveBtn.classList.remove('active');
+        
+        // ③ アラートを出す
+        //alert("削除されました");
+    }
+}
+
+/* --- カード切り替え時や初期表示時に、保存状態に合わせてボタンの色を維持する関数 --- */
+function updateSaveButtonState() {
+    if (!profiles || !profiles[index]) return;
+    
+    const currentProfileData = profiles[index];
+    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+    
+    // 現在の動物がすでにローカルストレージにあるか確認
+    const isSaved = GoodProfiles.some(p => p.name === currentProfileData.name);
+    
+    if (isSaved) {
+        saveBtn.classList.add('active');    // 保存されていれば色を反転したままにする
+    } else {
+        saveBtn.classList.remove('active'); // なければ元の色にする
+    }
+}
+
+/* --- 既存のカード切り替え関数 (changeCard) の末尾を修正 --- */
+function changeCard(newIndex, outClass, inClass){
+  isAnimating = true;
+  const newCard = makeCard(words[newIndex], inClass);
+
+  requestAnimationFrame(()=>{
+    currentCard.classList.add(outClass);
+    viewer.appendChild(newCard);
+    newCard.classList.add('enter');
+  });
+
+  setTimeout(()=>{
+    currentCard.remove();
+    newCard.classList.remove(inClass,'enter');
+    newCard.classList.add('current');
+    currentCard = newCard;
+    index = newIndex;
+    isAnimating = false;
+    updateButtons();
+    
+    // ★カードが切り替わった時に状態をチェック
+    updateSaveButtonState();
+  }, 520);
+}
+
+/* --- 既存の初期表示関数 (renderInitial) の末尾を修正 --- */
+function renderInitial(){
+    if (words.length === 0) return;
+    
+    viewer.innerHTML = "";
+    const card = makeCard(words[index]);
+    card.classList.add('current','enter');
+    viewer.appendChild(card);
+    currentCard = card;
+    updateButtons();
+    
+    // ★最初の1枚目を表示した時にも状態をチェック
+    updateSaveButtonState();
+}
+
+/* --- 【重要】お気に入りボタンのクリックイベント（ここを丸ごと差し替え） --- */
+saveBtn.addEventListener('click', () => {
+    if (!profiles || !profiles[index]) return;
+    
+    // 現在表示されている動物のデータを取得
+    const currentProfileData = profiles[index];
+    
+    // 登録・解除の切り替え処理を実行（この中で色反転・アラート・保存がすべて完結します）
+    toggleFavorite(currentProfileData);
+});
 
 /* --- FastAPIからデータを取得し、レンダリングするメイン関数 --- */
 async function fetchAnimals() {
