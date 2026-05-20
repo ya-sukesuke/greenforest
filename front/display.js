@@ -1,8 +1,6 @@
-// ================================
-// API
-// ================================
-
+// 【重要】FastAPIサーバーの GET エンドポイントURL
 const API_GET_URL = "/animals";
+const API_FAVORITE_URL = "/favorites"; // ★お気に入り用のURLを追加
 
 // ================================
 // グローバル変数
@@ -40,41 +38,33 @@ function escapeHtml(s){
             .replace(/"/g,'&quot;');
 }
 
-// ================================
-// 表示用データ変換
-// ================================
-
-function formatDataForDisplay(data){
+/* --- データ変換 --- */
+function formatDataForDisplay(data) {
 
     return data.map(p => ({
-
         id: p.uuid,
-
         photo: p.image,
-
         kind: p.type === "dog" ? "犬" : "猫",
 
-        breed: p.breed,
+        breed: p.breed || "",
 
-plf: `【名前】
-${p.name}
+        plf: `
+【名前】${p.name || "不明"}
 
-【性別】
-${p.gender === "male" ? "男の子" : "女の子"}
+【性別】${p.gender === "male" ? "男の子" : "女の子"}
 
-【年齢】
-${p.age}歳 ${p.month}ヶ月
+【年齢】${p.age || 0}歳${p.month || 0}ヶ月
 
 【避妊・去勢】
 ${p.sterilization === "done" ? "済" : "未"}
 
 【緊張度】
-${p.tension}
+${p.tension || "不明"}
 
 【病歴】
 ${(p.diseases && p.diseases.length > 0)
-? p.diseases.join(" / ")
-: "特になし"}
+            ? p.diseases.join(" / ")
+            : "特になし"}
 
 【推定誕生日】
 ${p.birthday || "不明"}
@@ -83,20 +73,17 @@ ${p.birthday || "不明"}
 ${p.protect_day || "不明"}
 
 【紹介文】
-${p.bio}`.trim()
-
+${p.bio || ""}
+`.trim()
     }));
 }
 
-// ================================
-// カード生成
-// ================================
-
-function makeCard(item){
+/* --- カード作成 --- */
+function makeCard(item, pos = '') {
 
     const c = document.createElement('div');
 
-    c.className = 'card';
+    c.className = `card ${pos}`;
 
     // ============================
     // 表
@@ -107,40 +94,42 @@ function makeCard(item){
     frontDiv.className = 'inner front';
 
     const img = document.createElement('img');
-
     img.className = 'photo';
 
-    img.src = item.photo;
+    img.src = item.photo || "";
 
     img.alt = escapeHtml(item.kind);
 
     img.onerror = () => {
 
         img.src =
-        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="16"%3E画像なし%3C/text%3E%3C/svg%3E';
+            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="16"%3E画像なし%3C/text%3E%3C/svg%3E';
     };
 
+    /* --- 表面 --- */
+    const frontDiv = document.createElement('div');
+
+    frontDiv.className = 'inner front';
+
     const idDiv = document.createElement('div');
-
     idDiv.className = 'id';
-
     idDiv.textContent = `UUID: ${item.id}`;
 
+    frontDiv.appendChild(idDiv);
+
+    frontDiv.appendChild(img);
+
     const kindDiv = document.createElement('div');
-
     kindDiv.className = 'kind';
-
     kindDiv.textContent = item.kind;
 
-    const breedDiv = document.createElement('div');
+    frontDiv.appendChild(kindDiv);
 
+    const breedDiv = document.createElement('div');
     breedDiv.className = 'breed';
 
-    breedDiv.textContent = item.breed || '';
+    breedDiv.textContent = item.breed;
 
-    frontDiv.appendChild(idDiv);
-    frontDiv.appendChild(img);
-    frontDiv.appendChild(kindDiv);
     frontDiv.appendChild(breedDiv);
 
     // ============================
@@ -148,27 +137,17 @@ function makeCard(item){
     // ============================
 
     const backDiv = document.createElement('div');
-
     backDiv.className = 'inner back';
 
-    backDiv.innerHTML = `
-        <div class="plf">
-            ${escapeHtml(item.plf).replace(/\n/g, "<br>")}
-        </div>
-    `;
+    backDiv.innerHTML =
+        `<div class="plf">${escapeHtml(item.plf).replace(/\n/g, "<br>")}</div>`;
 
-    // ============================
-    // 組み立て
-    // ============================
-
+    /* --- カードに追加 --- */
     c.appendChild(frontDiv);
-
     c.appendChild(backDiv);
 
-    // カードクリックで裏返し
-
+    /* --- クリックで反転 --- */
     c.addEventListener('click', () => {
-
         flip(c);
 
     });
@@ -176,169 +155,194 @@ function makeCard(item){
     return c;
 }
 
-// ================================
-// 裏返す
-// ================================
+/* --- お気に入り登録/解除 --- */
+function toggleFavorite(profile) {
 
-function flip(card){
-
-    card.classList.toggle('flipped');
-}
-
-// ================================
-// お気に入り切り替え
-// ================================
-
-function toggleFavorite(profile){
-
-    let favorites = JSON.parse(
+    let GoodProfiles = JSON.parse(
         localStorage.getItem("GoodProfiles")
     ) || [];
 
-    const favoriteIndex = favorites.indexOf(profile.uuid);
+    const favIndex = GoodProfiles.indexOf(profile.uuid);
 
-    if(favoriteIndex === -1){
+    if (favIndex === -1) {
 
-        favorites.push(profile.uuid);
+        /* --- 登録 --- */
+        GoodProfiles.push(profile.uuid);
+
+        localStorage.setItem(
+            "GoodProfiles",
+            JSON.stringify(GoodProfiles)
+        );
 
         saveBtn.classList.add('active');
 
-    }else{
+        alert("登録しました");
 
-        favorites.splice(favoriteIndex, 1);
+    } else {
+
+        /* --- 削除 --- */
+        GoodProfiles.splice(favIndex, 1);
+
+        localStorage.setItem(
+            "GoodProfiles",
+            JSON.stringify(GoodProfiles)
+        );
 
         saveBtn.classList.remove('active');
-    }
 
-    localStorage.setItem(
-        "GoodProfiles",
-        JSON.stringify(favorites)
-    );
+        alert("削除されました");
+    }
 }
 
-// ================================
-// お気に入り状態反映
-// ================================
+/* --- 保存状態チェック --- */
+function updateSaveButtonState() {
 
-function updateSaveButtonState(){
-
-    if(!profiles[index]) return;
+    if (!profiles || !profiles[index]) return;
 
     const currentProfile = profiles[index];
 
-    const favorites = JSON.parse(
+    let GoodProfiles = JSON.parse(
         localStorage.getItem("GoodProfiles")
     ) || [];
 
-    const isSaved = favorites.includes(currentProfile.uuid);
+    const isSaved =
+        GoodProfiles.includes(currentProfileData.uuid);
 
-    if(isSaved){
+    if (isSaved) {
 
         saveBtn.classList.add('active');
 
-    }else{
+    } else {
 
         saveBtn.classList.remove('active');
     }
 }
 
-// ================================
-// 初期表示
-// ================================
+/* --- 初期表示 --- */
+function renderInitial() {
 
-function renderInitial(){
-
-    if(words.length === 0){
-
-        viewer.innerHTML =
-        "<p>登録されている動物がいません。</p>";
-
-        return;
-    }
+    if (words.length === 0) return;
 
     viewer.innerHTML = "";
-
     const card = makeCard(words[index]);
 
-    card.classList.add('current');
+    card.classList.add('current', 'enter');
 
     viewer.appendChild(card);
-
     currentCard = card;
+
+    updateButtons();
 
     updateSaveButtonState();
 }
 
-// ================================
-// カード切り替え
-// ================================
+/* --- カード切り替え --- */
+function changeCard(newIndex, outClass, inClass) {
 
-function changeCard(newIndex){
-
-    if(isAnimating) return;
+    if (isAnimating) return;
 
     isAnimating = true;
 
     const newCard = makeCard(words[newIndex]);
 
-    viewer.innerHTML = "";
+    requestAnimationFrame(() => {
 
-    viewer.appendChild(newCard);
+        currentCard.classList.add(outClass);
 
-    currentCard = newCard;
+        viewer.appendChild(newCard);
 
-    index = newIndex;
+        newCard.classList.add('enter');
+    });
 
-    updateSaveButtonState();
+    setTimeout(() => {
 
-    isAnimating = false;
+        currentCard.remove();
+
+        newCard.classList.remove(inClass, 'enter');
+
+        newCard.classList.add('current');
+
+        currentCard = newCard;
+
+        index = newIndex;
+
+        isAnimating = false;
+
+        updateButtons();
+
+        updateSaveButtonState();
+
+    }, 520);
 }
 
-// ================================
-// 次へ
-// ================================
+/* --- 次へ --- */
+function goNext() {
 
-function goNext(){
+    if (words.length === 0) return;
 
-    const newIndex =
-        (index + 1) % words.length;
+    if (index >= words.length - 1) {
 
-    changeCard(newIndex);
-}
+        changeCard(0, 'to-left', 'from-right');
 
-// ================================
-// 前へ
-// ================================
+    } else {
 
-function goPrev(){
-
-    const newIndex =
-        (index - 1 + words.length) % words.length;
-
-    changeCard(newIndex);
-}
-
-// ================================
-// イベント
-// ================================
-
-nextBtn.addEventListener('click', goNext);
-
-prevBtn.addEventListener('click', goPrev);
-
-flipBtn.addEventListener('click', () => {
-
-    if(currentCard){
-
-        flip(currentCard);
+        changeCard(index + 1, 'to-left', 'from-right');
     }
-});
+}
 
+/* --- 前へ --- */
+function goPrev() {
+
+    if (words.length === 0) return;
+
+    if (index <= 0) {
+
+        changeCard(
+            words.length - 1,
+            'to-right',
+            'from-left'
+        );
+
+    } else {
+
+        changeCard(
+            index - 1,
+            'to-right',
+            'from-left'
+        );
+    }
+}
+
+/* --- カード反転 --- */
+function flip(card) {
+
+    if (!card) return;
+
+    card.classList.toggle('flipped');
+}
+
+/* --- ボタン更新 --- */
+function updateButtons() {
+
+    // 必要ならここに追加
+}
+
+/* --- お気に入りボタン --- */
 saveBtn.addEventListener('click', () => {
 
-    if(!profiles[index]) return;
+    if (!profiles || !profiles[index]) return;
 
-    toggleFavorite(profiles[index]);
+    const currentProfileData = profiles[index];
+
+    toggleFavorite(currentProfileData);
+});
+
+/* --- ナビゲーションボタン --- */
+nextBtn.addEventListener('click', goNext);
+prevBtn.addEventListener('click', goPrev);
+flipBtn.addEventListener('click', () => {
+
+    flip(currentCard);
 });
 
 // ================================
@@ -347,44 +351,36 @@ saveBtn.addEventListener('click', () => {
 
 document.addEventListener('keydown', e => {
 
-    if(e.key === 'ArrowLeft'){
+    if (e.key === 'ArrowLeft') {
 
         goPrev();
 
-    }else if(e.key === 'ArrowRight'){
+    } else if (e.key === 'ArrowRight') {
 
         goNext();
 
-    }else if(e.key === ' '){
+    } else if (e.key === ' ') {
 
         e.preventDefault();
 
-        if(currentCard){
-
-            flip(currentCard);
-        }
+        flip(currentCard);
     }
 });
 
-// ================================
-// データ取得
-// ================================
+/* --- FastAPIから取得 --- */
+async function fetchAnimals() {
 
-async function fetchAnimals(){
-
-    try{
+    try {
 
         let data = [];
 
-        // localStorage登録データ
-
+        /* --- localStorage から取得 --- */
         const localData =
             localStorage.getItem("animalData");
 
-        if(localData){
+        if (localData) {
 
             const parsed = JSON.parse(localData);
-
             data.push({
 
                 uuid: "local-" + Date.now(),
@@ -397,22 +393,31 @@ async function fetchAnimals(){
 
         const response = await fetch(API_GET_URL);
 
-        if(response.ok){
+        if (response.ok) {
 
             const apiData = await response.json();
-
             data = data.concat(apiData);
         }
 
         profiles = data;
-
         words = formatDataForDisplay(data);
 
-        renderInitial();
+        if (words.length > 0) {
 
-    }catch(error){
+            renderInitial();
 
-        console.error(error);
+        } else {
+
+            viewer.innerHTML =
+                "<p>登録されている動物がいません。</p>";
+        }
+
+    } catch (error) {
+
+        console.error("Error:", error);
+
+        viewer.innerHTML =
+            "<p>データ取得に失敗しました。</p>";
     }
 }
 

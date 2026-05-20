@@ -12,6 +12,7 @@ from pathlib import Path
 from fastapi.responses import FileResponse
 
 SAVE_FILE_PATH = "save.json"
+FAVORITES_FILE_PATH = "favorites.json"  # ★お気に入り保存用のファイルパス
 IMAGE_SAVE_DIR = "images"
 
 app = FastAPI()
@@ -24,17 +25,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- 1. リクエストモデルの修正 ---
+# --- 1. リクエストモデル ---
 class AddAnimalRequest(BaseModel):
     type: Literal['dog', 'cat']
     gender: Literal['male', 'female']
-    # JS側の変更に合わせて年齢・ヶ月は任意（Optional）にするか、
-    # JS側で必ず送るように構築する必要があります。
     age: Optional[int] = 0
     month: Optional[int] = 0
     name: str
     breed: str
-    birthday: str # date型だとフォーマットエラーになりやすいためstrで受け取るのが安全です
+    birthday: str 
     protect_day: str
     
     # 新しく追加されたフィールド
@@ -46,6 +45,29 @@ class AddAnimalRequest(BaseModel):
     bio: str
     image: str
 
+# ★お気に入り登録用のリクエストモデル
+class FavoriteRequest(BaseModel):
+    uuid: str
+
+# --- 共通ヘルパー関数：お気に入りデータの読み書き ---
+def load_favorites() -> List[str]:
+    if not os.path.exists(FAVORITES_FILE_PATH):
+        return []
+    try:
+        with open(FAVORITES_FILE_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+def save_favorites(favorites: List[str]):
+    try:
+        with open(FAVORITES_FILE_PATH, 'w', encoding='utf-8') as f:
+            json.dump(favorites, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Favorites write error: {e}")
+
+
+# --- 動物データ取得・追加エンドポイント ---
 @app.get("/animals")
 def get_animals():
     if not os.path.exists(SAVE_FILE_PATH):
@@ -67,7 +89,7 @@ def add_animal(request: AddAnimalRequest):
             except json.JSONDecodeError:
                 data = []
 
-    # --- 2. データのダンプと整形 ---
+    # データのダンプと整形
     new_entry = request.model_dump()
     new_entry['uuid'] = new_uuid
     
@@ -88,6 +110,42 @@ def add_animal(request: AddAnimalRequest):
 
     return {"message": "Success", "uuid": new_uuid}
 
+
+# --- ★新設：お気に入り（Favorites）関連エンドポイント ---
+
+# ①-1 お気に入りUUIDの一覧をまとめて取得 (GET /favorites) ★追加！
+@app.get("/favorites")
+def get_all_favorites():
+    return load_favorites()
+
+# ①-2 お気に入り状態の確認 (GET /favorites/{uuid})
+@app.get("/favorites/{uuid}")
+def check_favorite(uuid: str):
+    favorites = load_favorites()
+    is_favorite = uuid in favorites
+    return {"is_favorite": is_favorite}
+
+# ② お気に入り登録 (POST /favorites)
+@app.post("/favorites")
+def add_favorite(request: FavoriteRequest):
+    favorites = load_favorites()
+    if request.uuid not in favorites:
+        favorites.append(request.uuid)
+        save_favorites(favorites)
+    return {"status": "success", "message": "Registered"}
+
+# ③ お気に入り解除 (DELETE /favorites/{uuid})
+@app.delete("/favorites/{uuid}")
+def remove_favorite(uuid: str):
+    favorites = load_favorites()
+    if uuid in favorites:
+        favorites.remove(uuid)
+        save_favorites(favorites)
+        return {"status": "success", "message": "Deleted"}
+    raise HTTPException(status_code=404, detail="UUID not found in favorites")
+
+
+# --- 静的ファイル配信関連 ---
 BASE_DIR = Path(__file__).resolve().parent
 FRONT_DIR = BASE_DIR / "front"
 
