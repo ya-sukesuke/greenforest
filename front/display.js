@@ -59,12 +59,10 @@ function makeCard(item, pos){
   c.className = 'card ' + (pos || '');
   const img = document.createElement('img');
   img.className = 'photo';
-  // FastAPIから返されるデータにはBase64文字列がそのまま含まれることを想定
   img.src = item.photo; 
   img.alt = escapeHtml(item.kind);
 
   img.onerror = () => {
-    // 画像データが無効または読み込み失敗の場合の代替表示
     img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="16"%3E画像なし%3C/text%3E%3C/svg%3E';
   };
 
@@ -77,7 +75,6 @@ function makeCard(item, pos){
   idDiv.textContent = `UUID: ${escapeHtml(String(item.id))}`;
   frontDiv.appendChild(idDiv);
 
-  // 画像（ID の下に配置）
   frontDiv.appendChild(img);
 
   // 種類と品種
@@ -90,6 +87,7 @@ function makeCard(item, pos){
   breedDiv.className = 'breed';
   breedDiv.textContent = escapeHtml(item.breed || '');
   frontDiv.appendChild(breedDiv);
+
   const backDiv = document.createElement('div');
   backDiv.className = 'inner back';
   backDiv.innerHTML = `<div class="plf">${escapeHtml(item.plf).replace(/\n/g, "<br>")}</div>`;
@@ -103,36 +101,14 @@ function makeCard(item, pos){
 
 /* --- プロフィール保存関数(お気に入り登録 / 解除のトグル) --- */
 function toggleFavorite(profile) {
-<<<<<<< HEAD
-
-    // UUID配列取得
-    let favorites = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
-
-    // UUID一致確認
-    const favoriteIndex = favorites.indexOf(profile.uuid);
-
-    if (favoriteIndex === -1) {
-
-        // 登録
-        favorites.push(profile.uuid);
-
-        saveBtn.classList.add('active');
-
-    } else {
-
-        // 削除
-        favorites.splice(favoriteIndex, 1);
-
-        saveBtn.classList.remove('active');
-=======
     // ローカルストレージから uuid の配列を取得（なければ空配列）
     let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
     
-    // 【修正】配列内に現在の動物の uuid が含まれているかチェック
-    const index = GoodProfiles.indexOf(profile.uuid);
+    // 配列内に現在の動物の uuid が含まれているかチェック
+    const favoriteIndex = GoodProfiles.indexOf(profile.uuid);
     
-    if (index === -1) {
-        // 【1回目：未登録の場合】
+    if (favoriteIndex === -1) {
+        // 【登録されていない場合】
         // ① 配列に uuid だけを追加してローカルストレージに保存
         GoodProfiles.push(profile.uuid);
         localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
@@ -143,9 +119,9 @@ function toggleFavorite(profile) {
         // ③ アラートを出す
         alert("登録しました");
     } else {
-        // 【2回目：登録済の場合】
+        // 【すでに登録されている場合】
         // ① 配列から該当の uuid を削除してローカルストレージに保存
-        GoodProfiles.splice(index, 1);
+        GoodProfiles.splice(favoriteIndex, 1);
         localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
         
         // ② 色を元に戻す（activeクラスを除去）
@@ -153,106 +129,25 @@ function toggleFavorite(profile) {
         
         // ③ アラートを出す
         alert("削除されました");
->>>>>>> c652e587edf1a54fcdda22c9d09110cf17cd4ea5
     }
-
-    localStorage.setItem(
-        "GoodProfiles",
-        JSON.stringify(favorites)
-    );
 }
 
 /* --- カード切り替え時や初期表示時に、保存状態に合わせてボタンの色を維持する関数 --- */
 function updateSaveButtonState() {
-
     if (!profiles || !profiles[index]) return;
 
     const currentProfileData = profiles[index];
-<<<<<<< HEAD
-
-    let favorites = JSON.parse(
-        localStorage.getItem("GoodProfiles")
-    ) || [];
-
-    const isSaved = favorites.includes(currentProfileData.uuid);
-
-    if (isSaved) {
-        saveBtn.classList.add('active');
-=======
     let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
     
-    // 【修正】ローカルストレージの配列に現在の uuid が含まれているか確認
+    // ローカルストレージの配列に現在の uuid が含まれているか確認
     const isSaved = GoodProfiles.includes(currentProfileData.uuid);
     
     if (isSaved) {
         saveBtn.classList.add('active');    // uuidがあれば色を反転したままにする
->>>>>>> c652e587edf1a54fcdda22c9d09110cf17cd4ea5
     } else {
-        saveBtn.classList.remove('active');
+        saveBtn.classList.remove('active'); // なければ元の色にする
     }
 }
-
-/* --- 【重要】お気に入りボタンのクリックイベント --- */
-saveBtn.addEventListener('click', () => {
-    if (!profiles || !profiles[index]) return;
-    
-    // 現在表示されている動物のデータを取得
-    const currentProfileData = profiles[index];
-    
-    // 登録・解除の切り替え処理を実行
-    toggleFavorite(currentProfileData);
-});
-
-/* --- 既存のカード切り替え関数 (changeCard) の末尾を修正 --- */
-function changeCard(newIndex, outClass, inClass){
-  isAnimating = true;
-  const newCard = makeCard(words[newIndex], inClass);
-
-  requestAnimationFrame(()=>{
-    currentCard.classList.add(outClass);
-    viewer.appendChild(newCard);
-    newCard.classList.add('enter');
-  });
-
-  setTimeout(()=>{
-    currentCard.remove();
-    newCard.classList.remove(inClass,'enter');
-    newCard.classList.add('current');
-    currentCard = newCard;
-    index = newIndex;
-    isAnimating = false;
-    updateButtons();
-    
-    // ★カードが切り替わった時に状態をチェック
-    updateSaveButtonState();
-  }, 520);
-}
-
-/* --- 既存の初期表示関数 (renderInitial) の末尾を修正 --- */
-function renderInitial(){
-    if (words.length === 0) return;
-    
-    viewer.innerHTML = "";
-    const card = makeCard(words[index]);
-    card.classList.add('current','enter');
-    viewer.appendChild(card);
-    currentCard = card;
-    updateButtons();
-    
-    // ★最初の1枚目を表示した時にも状態をチェック
-    updateSaveButtonState();
-}
-
-/* --- 【重要】お気に入りボタンのクリックイベント（ここを丸ごと差し替え） --- */
-saveBtn.addEventListener('click', () => {
-    if (!profiles || !profiles[index]) return;
-    
-    // 現在表示されている動物のデータを取得
-    const currentProfileData = profiles[index];
-    
-    // 登録・解除の切り替え処理を実行（この中で色反転・アラート・保存がすべて完結します）
-    toggleFavorite(currentProfileData);
-});
 
 /* --- FastAPIからデータを取得し、レンダリングするメイン関数 --- */
 async function fetchAnimals() {
@@ -302,6 +197,9 @@ function renderInitial(){
     viewer.appendChild(card);
     currentCard = card;
     updateButtons();
+    
+    // 最初の1枚目を表示した時にお気に入り状態をチェック
+    updateSaveButtonState();
 }
 
 /* --- 次へ --- */
@@ -317,7 +215,6 @@ function goNext(){
 
 /* --- 前へ --- */
 function goPrev(){
-  // 修正: 最後の要素から逆順にループできるようにする
   if(isAnimating) return;
     
   if(index <= 0){
@@ -334,15 +231,12 @@ function changeCard(newIndex, outClass, inClass){
   const newCard = makeCard(words[newIndex], inClass);
 
   requestAnimationFrame(()=>{
-    // 既存のカードをアニメーション用にクラスを追加
     currentCard.classList.add(outClass);
-    // 新しいカードを一時的に追加
     viewer.appendChild(newCard);
     newCard.classList.add('enter');
   });
 
   setTimeout(()=>{
-    // 古いカードを削除
     currentCard.remove();
     
     newCard.classList.remove(inClass,'enter');
@@ -351,6 +245,9 @@ function changeCard(newIndex, outClass, inClass){
     index = newIndex;
     isAnimating = false;
     updateButtons();
+
+    // カードが切り替わった時にお気に入り状態をチェック
+    updateSaveButtonState();
   }, 520);
 }
 
@@ -361,9 +258,19 @@ function flip(card){
 
 /* --- ボタン更新 --- */
 function updateButtons(){
-  // 前へのボタンは、ループ処理にしたため無効化の必要なし
-  // prevBtn.disabled = (index === 0);
+  // ループ処理のため無効化の必要なし
 }
+
+/* --- お気に入りボタンのクリックイベント --- */
+saveBtn.addEventListener('click', () => {
+    if (!profiles || !profiles[index]) return;
+    
+    // 現在表示されている動物のデータを取得
+    const currentProfileData = profiles[index];
+    
+    // 登録・解除の切り替え処理を実行
+    toggleFavorite(currentProfileData);
+});
 
 /* --- イベント --- */
 nextBtn.addEventListener('click', goNext);
@@ -379,7 +286,6 @@ document.addEventListener('keydown', e=>{
     flip(currentCard);
   }
 });
-
 
 // アプリケーション起動時にデータを取得してレンダリングを開始
 fetchAnimals();
