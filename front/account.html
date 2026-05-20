@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <!--ヘッダーを読み込む-->
+
+  <link rel="stylesheet" href="header_style.css">
+
+    <!--ヘッダーを読み込む-->
+
+</head>
+<body>
+
+    <!--ヘッダーを読み込む-->
+
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <!--ヘッダーを読み込む-->
+    
+    <script src="display.js"></script>
+</body>
+</html>
