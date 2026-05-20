@@ -127,3 +127,20 @@ body {
     white-space: pre-wrap;
     text-align: left;
 }
+
+.saveBtn:hover {
+    transform: scale(1.05);
+}
+
+/* --- 【ボタンが押された状態】色が反転する（赤背景に白文字） --- */
+.saveBtn.active {
+    background-color: #ff4b5c; /* 反転時の背景：赤 */
+    color: #ffffff;            /* 反転時のハート：白 */
+}
+
+/* 押し心地を良くするためのポップアップアニメーション */
+@keyframes heartPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
