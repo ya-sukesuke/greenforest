@@ -17,20 +17,12 @@ function escapeHtml(s){
 
 /* =========================
    ★修正：サーバーからお気に入りUUID一覧をまとめて取得する関数
-   （全動物のチェックに使うため、サーバー側の全お気に入りリストを取得します）
 ========================= */
 async function getFavoriteUUIDsFromServer() {
     try {
-        // server.pyに追加したお気に入りデータから、現在登録されているすべてのUUIDを引っ張るために、
-        // 全動物をループするか、直接お気に入り一覧が取れるエンドポイントを叩きます。
-        // ここでは、各動物が登録されているか調べるために一度サーバー側の「お気に入り一覧」を
-        // 取得するAPIとして `API_FAVORITE_URL` をGETで叩けるか、もしくは
-        // allAnimalsを回して個別にチェックするかですが、効率化のため、
-        // server.py側に全お気に入りリストを返すAPI（GET /favorites）を想定します。
-        
         const response = await fetch(API_FAVORITE_URL);
         if (response.ok) {
-            // 例: ["uuid1", "uuid2"] のような配列が返ってくる想定
+            // サーバーから ["uuid1", "uuid2"] 形式の配列を取得
             return await response.json(); 
         }
         return [];
@@ -52,7 +44,7 @@ async function removeFavorite(uuid){
 
         if (response.ok) {
             alert("削除されました");
-            // 削除が成功したら画面を再描画
+            // 削除が成功したら、画面上の該当カードを再描画（リロードなしで反映）
             renderFavorites();
         } else {
             alert("削除に失敗しました");
@@ -108,7 +100,7 @@ ${escapeHtml(profile.bio || "")}
 async function renderFavorites(){
     favoriteContainer.innerHTML = "";
 
-    // サーバーからお気に入りUUID一覧を取得
+    // 1. サーバーからお気に入り登録されているUUID一覧を取得
     const favoriteUUIDs = await getFavoriteUUIDsFromServer();
 
     if(!favoriteUUIDs || favoriteUUIDs.length === 0){
@@ -116,14 +108,12 @@ async function renderFavorites(){
         return;
     }
 
-    emptyMessage.style.display = "none";
-
     try {
-        // すべての動物データを取得
+        // 2. すべての動物データをサーバーから取得
         const response = await fetch(API_GET_URL);
         const allAnimals = await response.json();
 
-        // サーバーから取得したUUID一覧に含まれる動物だけを抽出
+        // 3. 全データの中から、お気に入りUUIDが含まれている動物だけをフィルタリング
         const favoriteAnimals = allAnimals.filter(animal =>
             favoriteUUIDs.includes(animal.uuid)
         );
@@ -133,14 +123,17 @@ async function renderFavorites(){
             return;
         }
 
-        // カードを生成して画面に追加
+        emptyMessage.style.display = "none";
+
+        // 4. マッチした動物のカードを画面に生成
         favoriteAnimals.forEach(profile => {
             const card = createCard(profile);
             favoriteContainer.appendChild(card);
         });
 
     } catch(error){
-        console.error(error);
+        console.error("データの描画中にエラーが発生しました:", error);
+        emptyMessage.style.display = "block";
     }
 }
 

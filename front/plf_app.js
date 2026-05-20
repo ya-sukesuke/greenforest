@@ -10,7 +10,7 @@ function toBase64(file) {
     });
 }
 
-// --- ここからが「3.」のメイン部分 ---
+// --- メインアプリ初期化 ---
 async function initApp() {
     console.log("アプリ初期化開始...");
 
@@ -32,8 +32,6 @@ async function initApp() {
 
     console.log("要素を検出しました。セットアップを開始します。");
     alert("JavaScriptが正常に起動しました！"); // 動作確認用
-
-    // --- 以降、これまでのセットアップ処理をここにまとめる ---
 
     const imgInput = document.getElementById("imgInput");
     const imgPreview = document.getElementById("imgPreview");
@@ -76,13 +74,16 @@ async function initApp() {
             const file = imgInput.files[0];
             if (!file) throw new Error("画像を選択してください");
 
+            // サーバー(server.py)のAddAnimalRequestモデルの要求定義に完全準拠したデータ構造
             const payload = {
                 type: document.querySelector('input[name="type"]:checked').value,
                 gender: document.querySelector('input[name="gender"]:checked').value,
-                sterilization: document.querySelector('input[name="sterilization"]:checked').value,
+                
+                // 【修正】キー名を server.py に合わせて operated に変更
+                operated: document.querySelector('input[name="sterilization"]:checked').value === "done" ? "done" : "not_done",
 
-                age: parseInt(ageSelect.value),
-                month: parseInt(monthSelect.value),
+                age: parseInt(ageSelect.value) || 0,
+                month: parseInt(monthSelect.value) || 0,
 
                 name: document.getElementById("Name").value,
                 breed: document.getElementById("Breed").value,
@@ -90,24 +91,24 @@ async function initApp() {
                 birthday: document.getElementById("birthday").value,
                 protect_day: document.getElementById("ProtectDay").value,
 
-                tension: document.getElementById("tensionRange").value,
+                // 【修正】文字列ではなく整数(int)として送信するために parseInt を実行
+                tension: parseInt(document.getElementById("tensionRange").value) || 3,
+                
                 bio: document.getElementById("meBio").value,
 
                 diseases: [
-                ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
+                    ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
                 ].map(cb => {
-                if (cb.value === "other") {
-                    return document.getElementById("otherDiseaseInput").value;
-                }
-                return cb.value === "fiv" ? "エイズ" : "白血病";
+                    if (cb.value === "other") {
+                        return document.getElementById("otherDiseaseInput").value;
+                    }
+                    return cb.value === "fiv" ? "エイズ" : "白血病";
                 }),
 
                 image: await toBase64(file)
             };
 
-            // display.html 用に保存
-            localStorage.setItem("animalData", JSON.stringify(payload));
-
+            // サーバーにデータを送信
             const res = await fetch(API_POST_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -115,7 +116,9 @@ async function initApp() {
             });
 
             if (res.ok) {
-                alert("登録が完了しました！");
+                const resultData = await res.json();
+                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取る
+                alert(`登録が完了しました！\nUUID: ${resultData.uuid}`);
                 location.reload();
             } else {
                 const err = await res.json();
@@ -130,5 +133,5 @@ async function initApp() {
     });
 }
 
-// 最後にこの関数を呼び出す
+// アプリケーションの起動
 initApp();

@@ -113,7 +113,12 @@ def add_animal(request: AddAnimalRequest):
 
 # --- ★新設：お気に入り（Favorites）関連エンドポイント ---
 
-# ① お気に入り状態の確認 (GET /favorites/{uuid})
+# ①-1 お気に入りUUIDの一覧をまとめて取得 (GET /favorites) ★追加！
+@app.get("/favorites")
+def get_all_favorites():
+    return load_favorites()
+
+# ①-2 お気に入り状態の確認 (GET /favorites/{uuid})
 @app.get("/favorites/{uuid}")
 def check_favorite(uuid: str):
     favorites = load_favorites()
