@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!--ヘッダーを読み込む-->
+    <!-- ヘッダー -->
+    <link rel="stylesheet" href="header_style.css">
 
-  <link rel="stylesheet" href="header_style.css">
+    <!-- お気に入りページCSS -->
+    <link rel="stylesheet" href="account_style.css">
 
-    <!--ヘッダーを読み込む-->
-
+    <title>お気に入り一覧</title>
 </head>
+
 <body>
 
-    <!--ヘッダーを読み込む-->
-
+    <!-- ヘッダー -->
     <div id="header-placeholder"></div>
+
     <script>
         fetch('header.html')
         .then(response => response.text())
@@ -22,8 +26,22 @@
         });
     </script>
 
-    <!--ヘッダーを読み込む-->
-    
-    <script src="display.js"></script>
+    <!-- メイン -->
+    <main class="favorite-page">
+
+        <h1 class="page-title">お気に入り一覧</h1>
+
+        <div id="favoriteContainer" class="favorite-grid">
+            <!-- JSでカード生成 -->
+        </div>
+
+        <div id="emptyMessage" class="empty-message">
+            お気に入り登録された動物がいません。
+        </div>
+
+    </main>
+
+    <script src="account.js"></script>
+
 </body>
 </html>
