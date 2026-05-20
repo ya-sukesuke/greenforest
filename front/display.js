@@ -132,6 +132,39 @@ function toggleFavorite(profile) {
     }
 }
 
+/* --- プロフィール保存関数(お気に入り登録 / 解除のトグル) --- */
+function toggleFavorite(profile) {
+    // ローカルストレージから uuid の配列を取得（なければ空配列）
+    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+    
+    // 【修正】配列内に現在の動物の uuid が含まれているかチェック
+    const index = GoodProfiles.indexOf(profile.uuid);
+    
+    if (index === -1) {
+        // 【1回目：未登録の場合】
+        // ① 配列に uuid だけを追加してローカルストレージに保存
+        GoodProfiles.push(profile.uuid);
+        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+        
+        // ② ボックスの色を反転（activeクラスを付与）
+        saveBtn.classList.add('active');
+        
+        // ③ アラートを出す
+        alert("登録しました");
+    } else {
+        // 【2回目：登録済の場合】
+        // ① 配列から該当の uuid を削除してローカルストレージに保存
+        GoodProfiles.splice(index, 1);
+        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
+        
+        // ② 色を元に戻す（activeクラスを除去）
+        saveBtn.classList.remove('active');
+        
+        // ③ アラートを出す
+        alert("削除されました");
+    }
+}
+
 /* --- カード切り替え時や初期表示時に、保存状態に合わせてボタンの色を維持する関数 --- */
 function updateSaveButtonState() {
     if (!profiles || !profiles[index]) return;
@@ -139,15 +172,26 @@ function updateSaveButtonState() {
     const currentProfileData = profiles[index];
     let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
     
-    // 現在の動物がすでにローカルストレージにあるか確認
-    const isSaved = GoodProfiles.some(p => p.name === currentProfileData.name);
+    // 【修正】ローカルストレージの配列に現在の uuid が含まれているか確認
+    const isSaved = GoodProfiles.includes(currentProfileData.uuid);
     
     if (isSaved) {
-        saveBtn.classList.add('active');    // 保存されていれば色を反転したままにする
+        saveBtn.classList.add('active');    // uuidがあれば色を反転したままにする
     } else {
         saveBtn.classList.remove('active'); // なければ元の色にする
     }
 }
+
+/* --- 【重要】お気に入りボタンのクリックイベント --- */
+saveBtn.addEventListener('click', () => {
+    if (!profiles || !profiles[index]) return;
+    
+    // 現在表示されている動物のデータを取得
+    const currentProfileData = profiles[index];
+    
+    // 登録・解除の切り替え処理を実行
+    toggleFavorite(currentProfileData);
+});
 
 /* --- 既存のカード切り替え関数 (changeCard) の末尾を修正 --- */
 function changeCard(newIndex, outClass, inClass){
