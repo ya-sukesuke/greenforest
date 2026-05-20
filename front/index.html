@@ -30,9 +30,6 @@
     <main>
       <div id="main"></div>
     </main>
-    <footer>
-      <div id="footer"></div>
-    </footer>
 
     <script>
       fetch("header.html")
@@ -41,11 +38,6 @@
           document.getElementById("header").innerHTML = html;
         })
       
-      fetch("footer.html")
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("footer").innerHTML = html;
-        })
     </script>
     <script src="/plf_app.js" defer></script>
 </body>
