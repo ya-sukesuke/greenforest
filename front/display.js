@@ -100,37 +100,6 @@ function makeCard(item, pos){
   return c;
 }
 
-/* --- お気に入り登録・解除を切り替えるメイン関数 --- */
-function toggleFavorite(profile) {
-    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
-    
-    // すでに保存されているか「名前」でチェック
-    const index = GoodProfiles.findIndex(p => p.name === profile.name);
-    
-    if (index === -1) {
-        // 【1回目：登録されていない場合】
-        // ① ローカルストレージに保存する
-        GoodProfiles.push(profile);
-        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
-        
-        // ② ボックスの色を反転する（activeクラスをつける）
-        saveBtn.classList.add('active');
-        
-        // ③ アラートを出す
-        //alert("登録しました");
-    } else {
-        // 【2回目（もう一度押された場合）：すでに登録されている場合】
-        // ① ローカルストレージから削除する
-        GoodProfiles.splice(index, 1);
-        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
-        
-        // ② 色を元に戻す（activeクラスを外す）
-        saveBtn.classList.remove('active');
-        
-        // ③ アラートを出す
-        //alert("削除されました");
-    }
-}
 
 /* --- プロフィール保存関数(お気に入り登録 / 解除のトグル) --- */
 function toggleFavorite(profile) {
