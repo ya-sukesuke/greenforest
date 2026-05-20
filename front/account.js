@@ -1,3 +1,5 @@
+const API_GET_URL = "/animals";
+
 const favoriteContainer = document.getElementById("favoriteContainer");
 const emptyMessage = document.getElementById("emptyMessage");
 
@@ -6,6 +8,7 @@ const emptyMessage = document.getElementById("emptyMessage");
 ========================= */
 
 function escapeHtml(s){
+
     if(!s) return '';
 
     return s.replace(/&/g,'&amp;')
@@ -15,23 +18,46 @@ function escapeHtml(s){
 }
 
 /* =========================
-   お気に入り取得
+   UUID一覧取得
 ========================= */
 
-function getFavorites(){
-    return JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+function getFavoriteUUIDs(){
+
+    return JSON.parse(
+        localStorage.getItem("GoodProfiles")
+    ) || [];
+}
+
+/* =========================
+   お気に入り解除
+========================= */
+
+function removeFavorite(uuid){
+
+    let favorites = getFavoriteUUIDs();
+
+    favorites = favorites.filter(id => id !== uuid);
+
+    localStorage.setItem(
+        "GoodProfiles",
+        JSON.stringify(favorites)
+    );
+
+    renderFavorites();
 }
 
 /* =========================
    カード生成
 ========================= */
 
-function createCard(profile, index){
+function createCard(profile){
 
     const card = document.createElement("div");
+
     card.className = "favorite-card";
 
     card.innerHTML = `
+
         <img class="favorite-image"
              src="${profile.image}"
              alt="animal image">
@@ -47,6 +73,7 @@ function createCard(profile, index){
             </div>
 
             <div class="favorite-profile">
+
 【名前】${escapeHtml(profile.name || "")}
 
 【性別】${profile.gender === "male" ? "男の子" : "女の子"}
@@ -55,6 +82,7 @@ function createCard(profile, index){
 
 【紹介文】
 ${escapeHtml(profile.bio || "")}
+
             </div>
 
         </div>
@@ -64,24 +92,12 @@ ${escapeHtml(profile.bio || "")}
         </button>
     `;
 
-    /* =========================
-       削除処理
-    ========================= */
-
     const removeBtn = card.querySelector(".remove-btn");
 
     removeBtn.addEventListener("click", () => {
 
-        let favorites = getFavorites();
+        removeFavorite(profile.uuid);
 
-        favorites.splice(index, 1);
-
-        localStorage.setItem(
-            "GoodProfiles",
-            JSON.stringify(favorites)
-        );
-
-        renderFavorites();
     });
 
     return card;
@@ -91,13 +107,13 @@ ${escapeHtml(profile.bio || "")}
    描画
 ========================= */
 
-function renderFavorites(){
+async function renderFavorites(){
 
     favoriteContainer.innerHTML = "";
 
-    const favorites = getFavorites();
+    const favoriteUUIDs = getFavoriteUUIDs();
 
-    if(favorites.length === 0){
+    if(favoriteUUIDs.length === 0){
 
         emptyMessage.style.display = "block";
         return;
@@ -105,13 +121,29 @@ function renderFavorites(){
 
     emptyMessage.style.display = "none";
 
-    favorites.forEach((profile, index) => {
+    try {
 
-        const card = createCard(profile, index);
+        const response = await fetch(API_GET_URL);
 
-        favoriteContainer.appendChild(card);
+        const allAnimals = await response.json();
 
-    });
+        // UUID一致だけ抽出
+        const favoriteAnimals = allAnimals.filter(animal =>
+            favoriteUUIDs.includes(animal.uuid)
+        );
+
+        favoriteAnimals.forEach(profile => {
+
+            const card = createCard(profile);
+
+            favoriteContainer.appendChild(card);
+
+        });
+
+    } catch(error){
+
+        console.error(error);
+    }
 }
 
 /* =========================

@@ -102,50 +102,51 @@ function makeCard(item, pos){
 
 /* --- お気に入り登録・解除を切り替えるメイン関数 --- */
 function toggleFavorite(profile) {
-    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
-    
-    // すでに保存されているか「名前」でチェック
-    const index = GoodProfiles.findIndex(p => p.name === profile.name);
-    
-    if (index === -1) {
-        // 【1回目：登録されていない場合】
-        // ① ローカルストレージに保存する
-        GoodProfiles.push(profile);
-        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
-        
-        // ② ボックスの色を反転する（activeクラスをつける）
+
+    // UUID配列取得
+    let favorites = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
+
+    // UUID一致確認
+    const favoriteIndex = favorites.indexOf(profile.uuid);
+
+    if (favoriteIndex === -1) {
+
+        // 登録
+        favorites.push(profile.uuid);
+
         saveBtn.classList.add('active');
-        
-        // ③ アラートを出す
-        //alert("登録しました");
+
     } else {
-        // 【2回目（もう一度押された場合）：すでに登録されている場合】
-        // ① ローカルストレージから削除する
-        GoodProfiles.splice(index, 1);
-        localStorage.setItem("GoodProfiles", JSON.stringify(GoodProfiles));
-        
-        // ② 色を元に戻す（activeクラスを外す）
+
+        // 削除
+        favorites.splice(favoriteIndex, 1);
+
         saveBtn.classList.remove('active');
-        
-        // ③ アラートを出す
-        //alert("削除されました");
     }
+
+    localStorage.setItem(
+        "GoodProfiles",
+        JSON.stringify(favorites)
+    );
 }
 
 /* --- カード切り替え時や初期表示時に、保存状態に合わせてボタンの色を維持する関数 --- */
 function updateSaveButtonState() {
+
     if (!profiles || !profiles[index]) return;
-    
+
     const currentProfileData = profiles[index];
-    let GoodProfiles = JSON.parse(localStorage.getItem("GoodProfiles")) || [];
-    
-    // 現在の動物がすでにローカルストレージにあるか確認
-    const isSaved = GoodProfiles.some(p => p.name === currentProfileData.name);
-    
+
+    let favorites = JSON.parse(
+        localStorage.getItem("GoodProfiles")
+    ) || [];
+
+    const isSaved = favorites.includes(currentProfileData.uuid);
+
     if (isSaved) {
-        saveBtn.classList.add('active');    // 保存されていれば色を反転したままにする
+        saveBtn.classList.add('active');
     } else {
-        saveBtn.classList.remove('active'); // なければ元の色にする
+        saveBtn.classList.remove('active');
     }
 }
 
@@ -315,13 +316,6 @@ function updateButtons(){
 nextBtn.addEventListener('click', goNext);
 prevBtn.addEventListener('click', goPrev);
 flipBtn.addEventListener('click', () => flip(currentCard));
-saveBtn.addEventListener('click', () => {
-    // 現在表示されているカードの元のデータを取得
-    const currentProfileData = profiles[index];
-    saveProfileData(currentProfileData);
-    saveBtn.classList.add('active'); // トグルではなく、一度アクティブにする
-    setTimeout(() => saveBtn.classList.remove('active'), 500); // 0.5秒後に戻す
-});
 
 /* --- キーボード操作 --- */
 document.addEventListener('keydown', e=>{
