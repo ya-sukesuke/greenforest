@@ -32,12 +32,15 @@ function formatDataForDisplay(data) {
     return data.map(p => ({
         id: p.uuid,
         photo: p.image,
+        // 前面で表示するために名前と年齢を個別に取り出す
+        name: p.name || "不明",
+        age: p.age || 0,
+        month: p.month || 0,
         kind: p.type === "dog" ? "犬" : "猫",
         breed: p.breed || "",
+        // plf は前面の名前・年齢を除いた詳細情報にする
         plf: `
-【名前】${p.name || "不明"}
 【性別】${p.gender === "male" ? "男の子" : "女の子"}
-【年齢】${p.age || 0}歳${p.month || 0}ヶ月
 【避妊・去勢】${p.sterilization === "done" ? "済" : "未"}
 【緊張度】${p.tension || "不明"}
 【病歴】${(p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし"}
@@ -67,27 +70,45 @@ function makeCard(item, pos = '') {
     const frontDiv = document.createElement('div');
     frontDiv.className = 'inner front';
 
-    const idDiv = document.createElement('div');
-    idDiv.className = 'id';
-    idDiv.textContent = `UUID: ${item.id}`;
-
-    frontDiv.appendChild(idDiv);
+    // 表面には名前と年齢のみ表示（画像は任意で表示）
     frontDiv.appendChild(img);
 
-    const kindDiv = document.createElement('div');
-    kindDiv.className = 'kind';
-    kindDiv.textContent = item.kind;
-    frontDiv.appendChild(kindDiv);
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'name';
+    nameDiv.textContent = item.name || '不明';
+    frontDiv.appendChild(nameDiv);
 
-    const breedDiv = document.createElement('div');
-    breedDiv.className = 'breed';
-    breedDiv.textContent = item.breed;
-    frontDiv.appendChild(breedDiv);
+    // 種類（犬／猫）を表面に表示
+    const kindFrontDiv = document.createElement('div');
+    kindFrontDiv.className = 'kind';
+    kindFrontDiv.textContent = item.kind;
+    frontDiv.appendChild(kindFrontDiv);
+
+    const ageDiv = document.createElement('div');
+    ageDiv.className = 'age';
+    ageDiv.textContent = `${item.age || 0}歳 ${item.month || 0}ヶ月`;
+    frontDiv.appendChild(ageDiv);
 
     /* --- 裏面 --- */
     const backDiv = document.createElement('div');
     backDiv.className = 'inner back';
-    backDiv.innerHTML = `<div class="plf">${escapeHtml(item.plf).replace(/\n/g, "<br>")}</div>`;
+
+    const idDivBack = document.createElement('div');
+    idDivBack.className = 'id';
+    idDivBack.textContent = `UUID: ${item.id}`;
+    backDiv.appendChild(idDivBack);
+
+    // 裏面の種類表示は不要になったため削除
+
+    const breedDivBack = document.createElement('div');
+    breedDivBack.className = 'breed';
+    breedDivBack.textContent = item.breed;
+    backDiv.appendChild(breedDivBack);
+
+    const plfDiv = document.createElement('div');
+    plfDiv.className = 'plf';
+    plfDiv.innerHTML = escapeHtml(item.plf).replace(/\n/g, "<br>");
+    backDiv.appendChild(plfDiv);
 
     c.appendChild(frontDiv);
     c.appendChild(backDiv);
@@ -119,9 +140,9 @@ async function toggleFavorite(profile) {
 
             if (response.ok) {
                 saveBtn.classList.add('active'); // 色を反転
-                alert("登録しました");
+                //alert("登録しました");
             } else {
-                alert("登録に失敗しました");
+                //alert("登録に失敗しました");
             }
         } else {
             /* --- 削除要求 (DELETE) --- */
@@ -131,9 +152,9 @@ async function toggleFavorite(profile) {
 
             if (response.ok) {
                 saveBtn.classList.remove('active'); // 色を戻す
-                alert("削除されました");
+                //alert("削除されました");
             } else {
-                alert("削除に失敗しました");
+                //alert("削除に失敗しました");
             }
         }
     } catch (error) {
