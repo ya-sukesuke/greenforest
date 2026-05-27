@@ -31,7 +31,6 @@ async function initApp() {
     }
 
     console.log("要素を検出しました。セットアップを開始します。");
-    alert("JavaScriptが正常に起動しました！"); // 動作確認用
 
     const imgInput = document.getElementById("imgInput");
     const imgPreview = document.getElementById("imgPreview");
@@ -117,8 +116,7 @@ async function initApp() {
 
             if (res.ok) {
                 const resultData = await res.json();
-                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取る
-                alert(`登録が完了しました！\nUUID: ${resultData.uuid}`);
+                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取
                 location.reload();
             } else {
                 const err = await res.json();
