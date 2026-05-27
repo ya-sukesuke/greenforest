@@ -42,7 +42,6 @@ function formatDataForDisplay(data) {
         month: p.month || 0,
         kind: p.type === "dog" ? "犬" : "猫",
         breed: p.breed || "",
-        // ★修正：p.sterilization を p.operated に修正して完全に一致させました
         plf: `
 【名前】${p.name || "不明"}
 【性別】${p.gender === "male" ? "男の子" : "女の子"}
@@ -53,7 +52,8 @@ function formatDataForDisplay(data) {
 【推定誕生日】${p.birthday || "不明"}
 【保護日】${p.protect_day || "不明"}
 【紹介文】${p.bio || ""}
-`.trim()
+`.trim(),
+        uuid: p.uuid || "不明"
     }));
 }
 
@@ -78,11 +78,6 @@ function makeCard(item, pos = '') {
         img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="16"%3E画像なし%3C/text%3E%3C/svg%3E';
     };
 
-    const idDiv = document.createElement('div');
-    idDiv.className = 'id';
-    idDiv.textContent = `UUID: ${item.id}`;
-
-    frontDiv.appendChild(idDiv);
     frontDiv.appendChild(img);
 
     const kindDiv = document.createElement('div');
@@ -100,7 +95,17 @@ function makeCard(item, pos = '') {
     // ============================
     const backDiv = document.createElement('div');
     backDiv.className = 'inner back';
-    backDiv.innerHTML = `<div class="plf">${escapeHtml(item.plf).replace(/\n/g, "<br>")}</div>`;
+
+    const plfDiv = document.createElement('div');
+    plfDiv.className = 'plf';
+    plfDiv.innerHTML = escapeHtml(item.plf).replace(/\n/g, "<br>");
+
+    const uuidDiv = document.createElement('div');
+    uuidDiv.className = 'uuid';
+    uuidDiv.textContent = `UUID: ${item.uuid}`;
+
+    backDiv.appendChild(plfDiv);
+    backDiv.appendChild(uuidDiv);
 
     /* --- カードに追加 --- */
     c.appendChild(frontDiv);
