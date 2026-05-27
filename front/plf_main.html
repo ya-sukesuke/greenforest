@@ -79,30 +79,35 @@
       <p class="disease-title">病歴</p>
 
       <div class="disease-row">
-        <label class="disease-option">
-          <input type="checkbox" value="fiv">
-          <span>エイズ</span>
-        </label>
-
-        <label class="disease-option">
-          <input type="checkbox" value="felv">
-          <span>白血病</span>
-        </label>
+        <label>エイズ</label>
+        <select id="disease_fiv">
+          <option value="none">なし</option>
+          <option value="treated">治療済み</option>
+          <option value="ongoing">闘病中</option>
+        </select>
       </div>
 
       <div class="disease-row">
-        <label class="disease-option">
-          <input type="checkbox" id="diseaseOther" value="other">
-          <span>その他</span>
-        </label>
-
-        <input
-          type="text"
-          id="otherDiseaseInput"
-          class="other-disease-input"
-          placeholder="病名を入力"
-        >
+        <label>白血病</label>
+        <select id="disease_felv">
+          <option value="none">なし</option>
+          <option value="treated">治療済み</option>
+          <option value="ongoing">闘病中</option>
+        </select>
       </div>
+
+      <div id="otherDiseaseContainer">
+        <div class="disease-row other-disease-row">
+          <input type="text" class="other-disease-input" placeholder="その他の病名">
+          <select class="other-disease-status">
+            <option value="none">なし</option>
+            <option value="treated">治療済み</option>
+            <option value="ongoing">闘病中</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="addOtherDisease" type="button">その他を追加</button>
     </div>
 
     <!-- 推定年齢 -->

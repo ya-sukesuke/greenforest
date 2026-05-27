@@ -36,6 +36,8 @@ async function initApp() {
     const imgPreview = document.getElementById("imgPreview");
     const ageSelect = document.getElementById("ageSelect");
     const monthSelect = document.getElementById("monthSelect");
+    const addOtherBtn = document.getElementById('addOtherDisease');
+    const otherContainer = document.getElementById('otherDiseaseContainer');
 
     // 1. 画像プレビューの設定
     if (imgInput && imgPreview) {
@@ -95,14 +97,33 @@ async function initApp() {
                 
                 bio: document.getElementById("meBio").value,
 
-                diseases: [
-                    ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
-                ].map(cb => {
-                    if (cb.value === "other") {
-                        return document.getElementById("otherDiseaseInput").value;
-                    }
-                    return cb.value === "fiv" ? "エイズ" : "白血病";
-                }),
+                diseases: (function(){
+                    const list = [];
+                    const statusLabel = v => v === 'treated' ? '治療済み' : (v === 'ongoing' ? '疾患中' : '');
+
+                    const fiv = document.getElementById('disease_fiv')?.value;
+                    if (fiv && fiv !== 'none') list.push(`エイズ (${statusLabel(fiv)})`);
+
+                    const felv = document.getElementById('disease_felv')?.value;
+                    if (felv && felv !== 'none') list.push(`白血病 (${statusLabel(felv)})`);
+
+                    document.querySelectorAll('.other-disease-row').forEach(row => {
+                        const nameInput = row.querySelector('.other-disease-input');
+                        const statusSelect = row.querySelector('.other-disease-status');
+                        if (!nameInput) return;
+                        const name = nameInput.value.trim();
+                        const st = statusSelect ? statusSelect.value : 'none';
+                        if (name) {
+                            if (st && st !== 'none') {
+                                list.push(`${name} (${statusLabel(st)})`);
+                            } else {
+                                list.push(name);
+                            }
+                        }
+                    });
+
+                    return list;
+                })(),
 
                 image: await toBase64(file)
             };
@@ -129,6 +150,27 @@ async function initApp() {
             saveBtn.textContent = "保存";
         }
     });
+
+    // その他を追加するハンドラ
+    if (addOtherBtn && otherContainer) {
+        addOtherBtn.addEventListener('click', () => {
+            const row = document.createElement('div');
+            row.className = 'disease-row other-disease-row';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'other-disease-input';
+            input.placeholder = 'その他の病名';
+
+            const select = document.createElement('select');
+            select.className = 'other-disease-status';
+            select.innerHTML = `\n                <option value="none">なし</option>\n                <option value="treated">治療済み</option>\n                <option value="ongoing">疾患中</option>\n            `;
+
+            row.appendChild(input);
+            row.appendChild(select);
+            otherContainer.appendChild(row);
+        });
+    }
 }
 
 // アプリケーションの起動

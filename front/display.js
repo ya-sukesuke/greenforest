@@ -80,6 +80,16 @@ function makeCard(item, pos = '') {
 
     frontDiv.appendChild(img);
 
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'name';
+    nameDiv.textContent = item.name;
+    frontDiv.appendChild(nameDiv);
+
+    const ageDiv = document.createElement('div');
+    ageDiv.className = 'age';
+    ageDiv.textContent = `${item.age}歳${item.month}ヶ月`;
+    frontDiv.appendChild(ageDiv);
+
     const kindDiv = document.createElement('div');
     kindDiv.className = 'kind';
     kindDiv.textContent = item.kind;
