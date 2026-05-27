@@ -44,6 +44,10 @@ function formatDataForDisplay(data) {
     return data.map(p => ({
         id: p.uuid,
         photo: p.image,
+        // 前面で表示するために名前と年齢を個別に取り出す
+        name: p.name || "不明",
+        age: p.age || 0,
+        month: p.month || 0,
         kind: p.type === "dog" ? "犬" : "猫",
 
         breed: p.breed || "",
