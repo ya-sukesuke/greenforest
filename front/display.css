@@ -27,14 +27,22 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
+
     display: flex;
     flex-direction: column;
+
     justify-content: center;
     align-items: center;
+
     padding: 20px;
+
     box-sizing: border-box;
+
     opacity: 1;
+
     transition: opacity 0.3s ease;
+
+    overflow: hidden;
 }
 
 .front {
@@ -45,6 +53,9 @@ body {
     background: #e0e0e0;
     opacity: 0;
     pointer-events: none;
+
+    overflow: hidden;
+    justify-content: flex-start;
 }
 
 .card.flipped .front {
@@ -125,5 +136,49 @@ body {
 
 .plf{
     white-space: pre-wrap;
-    text-align: left;
+
+    text-align: center;
+
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    line-height: 1.8;
+
+    padding: 0 10px;
+
+    scrollbar-gutter: stable;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.uuid {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #666;
+}
+
+.saveBtn:hover {
+    transform: scale(1.05);
+}
+
+/* --- 【ボタンが押された状態】色が反転する（赤背景に白文字） --- */
+.saveBtn.active {
+    background-color: #ff4b5c; /* 反転時の背景：赤 */
+    color: #ffffff;            /* 反転時のハート：白 */
+}
+
+/* 押し心地を良くするためのポップアップアニメーション */
+@keyframes heartPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
