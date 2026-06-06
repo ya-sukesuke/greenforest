@@ -1,45 +1,144 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="ja">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!--ヘッダーを読み込む-->
+```
+<!-- CSS -->
+<link rel="stylesheet" href="header_style.css">
+<link rel="stylesheet" href="display.css">
 
-  <link rel="stylesheet" href="header_style.css">
-  <link rel="stylesheet" href="display.css">
+<title>Green Forest</title>
 
-    <!--ヘッダーを読み込む-->
-
-  <style>
-    .text-1{
-        position: absolute;  
-        top: 50%;             
-        left: 50%;          
-        transform: translate(-50%, -50%); 
-        font-size: 24px;
-        color: black;
+<style>
+    body{
+        margin: 0;
+        padding-top: 80px;
+        background-color: #f5f5f5;
+        font-family: sans-serif;
     }
-  </style>
+
+    .hero{
+        text-align: center;
+        background: white;
+        padding: 80px 20px;
+    }
+
+    .hero h2{
+        color: #4CAF50;
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+
+    .hero p{
+        font-size: 18px;
+        line-height: 2;
+    }
+
+    .btn{
+        display: inline-block;
+        margin-top: 30px;
+        padding: 15px 30px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .btn:hover{
+        opacity: 0.9;
+    }
+
+    .content{
+        max-width: 1000px;
+        margin: 30px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+    }
+
+    .content h2{
+        color: #4CAF50;
+    }
+
+    footer{
+        margin-top: 50px;
+        text-align: center;
+        padding: 20px;
+        background-color: #4CAF50;
+        color: white;
+    }
+</style>
+```
 
 </head>
 
-
 <body>
-    <header>
-      <div id="header"></div>
-    </header>
-    <main>
-      <div id="main"></div>
-    </main>
 
-    <script>
-      fetch("header.html")
+```
+<!-- ヘッダー -->
+<header>
+    <div id="header"></div>
+</header>
+
+<!-- メイン -->
+<main>
+
+    <section class="hero">
+        <h2>保護動物との新しい出会いを</h2>
+
+        <p>
+            このサイトは保護犬・保護猫と<br>
+            新しい家族をつなぐマッチングサイトです。<br>
+            あなたを待っている動物たちを探してみましょう。
+        </p>
+
+        <a href="display.html" class="btn">
+            保護犬・保護猫を見る
+        </a>
+    </section>
+
+    <section class="content">
+        <h2>このサイトについて</h2>
+        <p>
+            Green Forest は保護犬・保護猫と里親希望者をつなぐためのサイトです。
+            動物たちに新しい家族との出会いを提供することを目的としています。
+        </p>
+    </section>
+
+    <section class="content">
+        <h2>保護犬・保護猫が生まれる背景</h2>
+        <p>
+            飼育放棄や迷子など様々な事情で保護される動物がいます。
+            一匹でも多くの命が幸せな家庭と出会えるよう支援しています。
+        </p>
+    </section>
+
+    <section class="content">
+        <h2>Green Forestについて</h2>
+        <p>
+            保護活動を支援し、人と動物のより良い出会いをサポートします。
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 Green Forest</p>
+</footer>
+
+<!-- ヘッダー読み込み -->
+<script>
+    fetch("header.html")
         .then(res => res.text())
         .then(html => {
-          document.getElementById("header").innerHTML = html;
-        })
-      
-    </script>
-    <script src="/plf_app.js" defer></script>
-</body>
+            document.getElementById("header").innerHTML = html;
+        });
+</script>
+```
 
+</body>
 </html>
