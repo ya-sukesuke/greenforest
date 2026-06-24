@@ -1,78 +1,95 @@
 <!DOCTYPE html>
-
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="header_style.css">
+    <link rel="stylesheet" href="home.css">
 
-<!-- CSS -->
-<link rel="stylesheet" href="header_style.css">
-<link rel="stylesheet" href="home.css">
+    <title>Green Forest</title>
+</head>
+
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div id="header"></div>
+    </header>
+
+    <!-- メイン -->
+    <main>
+
+        <section class="hero">
+
+            <h2>
+                きみと、あたらしい家族をつなぐ場所。
+            </h2>
+
+            <p>
+                やさしい出会いが、ここからはじまります。<br>
+                保護犬・保護猫と新しい家族をつなぐマッチングサイトです。
+            </p>
+
+            <a href="display.html" class="btn">
+                どうぶつをさがす
+            </a>
+
+        </section>
 
 
-<title>Green Forest</title>
+        <section class="content">
 
-<!-- ヘッダー -->
-<header>
-    <div id="header"></div>
-</header>
+            <h2>私たちの想い</h2>
 
-<!-- メイン -->
-<main>
+            <p>
+                Green Forest は保護犬・保護猫と里親希望者をつなぐためのサイトです。
+                動物たちに新しい家族との出会いを提供することを目的としています。
+            </p>
 
-    <section class="hero">
-        <h2>保護動物との新しい出会いを</h2>
+        </section>
 
-        <p>
-            このサイトは保護犬・保護猫と<br>
-            新しい家族をつなぐマッチングサイトです。<br>
-            あなたを待っている動物たちを探してみましょう。
-        </p>
 
-        <a href="display.html" class="btn">
-            保護犬・保護猫を見る
-        </a>
-    </section>
+        <section class="content">
 
-    <section class="content">
-        <h2>このサイトについて</h2>
-        <p>
-            Green Forest は保護犬・保護猫と里親希望者をつなぐためのサイトです。
-            動物たちに新しい家族との出会いを提供することを目的としています。
-        </p>
-    </section>
+            <h2>保護どうぶつが生まれる背景</h2>
 
-    <section class="content">
-        <h2>保護犬・保護猫が生まれる背景</h2>
-        <p>
-            飼育放棄や迷子など様々な事情で保護される動物がいます。
-            一匹でも多くの命が幸せな家庭と出会えるよう支援しています。
-        </p>
-    </section>
+            <p>
+                飼育放棄や迷子、多頭飼育崩壊など、
+                様々な事情で保護される動物たちがいます。
+            </p>
 
-    <section class="content">
-        <h2>Green Forestについて</h2>
-        <p>
-            保護活動を支援し、人と動物のより良い出会いをサポートします。
-        </p>
-    </section>
+        </section>
 
-</main>
 
-<footer>
-    <p>&copy; 2026 Green Forest</p>
-</footer>
+        <section class="content">
 
-<!-- ヘッダー読み込み -->
-<script>
-    fetch("header.html")
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById("header").innerHTML = html;
-        });
-</script>
+            <h2>Green Forest × 手と手の森 × 旭川高専</h2>
 
+            <p>
+                高専生による開発と、
+                保護団体との連携によって進められているプロジェクトです。
+            </p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Green Forest</p>
+    </footer>
+
+
+    <script>
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+            });
+    </script>
 
 </body>
+
 </html>

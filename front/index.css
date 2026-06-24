@@ -1,0 +1,63 @@
+
+/* 全体 */
+body{
+    background-color: #f8fbfd;
+    color: #333;
+}
+
+
+/* ヘッダー */
+.logo h1{
+    color: #3A8FB7;
+}
+
+nav a:hover{
+    color: #3A8FB7;
+}
+
+
+/* メインタイトル */
+.hero h2{
+    color: #3A8FB7;
+}
+
+
+/* ボタン */
+.button{
+    background-color: #3A8FB7;
+    color: white;
+}
+
+.button:hover{
+    background-color: #2F7598;
+}
+
+
+/* セクションタイトル */
+section h2{
+    color: #3A8FB7;
+}
+
+
+/* カード */
+.card h3{
+    color: #3A8FB7;
+}
+
+.card{
+    background-color: white;
+    border: 2px solid rgba(58,143,183,0.15);
+}
+
+
+/* 手と手の森 */
+.forest{
+    background-color: #EEF7FB;
+}
+
+
+/* フッター */
+footer{
+    background-color: #3A8FB7;
+    color: white;
+}
