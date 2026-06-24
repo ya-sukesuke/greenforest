@@ -1,0 +1,156 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #f7fbf7 0%, #eef6ef 100%);
+    color: #263238;
+    font-family: "Yu Gothic", sans-serif;
+}
+
+.page {
+    padding: 24px 16px 48px;
+}
+
+.intro {
+    max-width: 980px;
+    margin: 0 auto 20px;
+    text-align: center;
+}
+
+.intro h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #2f6f3e;
+}
+
+.intro p {
+    margin: 8px 0 0;
+    color: #55705b;
+}
+
+.scroll-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.scroll-viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.card {
+    perspective: 1000px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: min(300px, calc(100vw - 32px));
+    height: 400px;
+}
+
+.inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.front {
+    background: #f0f0f0;
+}
+
+.back {
+    background: #e0e0e0;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.card.flipped .front {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.card.flipped .back {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.photo {
+    max-width: 100%;
+    max-height: 85%;
+    margin-bottom: 6px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.kind,
+.breed,
+.plf {
+    text-align: center;
+    margin: 5px 0;
+}
+
+.breed {
+    margin-bottom: 0;
+}
+
+.plf {
+    white-space: pre-wrap;
+    text-align: left;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    line-height: 1.8;
+    padding: 0 10px;
+    scrollbar-gutter: stable;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.uuid {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #666;
+}
+
+.empty-state {
+    text-align: center;
+    color: #55705b;
+    padding: 40px 16px;
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 16px 12px 40px;
+    }
+
+    .intro h1 {
+        font-size: 1.6rem;
+    }
+
+    .scroll-viewer {
+        gap: 18px;
+    }
+
+    .card {
+        height: 380px;
+    }
+}
