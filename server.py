@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import Literal, List, Optional
+from typing import Literal, List, Optional, Union
 from datetime import date
 import uuid
 import os
@@ -29,7 +29,7 @@ app.add_middleware(
 class AddAnimalRequest(BaseModel):
     type: Literal['dog', 'cat']
     gender: Literal['male', 'female']
-    age: Optional[int] = 0
+    age: Union[str, int] = ""
     name: str
     coat_color: str
     

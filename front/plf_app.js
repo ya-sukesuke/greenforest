@@ -56,9 +56,11 @@ async function initApp() {
     // 2. セレクトボックスの生成
     if (ageSelect) {
         for (let i = 0; i <= 30; i++) {
-            ageSelect.add(new Option(`${i}歳`, i));
+            ageSelect.add(new Option(`${i}`, i));
         }
+        ageSelect.add(new Option('不詳', -1));
     }
+
     // 3. 保存ボタンのクリックイベント
     saveBtn.addEventListener("click", async () => {
         saveBtn.disabled = true;
@@ -71,11 +73,14 @@ async function initApp() {
             if (!file) throw new Error("画像を選択してください");
             if (!genderInput) throw new Error("性別を選択してください");
             if (!sterilizationInput) throw new Error("避妊・去勢を選択してください");
+            if (!ageSelect.value) throw new Error("年齢を選択してください");
+
+            const ageValue = ageSelect.value;
 
             const payload = {
                 type: document.querySelector('input[name="type"]:checked').value,
                 gender: genderInput.value,
-                age: parseInt(ageSelect.value) || 0,
+                age: ageValue,
 
                 name: document.getElementById("Name").value,
                 coat_color: coatColorInput ? coatColorInput.value : "",
