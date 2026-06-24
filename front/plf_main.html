@@ -31,7 +31,7 @@
 
     <!-- 基本情報 -->
     <input type="text" id="Name" placeholder="名前を入力">
-    <input type="text" id="Breed" placeholder="品種を入力">
+    <input type="text" id="CoatColor" placeholder="毛色を入力">
 
     <!-- 種別 -->
     <div class="type-group">
@@ -105,8 +105,8 @@
       </div>
     </div>
 
-    <!-- 推定年齢 -->
-    <label class="form-title">推定年齢</label>
+    <!-- 年齢 -->
+    <label class="form-title">年齢</label>
 
     <div class="age-group">
       <select id="ageSelect">
@@ -114,48 +114,11 @@
       </select>
       <span class="age-unit">歳</span>
 
-      <select id="monthSelect">
-        <!-- JSで 0〜12 を生成 -->
-      </select>
-      <span class="age-unit">ヵ月</span>
     </div>
 
-    <!-- 日付 -->
-    <label for="birthday" class="note form-title">推定誕生日</label>
-    <input type="date" id="birthday">
-
-    <label for="ProtectDay" class="note form-title">保護日</label>
-    <input type="date" id="ProtectDay">
-
-    <!-- 緊張度 -->
-    <div class="tension-group">
-      <label for="tensionRange" class="tension-title form-title">
-        緊張の度合い：<span id="tensionValue">3</span>
-      </label>
-
-      <input
-        type="range"
-        id="tensionRange"
-        min="1"
-        max="5"
-        step="1"
-        value="3"
-      >
-    <div class="tension-scale">
-    <div class="tension-label">
-        <span class="tension-num">1</span>
-        <span class="tension-text">パンチ・噛む</span>
-    </div>
-
-    <div class="tension-label">
-        <span class="tension-num">5</span>
-        <span class="tension-text">フレンドリー</span>
-    </div>
-    </div>
-    </div>
-
-    <!-- 紹介文 -->
-    <textarea id="meBio" placeholder="紹介文を入力してください"></textarea>
+    <!-- 性格 -->
+    <label class="form-title" for="personality">性格</label>
+    <textarea id="personality" placeholder="性格を入力してください"></textarea>
 
     <!-- 保存 -->
     <button id="saveProfile">保存</button>

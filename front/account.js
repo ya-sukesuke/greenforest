@@ -68,17 +68,20 @@ function createCard(profile){
              alt="animal image">
         <div class="favorite-content">
             <div class="favorite-kind">
-                ${profile.type === "dog" ? "犬" : "猫"}
+                ${escapeHtml(profile.name || "名前不明")}
             </div>
             <div class="favorite-breed">
-                ${escapeHtml(profile.breed || "種類不明")}
+                ${escapeHtml(profile.coat_color || profile.breed || "毛色不明")}
             </div>
             <div class="favorite-profile">
 【名前】${escapeHtml(profile.name || "")}
 【性別】${profile.gender === "male" ? "男の子" : "女の子"}
-【年齢】${profile.age || 0}歳 ${profile.month || 0}ヶ月
-【紹介文】
-${escapeHtml(profile.bio || "")}
+【年齢】${profile.age || 0}歳
+【避妊・去勢】${profile.sterilization === "done" || profile.operated === "done" ? "済" : "未"}
+【病気】
+${escapeHtml((profile.diseases && profile.diseases.length > 0) ? profile.diseases.join(" / ") : "特になし")}
+【性格】
+${escapeHtml(profile.personality || profile.bio || "")}
             </div>
         </div>
         <button class="remove-btn">

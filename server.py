@@ -30,19 +30,13 @@ class AddAnimalRequest(BaseModel):
     type: Literal['dog', 'cat']
     gender: Literal['male', 'female']
     age: Optional[int] = 0
-    month: Optional[int] = 0
     name: str
-    breed: str
-    birthday: str 
-    protect_day: str
+    coat_color: str
     
-    # 新しく追加されたフィールド
-    operated: Literal['done', 'not_done'] # 避妊・去勢
-    diseases: List[str]                  # 病歴（配列）
-    other_disease: Optional[str] = None  # その他病名
-    tension: int                         # 緊張度 (1-5)
-    
-    bio: str
+    sterilization: Literal['done', 'not_done']
+    diseases: List[str]
+    other_disease: Optional[str] = None
+    personality: str
     image: str
 
 # ★お気に入り登録用のリクエストモデル
