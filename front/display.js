@@ -39,19 +39,16 @@ function formatDataForDisplay(data) {
         photo: p.image,
         name: p.name || "不明",
         age: p.age || 0,
-        month: p.month || 0,
-        kind: p.type === "dog" ? "犬" : "猫",
-        breed: p.breed || "",
+        kind: p.type === "dog" ? "犬" : p.type === "cat" ? "猫" : "動物",
+        coatColor: p.coat_color || p.breed || "",
         plf: `
 【名前】${p.name || "不明"}
+【年齢】${p.age || 0}歳
 【性別】${p.gender === "male" ? "男の子" : "女の子"}
-【年齢】${p.age || 0}歳${p.month || 0}ヶ月
-【避妊・去勢】${p.operated === "done" ? "済" : "未"}
-【緊張度】${p.tension || "不明"}
+【毛色】${p.coat_color || p.breed || "不明"}
+【避妊・去勢】${p.sterilization === "done" || p.operated === "done" ? "済" : "未"}
 【病歴】${(p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし"}
-【推定誕生日】${p.birthday || "不明"}
-【保護日】${p.protect_day || "不明"}
-【紹介文】${p.bio || ""}
+【性格】${p.personality || p.bio || ""}
 `.trim(),
         uuid: p.uuid || "不明"
     }));
@@ -82,13 +79,13 @@ function makeCard(item, pos = '') {
 
     const kindDiv = document.createElement('div');
     kindDiv.className = 'kind';
-    kindDiv.textContent = item.kind;
+    kindDiv.textContent = item.name;
     frontDiv.appendChild(kindDiv);
 
-    const breedDiv = document.createElement('div');
-    breedDiv.className = 'breed';
-    breedDiv.textContent = item.breed;
-    frontDiv.appendChild(breedDiv);
+    const coatColorDiv = document.createElement('div');
+    coatColorDiv.className = 'breed';
+    coatColorDiv.textContent = `${item.age}歳`;
+    frontDiv.appendChild(coatColorDiv);
 
     // ============================
     // 裏

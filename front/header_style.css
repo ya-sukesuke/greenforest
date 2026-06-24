@@ -22,7 +22,8 @@
 /* ===== 左：ロゴ ===== */
 .header h1{
   margin: 0;
-  font-size: 24px;
+  width: 100%;
+  font-size: 2vw;
   font-family: "MS Mincho", sans-serif;
 }
 
@@ -30,7 +31,7 @@
 .header-center{
   grid-column: 2;
   text-align: center;
-  font-size: 20px;
+  font-size: 2vw;
 }
 
 /* ===== 右：nav（中身は使わない想定） ===== */

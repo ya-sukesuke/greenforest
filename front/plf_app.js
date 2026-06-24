@@ -35,7 +35,8 @@ async function initApp() {
     const imgInput = document.getElementById("imgInput");
     const imgPreview = document.getElementById("imgPreview");
     const ageSelect = document.getElementById("ageSelect");
-    const monthSelect = document.getElementById("monthSelect");
+    const coatColorInput = document.getElementById("CoatColor");
+    const personalityInput = document.getElementById("personality");
 
     // 1. 画像プレビューの設定
     if (imgInput && imgPreview) {
@@ -58,42 +59,27 @@ async function initApp() {
             ageSelect.add(new Option(`${i}歳`, i));
         }
     }
-    if (monthSelect) {
-        for (let i = 0; i <= 11; i++) {
-            monthSelect.add(new Option(`${i}ヶ月`, i));
-        }
-    }
-
     // 3. 保存ボタンのクリックイベント
     saveBtn.addEventListener("click", async () => {
         saveBtn.disabled = true;
         saveBtn.textContent = "送信中...";
 
         try {
-            const file = imgInput.files[0];
+            const genderInput = document.querySelector('input[name="gender"]:checked');
+            const sterilizationInput = document.querySelector('input[name="sterilization"]:checked');
+            const file = imgInput && imgInput.files ? imgInput.files[0] : null;
             if (!file) throw new Error("画像を選択してください");
+            if (!genderInput) throw new Error("性別を選択してください");
+            if (!sterilizationInput) throw new Error("避妊・去勢を選択してください");
 
-            // サーバー(server.py)のAddAnimalRequestモデルの要求定義に完全準拠したデータ構造
             const payload = {
                 type: document.querySelector('input[name="type"]:checked').value,
-                gender: document.querySelector('input[name="gender"]:checked').value,
-                
-                // 【修正】キー名を server.py に合わせて operated に変更
-                operated: document.querySelector('input[name="sterilization"]:checked').value === "done" ? "done" : "not_done",
-
+                gender: genderInput.value,
                 age: parseInt(ageSelect.value) || 0,
-                month: parseInt(monthSelect.value) || 0,
 
                 name: document.getElementById("Name").value,
-                breed: document.getElementById("Breed").value,
-
-                birthday: document.getElementById("birthday").value,
-                protect_day: document.getElementById("ProtectDay").value,
-
-                // 【修正】文字列ではなく整数(int)として送信するために parseInt を実行
-                tension: parseInt(document.getElementById("tensionRange").value) || 3,
-                
-                bio: document.getElementById("meBio").value,
+                coat_color: coatColorInput ? coatColorInput.value : "",
+                sterilization: sterilizationInput.value,
 
                 diseases: [
                     ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
@@ -103,6 +89,8 @@ async function initApp() {
                     }
                     return cb.value === "fiv" ? "エイズ" : "白血病";
                 }),
+
+                personality: personalityInput ? personalityInput.value : "",
 
                 image: await toBase64(file)
             };
