@@ -137,9 +137,8 @@ async function toggleFavorite(profile) {
 
             if (response.ok) {
                 saveBtn.classList.add('active');
-                alert("登録しました");
             } else {
-                alert("登録に失敗しました");
+                // alert("登録に失敗しました");
             }
         } else {
             /* --- 削除要求 (DELETE) --- */
@@ -149,9 +148,9 @@ async function toggleFavorite(profile) {
 
             if (response.ok) {
                 saveBtn.classList.remove('active');
-                alert("削除されました");
+                // alert("削除されました");
             } else {
-                alert("削除に失敗しました");
+                // alert("削除に失敗しました");
             }
         }
     } catch (error) {
