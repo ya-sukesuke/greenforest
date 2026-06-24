@@ -20,6 +20,10 @@ const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const flipBtn = document.getElementById('flipBtn');
 const saveBtn = document.getElementById('saveBtn');
+const constructBtn = document.getElementById('constructBtn');
+
+// 公式LINEのアカウントIDを設定してください（例: @greenforest）
+const LINE_OFFICIAL_ACCOUNT_ID = "";
 
 // ================================
 // HTMLエスケープ
@@ -250,6 +254,42 @@ function flip(card) {
     card.classList.toggle('flipped');
 }
 
+function buildLineMessage(profile) {
+    const kind = profile.type === 'dog' ? '犬' : profile.type === 'cat' ? '猫' : '動物';
+    const coatColor = profile.coat_color || profile.breed || '不明';
+    const sterilization = profile.sterilization === 'done' || profile.operated === 'done' ? '済' : '未';
+    const diseases = (profile.diseases && profile.diseases.length > 0) ? profile.diseases.join(' / ') : '特になし';
+
+    return [
+        '契約について問い合わせしたいです。',
+        `UUID: ${profile.uuid || '不明'}`,
+        `名前: ${profile.name || '不明'}`,
+        `年齢: ${profile.age ?? 0}歳`,
+        `性別: ${profile.gender === 'male' ? '男の子' : profile.gender === 'female' ? '女の子' : '不明'}`,
+        `種類: ${kind}`,
+        `毛色: ${coatColor}`,
+        `避妊・去勢: ${sterilization}`,
+        `病歴: ${diseases}`,
+        `性格: ${profile.personality || profile.bio || '不明'}`,
+        '',
+        '画像URL:',
+        profile.image || '不明'
+    ].join('\n');
+}
+
+function openOfficialLine(profile) {
+    if (!profile || !profile.uuid) return;
+
+    if (!LINE_OFFICIAL_ACCOUNT_ID) {
+        alert('公式LINEのアカウントIDを設定してください');
+        return;
+    }
+
+    const message = buildLineMessage(profile);
+    const lineUrl = `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OFFICIAL_ACCOUNT_ID)}/?${encodeURIComponent(message)}`;
+    window.location.href = lineUrl;
+}
+
 /* --- ボタン更新 --- */
 function updateButtons() {
     // 必要ならここに追加
@@ -263,6 +303,11 @@ saveBtn.addEventListener('click', async () => {
     saveBtn.disabled = true;
     await toggleFavorite(currentProfileData);
     saveBtn.disabled = false;
+});
+
+constructBtn.addEventListener('click', () => {
+    if (!profiles || !profiles[index]) return;
+    openOfficialLine(profiles[index]);
 });
 
 /* --- ナビゲーションボタン --- */

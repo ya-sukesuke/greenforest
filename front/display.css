@@ -71,13 +71,17 @@ body {
 
 .photo {
     max-width: 100%;
-    max-height: 60%;
-    margin-bottom: 10px;
+    max-height: 85%;
+    margin-bottom: 6px;
 }
 
 .kind, .breed, .plf {
     text-align: center;
     margin: 5px 0;
+}
+
+.breed {
+    margin-bottom: 0;
 }
 
 .saveBtn{
@@ -167,19 +171,32 @@ body {
     color: #666;
 }
 
-.saveBtn:hover {
-    transform: scale(1.05);
-}
-
-/* --- 【ボタンが押された状態】色が反転する（赤背景に白文字） --- */
-.saveBtn.active {
-    background-color: #ff4b5c; /* 反転時の背景：赤 */
-    color: #ffffff;            /* 反転時のハート：白 */
-}
 
 /* 押し心地を良くするためのポップアップアニメーション */
 @keyframes heartPulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
+}
+
+.contructBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 250px;
+    margin: 0 auto;
+    margin-top: 5px;
+    padding: .9em 2em;
+    border: 1px solid #25bb5c;
+    border-radius: 25px;
+    background-color: #fff;
+    color: #25bb5c;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contructBtn:hover {
+    background-color: #25bb5c;
+    color: #fff;
 }
