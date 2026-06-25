@@ -1,3 +1,14 @@
+// パスワードチェック
+(function() {
+    const password = prompt("パスワードを入力してください：");
+    if (password === "greenforest") {
+        document.documentElement.style.display = "block";
+    } else {
+        alert("パスワードが正しくありません。");
+        window.location.href = "index.html";
+    }
+})();
+
 const API_POST_URL = "/add_animal";
 
 // Base64変換関数
@@ -109,7 +120,7 @@ async function initApp() {
 
             if (res.ok) {
                 const resultData = await res.json();
-                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取
+                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取る
                 location.reload();
             } else {
                 const err = await res.json();
