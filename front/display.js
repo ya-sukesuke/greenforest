@@ -41,15 +41,15 @@ function formatDataForDisplay(data) {
         name: p.name || "不明",
         age: p.age || "不詳",
         kind: p.type === "dog" ? "犬" : p.type === "cat" ? "猫" : "動物",
-        plf: `
-【名前】${p.name || "不明"}
-【年齢】${p.age || "不詳"}歳
-【性別】${p.gender === "male" ? "男の子" : "女の子"}
-【毛色】${p.coat_color || p.breed || "不明"}
-【避妊・去勢】${p.sterilization === "done" || p.operated === "done" ? "済" : "未"}
-【病歴】${(p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし"}
-【性格】${p.personality || p.bio || ""}
-`.trim(),
+        plf: [
+            { label: "名前", value: p.name || "不明" },
+            { label: "年齢", value: `${p.age || "不詳"}歳` },
+            { label: "性別", value: p.gender === "male" ? "男の子" : "女の子" },
+            { label: "毛色", value: p.coat_color || p.breed || "不明" },
+            { label: "避妊・去勢", value: p.sterilization === "done" || p.operated === "done" ? "済" : "未" },
+            { label: "病歴", value: (p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし" },
+            { label: "性格", value: p.personality || p.bio || "" }
+        ],
         uuid: p.uuid || "不明"
     }));
 }
@@ -143,15 +143,20 @@ function makeCard(item, pos = '') {
     frontDiv.appendChild(img);
     frontDiv.appendChild(actionsDiv);
 
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'front-info';
+
     const kindDiv = document.createElement('div');
-    kindDiv.className = 'kind';
+    kindDiv.className = 'name';
     kindDiv.textContent = item.name;
-    frontDiv.appendChild(kindDiv);
+    infoDiv.appendChild(kindDiv);
 
     const coatColorDiv = document.createElement('div');
-    coatColorDiv.className = 'breed';
+    coatColorDiv.className = 'age';
     coatColorDiv.textContent = `${item.age}歳`;
-    frontDiv.appendChild(coatColorDiv);
+    infoDiv.appendChild(coatColorDiv);
+
+    frontDiv.appendChild(infoDiv);
 
     // ============================
     // 裏
@@ -161,7 +166,20 @@ function makeCard(item, pos = '') {
 
     const plfDiv = document.createElement('div');
     plfDiv.className = 'plf';
-    plfDiv.innerHTML = escapeHtml(item.plf).replace(/\n/g, "<br>");
+
+    const dl = document.createElement('dl');
+    dl.className = 'plf-list';
+    item.plf.forEach(info => {
+        if (info.value) {
+            const dt = document.createElement('dt');
+            dt.textContent = `【${info.label}】`;
+            const dd = document.createElement('dd');
+            dd.textContent = info.value;
+            dl.appendChild(dt);
+            dl.appendChild(dd);
+        }
+    });
+    plfDiv.appendChild(dl);
 
     const uuidDiv = document.createElement('div');
     uuidDiv.className = 'uuid';

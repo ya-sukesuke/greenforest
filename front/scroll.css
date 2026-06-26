@@ -152,15 +152,48 @@ body {
     transform: none;
 }
 
-.kind,
-.breed,
-.plf {
-    text-align: center;
-    margin: 5px 0;
+.front-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+    padding: 8px 0;
+    box-sizing: border-box;
 }
 
-.breed {
-    margin-bottom: 0;
+.name {
+    text-align: center;
+    margin: 0 0 4px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #263238;
+}
+
+.age {
+    text-align: center;
+    margin: 0;
+    font-size: 1em;
+    color: #55705b;
+}
+
+.plf-list {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.plf-list dt {
+    font-weight: bold;
+    margin-top: 8px;
+    color: #2f6f3e;
+}
+
+.plf-list dd {
+    margin: 4px 0 8px 1.2em;
+    white-space: pre-wrap;
+    color: #263238;
 }
 
 .plf {

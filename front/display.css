@@ -136,23 +136,52 @@ body {
     margin: 5px 0;
 }
 
+.front-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+    padding: 8px 0;
+    box-sizing: border-box;
+}
+
 .name {
     text-align: center;
-    margin-top: auto;
-    margin-bottom: 5px;
+    margin: 0 0 6px;
     font-size: 1.4em;
     font-weight: bold;
+    color: #263238;
 }
 
 .age {
     text-align: center;
-    margin-top: 0;
-    margin-bottom: 12px;
+    margin: 0;
     font-size: 1.2em;
+    color: #555;
 }
 
 .breed {
     margin-bottom: 0;
+}
+
+.plf-list {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.plf-list dt {
+    font-weight: bold;
+    margin-top: 8px;
+    color: #2f6f3e;
+}
+
+.plf-list dd {
+    margin: 4px 0 8px 1.2em;
+    white-space: pre-wrap;
+    color: #333;
 }
 
 .btn {
