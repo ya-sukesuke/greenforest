@@ -35,7 +35,7 @@ app.add_middleware(
 class AddAnimalRequest(BaseModel):
     type: Literal['dog', 'cat']
     gender: Literal['male', 'female']
-    age: Union[str, int] = ""
+    age: int
     name: str
     coat_color: str
     sterilization: Literal['done', 'not_done']
@@ -43,6 +43,7 @@ class AddAnimalRequest(BaseModel):
     other_disease: Optional[str] = None
     personality: str
     image: str
+    is_estimated: bool = False
 
 class FavoriteRequest(BaseModel):
     uuid: str

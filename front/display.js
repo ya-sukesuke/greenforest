@@ -35,23 +35,36 @@ function escapeHtml(s){
 
 /* --- データ変換 --- */
 function formatDataForDisplay(data) {
-    return data.map(p => ({
-    raw: p,
-        photo: p.image,
-        name: p.name || "不明",
-        age: p.age || "不詳",
-        kind: p.type === "dog" ? "犬" : p.type === "cat" ? "猫" : "動物",
-        plf: [
-            { label: "名前", value: p.name || "不明" },
-            { label: "年齢", value: `${p.age || "不詳"}歳` },
-            { label: "性別", value: p.gender === "male" ? "男の子" : "女の子" },
-            { label: "毛色", value: p.coat_color || p.breed || "不明" },
-            { label: "避妊・去勢", value: p.sterilization === "done" || p.operated === "done" ? "済" : "未" },
-            { label: "病歴", value: (p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし" },
-            { label: "性格", value: p.personality || p.bio || "" }
-        ],
-        uuid: p.uuid || "不明"
-    }));
+    return data.map(p => {
+        let ageStr = "不詳";
+        if (p.age !== undefined && p.age !== null && p.age !== -1 && p.age !== "-1") {
+            const ageNum = parseInt(p.age, 10);
+            if (!isNaN(ageNum)) {
+                ageStr = `${ageNum}歳`;
+                if (p.is_estimated) {
+                    ageStr += "（推定）";
+                }
+            }
+        }
+
+        return {
+            raw: p,
+            photo: p.image,
+            name: p.name || "不明",
+            age: ageStr,
+            kind: p.type === "dog" ? "犬" : p.type === "cat" ? "猫" : "動物",
+            plf: [
+                { label: "名前", value: p.name || "不明" },
+                { label: "年齢", value: ageStr },
+                { label: "性別", value: p.gender === "male" ? "男の子" : "女の子" },
+                { label: "毛色", value: p.coat_color || p.breed || "不明" },
+                { label: "避妊・去勢", value: p.sterilization === "done" || p.operated === "done" ? "済" : "未" },
+                { label: "病歴", value: (p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし" },
+                { label: "性格", value: p.personality || p.bio || "" }
+            ],
+            uuid: p.uuid || "不明"
+        };
+    });
 }
 
 function buildLineMessage(profile) {
@@ -60,11 +73,22 @@ function buildLineMessage(profile) {
     const sterilization = profile.sterilization === 'done' || profile.operated === 'done' ? '済' : '未';
     const diseases = (profile.diseases && profile.diseases.length > 0) ? profile.diseases.join(' / ') : '特になし';
 
+    let ageStr = "不詳";
+    if (profile.age !== undefined && profile.age !== null && profile.age !== -1 && profile.age !== "-1") {
+        const ageNum = parseInt(profile.age, 10);
+        if (!isNaN(ageNum)) {
+            ageStr = `${ageNum}歳`;
+            if (profile.is_estimated) {
+                ageStr += "（推定）";
+            }
+        }
+    }
+
     return [
         '契約について問い合わせしたいです。',
         `UUID: ${profile.uuid || '不明'}`,
         `名前: ${profile.name || '不明'}`,
-        `年齢: ${profile.age ?? "不詳"}歳`,
+        `年齢: ${ageStr}`,
         `性別: ${profile.gender === 'male' ? '男の子' : profile.gender === 'female' ? '女の子' : '不明'}`,
         `種類: ${kind}`,
         `毛色: ${coatColor}`,

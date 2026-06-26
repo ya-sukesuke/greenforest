@@ -68,6 +68,18 @@ async function initApp() {
             ageSelect.add(new Option(`${i}`, i));
         }
         ageSelect.add(new Option('不詳', -1));
+
+        const estimateCheckbox = document.getElementById("estimateCheckbox");
+        if (estimateCheckbox) {
+            ageSelect.addEventListener("change", () => {
+                if (ageSelect.value === "-1") {
+                    estimateCheckbox.checked = false;
+                    estimateCheckbox.disabled = true;
+                } else {
+                    estimateCheckbox.disabled = false;
+                }
+            });
+        }
     }
 
     // 3. 保存ボタンのクリックイベント
@@ -84,7 +96,8 @@ async function initApp() {
             if (!sterilizationInput) throw new Error("避妊・去勢を選択してください");
             if (!ageSelect.value) throw new Error("年齢を選択してください");
 
-            const ageValue = ageSelect.value;
+            const ageValue = parseInt(ageSelect.value, 10);
+            const isEstimated = document.getElementById("estimateCheckbox") ? document.getElementById("estimateCheckbox").checked : false;
 
             const payload = {
                 type: document.querySelector('input[name="type"]:checked').value,
@@ -106,7 +119,8 @@ async function initApp() {
 
                 personality: personalityInput ? personalityInput.value : "",
 
-                image: await toBase64(file)
+                image: await toBase64(file),
+                is_estimated: isEstimated
             };
 
             // サーバーにデータを送信
