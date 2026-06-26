@@ -1,11 +1,9 @@
-// パスワードチェック
+// パスワードチェック（管理者ログインチェック）
 (function() {
-    const password = prompt("パスワードを入力してください：");
-    if (password === "greenforest") {
-        document.documentElement.style.display = "block";
+    if (sessionStorage.getItem('admin_logged_in') !== 'true') {
+        window.location.href = "admin.html";
     } else {
-        alert("パスワードが正しくありません。");
-        window.location.href = "index.html";
+        document.documentElement.style.display = "block";
     }
 })();
 

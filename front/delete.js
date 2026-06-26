@@ -1,4 +1,13 @@
 // delete.js
+// パスワードチェック（管理者ログインチェック）
+(function() {
+    if (sessionStorage.getItem('admin_logged_in') !== 'true') {
+        window.location.href = "admin.html";
+    } else {
+        document.documentElement.style.display = "block";
+    }
+})();
+
 const API_URL = "/animals";
 
 let targetUuid = null;
