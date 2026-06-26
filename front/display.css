@@ -131,9 +131,24 @@ body {
     transform: none;
 }
 
-.kind, .breed, .plf {
+.plf {
     text-align: center;
     margin: 5px 0;
+}
+
+.name {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: 5px;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.age {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.2em;
 }
 
 .breed {
