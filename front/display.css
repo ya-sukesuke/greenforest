@@ -2,7 +2,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
     margin: 0;
 }
@@ -11,6 +11,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 40px; /* ヘッダーから少し離した位置に配置 */
+    margin-bottom: 40px;
 }
 
 .card {
@@ -201,6 +203,11 @@ body {
 
 /* スマホ向けのメディアクエリ */
 @media (max-width: 480px) {
+    .wrap {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
     .card {
         width: 310px;
         height: 440px;
