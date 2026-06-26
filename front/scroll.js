@@ -2,7 +2,7 @@ const API_GET_URL = "/animals";
 const API_FAVORITE_URL = "/favorites";
 
 // 公式LINEのアカウントIDを設定してください（例: @greenforest）
-const LINE_OFFICIAL_ACCOUNT_ID = "";
+const LINE_OFFICIAL_ACCOUNT_ID = "@889qbfcv";
 
 const viewer = document.getElementById('scroll-viewer');
 

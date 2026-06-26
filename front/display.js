@@ -20,7 +20,7 @@ const nextBtn = document.getElementById('nextBtn');
 const flipBtn = document.getElementById('flipBtn');
 
 // 公式LINEのアカウントIDを設定してください（例: @greenforest）
-const LINE_OFFICIAL_ACCOUNT_ID = "";
+const LINE_OFFICIAL_ACCOUNT_ID = "@889qbfcv";
 
 // ================================
 // HTMLエスケープ
