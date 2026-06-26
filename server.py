@@ -129,6 +129,29 @@ def remove_favorite(uuid: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {e}")
 
+@app.delete("/animals/{uuid}")
+def delete_animal(uuid: str):
+    try:
+        # 1. お気に入りテーブルから削除（存在する場合のみ）
+        try:
+            supabase.table("favorites").delete().eq("uuid", uuid).execute()
+        except Exception as fe:
+            print(f"Warning: Failed to delete from favorites table: {fe}")
+
+        # 2. Supabase Storage から画像を削除 (画像名は uuid.png)
+        try:
+            supabase.storage.from_("images").remove([f"{uuid}.png"])
+        except Exception as se:
+            print(f"Warning: Failed to delete image from storage: {se}")
+
+        # 3. animalsテーブルからデータを削除
+        response = supabase.table("animals").delete().eq("uuid", uuid).execute()
+        
+        return {"status": "success", "message": "Animal and its image deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting animal: {e}")
+
+
 
 # --- 静的ファイル配信関連 ---
 BASE_DIR = Path(__file__).resolve().parent
