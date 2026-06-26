@@ -221,7 +221,7 @@ function makeCard(item) {
 
     const ageDiv = document.createElement('div');
     ageDiv.className = 'age';
-    ageDiv.textContent = `${item.age}歳`;
+    ageDiv.textContent = item.age;
     infoDiv.appendChild(ageDiv);
 
     frontDiv.appendChild(infoDiv);

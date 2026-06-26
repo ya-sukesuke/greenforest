@@ -202,7 +202,7 @@ function makeCard(item, pos = '') {
 
     const coatColorDiv = document.createElement('div');
     coatColorDiv.className = 'age';
-    coatColorDiv.textContent = `${item.age}歳`;
+    coatColorDiv.textContent = item.age;
     infoDiv.appendChild(coatColorDiv);
 
     frontDiv.appendChild(infoDiv);
