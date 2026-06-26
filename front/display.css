@@ -185,4 +185,72 @@ body {
 }
 
 
-/* 押し心地を良くするためのポップアップアニメーション */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 48px;
+}
+
+.footer-note {
+    margin-top: 24px;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* スマホ向けのメディアクエリ */
+@media (max-width: 480px) {
+    .card {
+        width: 310px;
+        height: 440px;
+    }
+    
+    .photo {
+        max-height: 68%;
+        margin-bottom: 8px;
+    }
+    
+    .controls {
+        margin-top: 24px;
+        gap: 12px;
+    }
+    
+    .btn {
+        width: 64px;
+        height: 64px;
+        font-size: 0.9em;
+    }
+    
+    .footer-note {
+        margin-top: 16px;
+        font-size: 0.8rem;
+    }
+}
+
+/* 画面の高さが低い端末向け */
+@media (max-height: 740px) {
+    .card {
+        height: 400px;
+    }
+    
+    .photo {
+        max-height: 62%;
+    }
+    
+    .controls {
+        margin-top: 16px;
+    }
+    
+    .btn {
+        width: 60px;
+        height: 60px;
+        font-size: 0.85em;
+    }
+    
+    .footer-note {
+        margin-top: 12px;
+        font-size: 0.75rem;
+    }
+}
+
