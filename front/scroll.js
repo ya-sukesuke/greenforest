@@ -28,6 +28,19 @@ function formatDataForDisplay(data) {
             }
         }
 
+        const diseaseList = [];
+        if (p.diseases && p.diseases.length > 0) {
+            p.diseases.forEach(d => {
+                if (d && d !== "other") {
+                    diseaseList.push(d);
+                }
+            });
+        }
+        if (p.other_disease) {
+            diseaseList.push(p.other_disease);
+        }
+        const diseaseStr = diseaseList.length > 0 ? diseaseList.join(" / ") : "特になし";
+
         return {
             raw: p,
             photo: p.image,
@@ -40,7 +53,7 @@ function formatDataForDisplay(data) {
                 { label: "性別", value: p.gender === "male" ? "男の子" : "女の子" },
                 { label: "毛色", value: p.coat_color || p.breed || "不明" },
                 { label: "避妊・去勢", value: p.sterilization === "done" || p.operated === "done" ? "済" : "未" },
-                { label: "病歴", value: (p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし" },
+                { label: "病歴", value: diseaseStr },
                 { label: "性格", value: p.personality || p.bio || "" }
             ],
             uuid: p.uuid || '不明'
@@ -52,7 +65,6 @@ function buildLineMessage(profile) {
     const kind = profile.type === 'dog' ? '犬' : profile.type === 'cat' ? '猫' : '動物';
     const coatColor = profile.coat_color || profile.breed || '不明';
     const sterilization = profile.sterilization === 'done' || profile.operated === 'done' ? '済' : '未';
-    const diseases = (profile.diseases && profile.diseases.length > 0) ? profile.diseases.join(' / ') : '特になし';
 
     let ageStr = "不詳";
     if (profile.age !== undefined && profile.age !== null && profile.age !== -1 && profile.age !== "-1") {
@@ -64,6 +76,19 @@ function buildLineMessage(profile) {
             }
         }
     }
+
+    const diseaseList = [];
+    if (profile.diseases && profile.diseases.length > 0) {
+        profile.diseases.forEach(d => {
+            if (d && d !== 'other') {
+                diseaseList.push(d);
+            }
+        });
+    }
+    if (profile.other_disease) {
+        diseaseList.push(profile.other_disease);
+    }
+    const diseases = diseaseList.length > 0 ? diseaseList.join(' / ') : '特になし';
 
     return [
         '契約について問い合わせしたいです。',

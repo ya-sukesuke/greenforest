@@ -99,6 +99,17 @@ async function initApp() {
             const ageValue = parseInt(ageSelect.value, 10);
             const isEstimated = document.getElementById("estimateCheckbox") ? document.getElementById("estimateCheckbox").checked : false;
 
+            const checkedDiseases = [
+                ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
+            ]
+            .filter(cb => cb.value !== "other")
+            .map(cb => cb.value === "fiv" ? "エイズ" : "白血病");
+
+            const otherDiseaseCheckbox = document.getElementById("diseaseOther");
+            const otherDiseaseValue = (otherDiseaseCheckbox && otherDiseaseCheckbox.checked)
+                ? document.getElementById("otherDiseaseInput").value.trim()
+                : null;
+
             const payload = {
                 type: document.querySelector('input[name="type"]:checked').value,
                 gender: genderInput.value,
@@ -108,14 +119,8 @@ async function initApp() {
                 coat_color: coatColorInput ? coatColorInput.value : "",
                 sterilization: sterilizationInput.value,
 
-                diseases: [
-                    ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
-                ].map(cb => {
-                    if (cb.value === "other") {
-                        return document.getElementById("otherDiseaseInput").value;
-                    }
-                    return cb.value === "fiv" ? "エイズ" : "白血病";
-                }),
+                diseases: checkedDiseases,
+                other_disease: otherDiseaseValue,
 
                 personality: personalityInput ? personalityInput.value : "",
 

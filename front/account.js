@@ -62,6 +62,30 @@ function createCard(profile){
     const card = document.createElement("div");
     card.className = "favorite-card";
 
+    let ageStr = "不詳";
+    if (profile.age !== undefined && profile.age !== null && profile.age !== -1 && profile.age !== "-1") {
+        const ageNum = parseInt(profile.age, 10);
+        if (!isNaN(ageNum)) {
+            ageStr = `${ageNum}歳`;
+            if (profile.is_estimated) {
+                ageStr += "（推定）";
+            }
+        }
+    }
+
+    const diseaseList = [];
+    if (profile.diseases && profile.diseases.length > 0) {
+        profile.diseases.forEach(d => {
+            if (d && d !== 'other') {
+                diseaseList.push(d);
+            }
+        });
+    }
+    if (profile.other_disease) {
+        diseaseList.push(profile.other_disease);
+    }
+    const diseaseStr = diseaseList.length > 0 ? diseaseList.join(" / ") : "特になし";
+
     card.innerHTML = `
         <img class="favorite-image"
              src="${profile.image || ''}"
@@ -76,10 +100,10 @@ function createCard(profile){
             <div class="favorite-profile">
 【名前】${escapeHtml(profile.name || "")}
 【性別】${profile.gender === "male" ? "男の子" : "女の子"}
-【年齢】${profile.age || 0}歳
+【年齢】${ageStr}
 【避妊・去勢】${profile.sterilization === "done" || profile.operated === "done" ? "済" : "未"}
 【病気】
-${escapeHtml((profile.diseases && profile.diseases.length > 0) ? profile.diseases.join(" / ") : "特になし")}
+${escapeHtml(diseaseStr)}
 【性格】
 ${escapeHtml(profile.personality || profile.bio || "")}
             </div>
