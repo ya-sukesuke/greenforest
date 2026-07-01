@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>管理者ページ - わんにゃんりんく</title>
+    <!-- 共通CSSと個別CSS -->
+    <link rel="stylesheet" href="header_style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <!-- ヘッダー読み込みプレースホルダー -->
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <div class="admin-container">
+        <!-- ログインセクション -->
+        <div id="loginSection" class="admin-card">
+            <h2>管理者ログイン</h2>
+            <p>管理者パスワードを入力してください。</p>
+            <div class="form-group">
+                <input type="password" id="passwordInput" placeholder="パスワードを入力">
+                <p id="errorMessage" class="error-message hidden">パスワードが正しくありません。</p>
+            </div>
+            <button id="loginBtn" class="admin-btn">ログイン</button>
+        </div>
+
+        <!-- ダッシュボードセクション（認証成功時に表示） -->
+        <div id="dashboardSection" class="admin-card hidden">
+            <h2>管理者ダッシュボード</h2>
+            <p>管理する機能を選択してください。</p>
+            <div class="menu-grid">
+                <a href="plf_main.html" class="menu-item">
+                    <span class="icon">📝</span>
+                    <div class="menu-text">
+                        <span class="title">新規登録</span>
+                        <span class="desc">新しい保護動物の情報を登録します。</span>
+                    </div>
+                </a>
+                <a href="delete.html" class="menu-item">
+                    <span class="icon">🗑️</span>
+                    <div class="menu-text">
+                        <span class="title">登録削除</span>
+                        <span class="desc">登録されている動物情報を削除します。</span>
+                    </div>
+                </a>
+            </div>
+            <div class="logout-wrapper">
+                <button id="logoutBtn" class="logout-btn">ログアウト</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

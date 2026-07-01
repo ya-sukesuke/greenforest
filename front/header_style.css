@@ -1,6 +1,6 @@
 /* ===== ヘッダー全体 ===== */
 .header{
-  background-color: #0078d7;
+  background-color: #7EC8E3;
   color: white;
 
   position: fixed;
@@ -22,21 +22,19 @@
 /* ===== 左：ロゴ ===== */
 .header h1{
   margin: 0;
-  font-size: 24px;
+  width: 100%;
+  font-size: 2vw;
   font-family: "MS Mincho", sans-serif;
+  text-align: left;
 }
 
 /* ===== 中央：タイトル ===== */
 .header-center{
   grid-column: 2;
   text-align: center;
-  font-size: 20px;
+  font-size: 1vw;
 }
 
-/* ===== 右：nav（中身は使わない想定） ===== */
-.header nav{
-  grid-column: 3;
-}
 
 .header .login{
   background-color: white;

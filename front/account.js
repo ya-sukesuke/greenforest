@@ -62,23 +62,50 @@ function createCard(profile){
     const card = document.createElement("div");
     card.className = "favorite-card";
 
+    let ageStr = "不詳";
+    if (profile.age !== undefined && profile.age !== null && profile.age !== -1 && profile.age !== "-1") {
+        const ageNum = parseInt(profile.age, 10);
+        if (!isNaN(ageNum)) {
+            ageStr = `${ageNum}歳`;
+            if (profile.is_estimated) {
+                ageStr += "（推定）";
+            }
+        }
+    }
+
+    const diseaseList = [];
+    if (profile.diseases && profile.diseases.length > 0) {
+        profile.diseases.forEach(d => {
+            if (d && d !== 'other') {
+                diseaseList.push(d);
+            }
+        });
+    }
+    if (profile.other_disease) {
+        diseaseList.push(profile.other_disease);
+    }
+    const diseaseStr = diseaseList.length > 0 ? diseaseList.join(" / ") : "特になし";
+
     card.innerHTML = `
         <img class="favorite-image"
              src="${profile.image || ''}"
              alt="animal image">
         <div class="favorite-content">
             <div class="favorite-kind">
-                ${profile.type === "dog" ? "犬" : "猫"}
+                ${escapeHtml(profile.name || "名前不明")}
             </div>
             <div class="favorite-breed">
-                ${escapeHtml(profile.breed || "種類不明")}
+                ${escapeHtml(profile.coat_color || profile.breed || "毛色不明")}
             </div>
             <div class="favorite-profile">
 【名前】${escapeHtml(profile.name || "")}
 【性別】${profile.gender === "male" ? "男の子" : "女の子"}
-【年齢】${profile.age || 0}歳 ${profile.month || 0}ヶ月
-【紹介文】
-${escapeHtml(profile.bio || "")}
+【年齢】${ageStr}
+【避妊・去勢】${profile.sterilization === "done" || profile.operated === "done" ? "済" : "未"}
+【病気】
+${escapeHtml(diseaseStr)}
+【性格】
+${escapeHtml(profile.personality || profile.bio || "")}
             </div>
         </div>
         <button class="remove-btn">

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<link rel="stylesheet" href="header_style.css">
+	<link rel="stylesheet" href="scroll.css">
+</head>
+<title>保護動物一覧</title>
+<body>
+	<div id="header-placeholder"></div>
+
+	<main class="page">
+		<section class="intro">
+			<h1>保護動物一覧</h1>
+		</section>
+
+		<div class="scroll-wrap">
+			<div id="scroll-viewer" class="scroll-viewer" aria-live="polite"></div>
+		</div>
+	</main>
+
+	<script>
+		fetch('header.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('header-placeholder').innerHTML = data;
+			});
+	</script>
+	<script src="scroll.js"></script>
+</body>
+</html>

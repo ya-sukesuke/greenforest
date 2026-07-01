@@ -1,3 +1,12 @@
+// パスワードチェック（管理者ログインチェック）
+(function() {
+    if (sessionStorage.getItem('admin_logged_in') !== 'true') {
+        window.location.href = "admin.html";
+    } else {
+        document.documentElement.style.display = "block";
+    }
+})();
+
 const API_POST_URL = "/add_animal";
 
 // Base64変換関数
@@ -35,7 +44,8 @@ async function initApp() {
     const imgInput = document.getElementById("imgInput");
     const imgPreview = document.getElementById("imgPreview");
     const ageSelect = document.getElementById("ageSelect");
-    const monthSelect = document.getElementById("monthSelect");
+    const coatColorInput = document.getElementById("CoatColor");
+    const personalityInput = document.getElementById("personality");
 
     // 1. 画像プレビューの設定
     if (imgInput && imgPreview) {
@@ -55,12 +65,20 @@ async function initApp() {
     // 2. セレクトボックスの生成
     if (ageSelect) {
         for (let i = 0; i <= 30; i++) {
-            ageSelect.add(new Option(`${i}歳`, i));
+            ageSelect.add(new Option(`${i}`, i));
         }
-    }
-    if (monthSelect) {
-        for (let i = 0; i <= 11; i++) {
-            monthSelect.add(new Option(`${i}ヶ月`, i));
+        ageSelect.add(new Option('不詳', -1));
+
+        const estimateCheckbox = document.getElementById("estimateCheckbox");
+        if (estimateCheckbox) {
+            ageSelect.addEventListener("change", () => {
+                if (ageSelect.value === "-1") {
+                    estimateCheckbox.checked = false;
+                    estimateCheckbox.disabled = true;
+                } else {
+                    estimateCheckbox.disabled = false;
+                }
+            });
         }
     }
 
@@ -70,41 +88,44 @@ async function initApp() {
         saveBtn.textContent = "送信中...";
 
         try {
-            const file = imgInput.files[0];
+            const genderInput = document.querySelector('input[name="gender"]:checked');
+            const sterilizationInput = document.querySelector('input[name="sterilization"]:checked');
+            const file = imgInput && imgInput.files ? imgInput.files[0] : null;
             if (!file) throw new Error("画像を選択してください");
+            if (!genderInput) throw new Error("性別を選択してください");
+            if (!sterilizationInput) throw new Error("避妊・去勢を選択してください");
+            if (!ageSelect.value) throw new Error("年齢を選択してください");
 
-            // サーバー(server.py)のAddAnimalRequestモデルの要求定義に完全準拠したデータ構造
+            const ageValue = parseInt(ageSelect.value, 10);
+            const isEstimated = document.getElementById("estimateCheckbox") ? document.getElementById("estimateCheckbox").checked : false;
+
+            const checkedDiseases = [
+                ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
+            ]
+            .filter(cb => cb.value !== "other")
+            .map(cb => cb.value === "fiv" ? "エイズ" : "白血病");
+
+            const otherDiseaseCheckbox = document.getElementById("diseaseOther");
+            const otherDiseaseValue = (otherDiseaseCheckbox && otherDiseaseCheckbox.checked)
+                ? document.getElementById("otherDiseaseInput").value.trim()
+                : null;
+
             const payload = {
                 type: document.querySelector('input[name="type"]:checked').value,
-                gender: document.querySelector('input[name="gender"]:checked').value,
-                
-                // 【修正】キー名を server.py に合わせて operated に変更
-                operated: document.querySelector('input[name="sterilization"]:checked').value === "done" ? "done" : "not_done",
-
-                age: parseInt(ageSelect.value) || 0,
-                month: parseInt(monthSelect.value) || 0,
+                gender: genderInput.value,
+                age: ageValue,
 
                 name: document.getElementById("Name").value,
-                breed: document.getElementById("Breed").value,
+                coat_color: coatColorInput ? coatColorInput.value : "",
+                sterilization: sterilizationInput.value,
 
-                birthday: document.getElementById("birthday").value,
-                protect_day: document.getElementById("ProtectDay").value,
+                diseases: checkedDiseases,
+                other_disease: otherDiseaseValue,
 
-                // 【修正】文字列ではなく整数(int)として送信するために parseInt を実行
-                tension: parseInt(document.getElementById("tensionRange").value) || 3,
-                
-                bio: document.getElementById("meBio").value,
+                personality: personalityInput ? personalityInput.value : "",
 
-                diseases: [
-                    ...document.querySelectorAll('.disease-option input[type="checkbox"]:checked')
-                ].map(cb => {
-                    if (cb.value === "other") {
-                        return document.getElementById("otherDiseaseInput").value;
-                    }
-                    return cb.value === "fiv" ? "エイズ" : "白血病";
-                }),
-
-                image: await toBase64(file)
+                image: await toBase64(file),
+                is_estimated: isEstimated
             };
 
             // サーバーにデータを送信
@@ -116,7 +137,7 @@ async function initApp() {
 
             if (res.ok) {
                 const resultData = await res.json();
-                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取
+                // サーバー側で発行された本物のUUID（resultData.uuid）を受け取る
                 location.reload();
             } else {
                 const err = await res.json();

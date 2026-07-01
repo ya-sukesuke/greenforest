@@ -2,18 +2,24 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import Literal, List, Optional
-from datetime import date
+from typing import Literal, List, Optional, Union
 import uuid
 import os
-import json
 import base64
 from pathlib import Path
 from fastapi.responses import FileResponse
+# --- Supabase用のライブラリを追加 ---
+from supabase import create_client, Client
 
-SAVE_FILE_PATH = "save.json"
-FAVORITES_FILE_PATH = "favorites.json"  # ★お気に入り保存用のファイルパス
-IMAGE_SAVE_DIR = "images"
+# 環境変数からSupabaseの接続情報を取得
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    print("⚠️ 警告: SUPABASE_URL または SUPABASE_KEY が設定されていません。ローカル環境の場合は環境変数を確認してください。")
+
+# Supabaseクライアントの初期化
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
 app = FastAPI()
 
@@ -25,124 +31,127 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- 1. リクエストモデル ---
+# --- リクエストモデル ---
 class AddAnimalRequest(BaseModel):
     type: Literal['dog', 'cat']
     gender: Literal['male', 'female']
-    age: Optional[int] = 0
-    month: Optional[int] = 0
+    age: int
     name: str
-    breed: str
-    birthday: str 
-    protect_day: str
-    
-    # 新しく追加されたフィールド
-    operated: Literal['done', 'not_done'] # 避妊・去勢
-    diseases: List[str]                  # 病歴（配列）
-    other_disease: Optional[str] = None  # その他病名
-    tension: int                         # 緊張度 (1-5)
-    
-    bio: str
+    coat_color: str
+    sterilization: Literal['done', 'not_done']
+    diseases: List[str]
+    other_disease: Optional[str] = None
+    personality: str
     image: str
+    is_estimated: bool = False
 
-# ★お気に入り登録用のリクエストモデル
 class FavoriteRequest(BaseModel):
     uuid: str
-
-# --- 共通ヘルパー関数：お気に入りデータの読み書き ---
-def load_favorites() -> List[str]:
-    if not os.path.exists(FAVORITES_FILE_PATH):
-        return []
-    try:
-        with open(FAVORITES_FILE_PATH, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception:
-        return []
-
-def save_favorites(favorites: List[str]):
-    try:
-        with open(FAVORITES_FILE_PATH, 'w', encoding='utf-8') as f:
-            json.dump(favorites, f, indent=4, ensure_ascii=False)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Favorites write error: {e}")
 
 
 # --- 動物データ取得・追加エンドポイント ---
 @app.get("/animals")
 def get_animals():
-    if not os.path.exists(SAVE_FILE_PATH):
-        return []
     try:
-        with open(SAVE_FILE_PATH, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        # Supabaseのanimalsテーブルから全データを取得
+        response = supabase.table("animals").select("*").execute()
+        return response.data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Read error: {e}")
 
 @app.post("/add_animal")
 def add_animal(request: AddAnimalRequest):
     new_uuid = str(uuid.uuid4())
-    data = []
-    if os.path.exists(SAVE_FILE_PATH):
-        with open(SAVE_FILE_PATH, 'r', encoding='utf-8') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                data = []
+    image_url = ""
 
-    # データのダンプと整形
-    new_entry = request.model_dump()
-    new_entry['uuid'] = new_uuid
-    
-    # 画像のデコードと保存
+    # 画像のデコードとSupabase Storageへのアップロード
     try:
         if "," in request.image:
             img_binary = base64.b64decode(request.image.split(",")[1])
-            if not os.path.exists(IMAGE_SAVE_DIR):
-                os.makedirs(IMAGE_SAVE_DIR)
-            with open(os.path.join(IMAGE_SAVE_DIR, f"{new_uuid}.png"), 'wb') as f:
-               f.write(img_binary) 
+            
+            # 'images' バケットに、[uuid].png という名前でバイナリをアップロード
+            supabase.storage.from_("images").upload(
+                path=f"{new_uuid}.png",
+                file=img_binary,
+                file_options={"content-type": "image/png"}
+            )
+            # アップロードした画像の公開URLを取得
+            image_url = supabase.storage.from_("images").get_public_url(f"{new_uuid}.png")
     except Exception as e:
         print(f"Image save error: {e}")
 
-    data.append(new_entry)
-    with open(SAVE_FILE_PATH, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+    # データベースに挿入するデータの整形
+    new_entry = request.model_dump()
+    new_entry['uuid'] = new_uuid
+    new_entry['image'] = image_url  # Base64文字列の代わりに画像のURLを保存する
+
+    try:
+        # Supabaseのanimalsテーブルにデータを1行追加
+        supabase.table("animals").insert(new_entry).execute()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database insert error: {e}")
 
     return {"message": "Success", "uuid": new_uuid}
 
 
-# --- ★新設：お気に入り（Favorites）関連エンドポイント ---
+# --- お気に入り（Favorites）関連エンドポイント ---
 
-# ①-1 お気に入りUUIDの一覧をまとめて取得 (GET /favorites) ★追加！
 @app.get("/favorites")
 def get_all_favorites():
-    return load_favorites()
+    try:
+        response = supabase.table("favorites").select("uuid").execute()
+        return [row["uuid"] for row in response.data]
+    except Exception:
+        return []
 
-# ①-2 お気に入り状態の確認 (GET /favorites/{uuid})
 @app.get("/favorites/{uuid}")
 def check_favorite(uuid: str):
-    favorites = load_favorites()
-    is_favorite = uuid in favorites
-    return {"is_favorite": is_favorite}
+    try:
+        response = supabase.table("favorites").select("uuid").eq("uuid", uuid).execute()
+        is_favorite = len(response.data) > 0
+        return {"is_favorite": is_favorite}
+    except Exception:
+        return {"is_favorite": False}
 
-# ② お気に入り登録 (POST /favorites)
 @app.post("/favorites")
 def add_favorite(request: FavoriteRequest):
-    favorites = load_favorites()
-    if request.uuid not in favorites:
-        favorites.append(request.uuid)
-        save_favorites(favorites)
-    return {"status": "success", "message": "Registered"}
+    try:
+        # 重複を避けるためupsert（あれば更新、なければ挿入）を使用
+        supabase.table("favorites").upsert({"uuid": request.uuid}).execute()
+        return {"status": "success", "message": "Registered"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {e}")
 
-# ③ お気に入り解除 (DELETE /favorites/{uuid})
 @app.delete("/favorites/{uuid}")
 def remove_favorite(uuid: str):
-    favorites = load_favorites()
-    if uuid in favorites:
-        favorites.remove(uuid)
-        save_favorites(favorites)
+    try:
+        response = supabase.table("favorites").delete().eq("uuid", uuid).execute()
         return {"status": "success", "message": "Deleted"}
-    raise HTTPException(status_code=404, detail="UUID not found in favorites")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {e}")
+
+@app.delete("/animals/{uuid}")
+def delete_animal(uuid: str):
+    try:
+        # 1. お気に入りテーブルから削除（存在する場合のみ）
+        try:
+            supabase.table("favorites").delete().eq("uuid", uuid).execute()
+        except Exception as fe:
+            print(f"Warning: Failed to delete from favorites table: {fe}")
+
+        # 2. Supabase Storage から画像を削除 (画像名は uuid.png)
+        try:
+            supabase.storage.from_("images").remove([f"{uuid}.png"])
+        except Exception as se:
+            print(f"Warning: Failed to delete image from storage: {se}")
+
+        # 3. animalsテーブルからデータを削除
+        response = supabase.table("animals").delete().eq("uuid", uuid).execute()
+        
+        return {"status": "success", "message": "Animal and its image deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting animal: {e}")
+
 
 
 # --- 静的ファイル配信関連 ---
@@ -159,4 +168,6 @@ if os.path.exists(FRONT_DIR):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Renderのポート番号自動割当に対応
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("server:app", host="0.0.0.0", port=port)

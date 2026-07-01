@@ -230,3 +230,21 @@ label.form-title {
   font-weight: bold;
   color: #555;
 }
+
+.estimate-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  color: rgb(71, 196, 100);
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+.estimate-option input {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  transform: scale(1.1);
+  accent-color: rgb(71, 196, 100);
+}

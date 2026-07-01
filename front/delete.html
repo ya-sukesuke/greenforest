@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja" style="display: none;">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>登録情報の削除 - わんにゃんりんく</title>
+    <!-- 共通CSSと個別CSS -->
+    <link rel="stylesheet" href="header_style.css">
+    <link rel="stylesheet" href="display.css">
+    <link rel="stylesheet" href="delete.css">
+</head>
+<body>
+
+    <!-- ヘッダー読み込みプレースホルダー -->
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <div class="container">
+        <header class="page-header">
+            <h2>登録情報の削除</h2>
+            <p class="description">登録されている動物の情報を一覧から削除できます。<br>削除すると、サーバー上の画像や「お気に入り」も含めて完全に消去されます。</p>
+        </header>
+
+        <!-- 動物一覧を表示するグリッド -->
+        <div class="animal-grid" id="animalGrid">
+            <div class="loading">データを読み込んでいます...</div>
+        </div>
+    </div>
+
+    <!-- 削除確認カスタムモーダル -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>⚠️ 削除の確認</h3>
+            <p>「<strong id="deleteTargetName">動物名</strong>」の情報を完全に削除しますか？<br>この操作は取り消せません。</p>
+            <div class="modal-actions">
+                <button class="modal-btn btn-secondary" id="cancelDeleteBtn">キャンセル</button>
+                <button class="modal-btn btn-danger" id="confirmDeleteBtn">完全に削除する</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div class="toast" id="toast"></div>
+
+    <script src="delete.js"></script>
+</body>
+</html>

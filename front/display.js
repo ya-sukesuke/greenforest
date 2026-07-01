@@ -10,7 +10,6 @@ let profiles = [];
 
 let index = 0;
 let currentCard = null;
-let isAnimating = false;
 
 // ================================
 // 要素取得
@@ -19,7 +18,9 @@ const viewer = document.getElementById('viewer');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const flipBtn = document.getElementById('flipBtn');
-const saveBtn = document.getElementById('saveBtn');
+
+// 公式LINEのアカウントIDを設定してください（例: @greenforest）
+const LINE_OFFICIAL_ACCOUNT_ID = "@889qbfcv";
 
 // ================================
 // HTMLエスケープ
@@ -34,27 +35,108 @@ function escapeHtml(s){
 
 /* --- データ変換 --- */
 function formatDataForDisplay(data) {
-    return data.map(p => ({
-        id: p.uuid,
-        photo: p.image,
-        name: p.name || "不明",
-        age: p.age || 0,
-        month: p.month || 0,
-        kind: p.type === "dog" ? "犬" : "猫",
-        breed: p.breed || "",
-        plf: `
-【名前】${p.name || "不明"}
-【性別】${p.gender === "male" ? "男の子" : "女の子"}
-【年齢】${p.age || 0}歳${p.month || 0}ヶ月
-【避妊・去勢】${p.operated === "done" ? "済" : "未"}
-【緊張度】${p.tension || "不明"}
-【病歴】${(p.diseases && p.diseases.length > 0) ? p.diseases.join(" / ") : "特になし"}
-【推定誕生日】${p.birthday || "不明"}
-【保護日】${p.protect_day || "不明"}
-【紹介文】${p.bio || ""}
-`.trim(),
-        uuid: p.uuid || "不明"
-    }));
+    return data.map(p => {
+        let ageStr = "不詳";
+        if (p.age !== undefined && p.age !== null && p.age !== -1 && p.age !== "-1") {
+            const ageNum = parseInt(p.age, 10);
+            if (!isNaN(ageNum)) {
+                ageStr = `${ageNum}歳`;
+                if (p.is_estimated) {
+                    ageStr += "（推定）";
+                }
+            }
+        }
+
+        const diseaseList = [];
+        if (p.diseases && p.diseases.length > 0) {
+            p.diseases.forEach(d => {
+                if (d && d !== "other") {
+                    diseaseList.push(d);
+                }
+            });
+        }
+        if (p.other_disease) {
+            diseaseList.push(p.other_disease);
+        }
+        const diseaseStr = diseaseList.length > 0 ? diseaseList.join(" / ") : "特になし";
+
+        return {
+            raw: p,
+            photo: p.image,
+            name: p.name || "不明",
+            age: ageStr,
+            kind: p.type === "dog" ? "犬" : p.type === "cat" ? "猫" : "動物",
+            plf: [
+                { label: "名前", value: p.name || "不明" },
+                { label: "年齢", value: ageStr },
+                { label: "性別", value: p.gender === "male" ? "男の子" : "女の子" },
+                { label: "毛色", value: p.coat_color || p.breed || "不明" },
+                { label: "避妊・去勢", value: p.sterilization === "done" || p.operated === "done" ? "済" : "未" },
+                { label: "病歴", value: diseaseStr },
+                { label: "性格", value: p.personality || p.bio || "" }
+            ],
+            uuid: p.uuid || "不明"
+        };
+    });
+}
+
+function buildLineMessage(profile) {
+    const kind = profile.type === 'dog' ? '犬' : profile.type === 'cat' ? '猫' : '動物';
+    const coatColor = profile.coat_color || profile.breed || '不明';
+    const sterilization = profile.sterilization === 'done' || profile.operated === 'done' ? '済' : '未';
+
+    let ageStr = "不詳";
+    if (profile.age !== undefined && profile.age !== null && profile.age !== -1 && profile.age !== "-1") {
+        const ageNum = parseInt(profile.age, 10);
+        if (!isNaN(ageNum)) {
+            ageStr = `${ageNum}歳`;
+            if (profile.is_estimated) {
+                ageStr += "（推定）";
+            }
+        }
+    }
+
+    const diseaseList = [];
+    if (profile.diseases && profile.diseases.length > 0) {
+        profile.diseases.forEach(d => {
+            if (d && d !== 'other') {
+                diseaseList.push(d);
+            }
+        });
+    }
+    if (profile.other_disease) {
+        diseaseList.push(profile.other_disease);
+    }
+    const diseases = diseaseList.length > 0 ? diseaseList.join(' / ') : '特になし';
+
+    return [
+        '契約について問い合わせしたいです。',
+        `UUID: ${profile.uuid || '不明'}`,
+        `名前: ${profile.name || '不明'}`,
+        `年齢: ${ageStr}`,
+        `性別: ${profile.gender === 'male' ? '男の子' : profile.gender === 'female' ? '女の子' : '不明'}`,
+        `種類: ${kind}`,
+        `毛色: ${coatColor}`,
+        `避妊・去勢: ${sterilization}`,
+        `病歴: ${diseases}`,
+        `性格: ${profile.personality || profile.bio || '不明'}`,
+        '',
+        '画像URL:',
+        profile.image || '不明'
+    ].join('\n');
+}
+
+function openOfficialLine(profile) {
+    if (!profile || !profile.uuid) return;
+
+    if (!LINE_OFFICIAL_ACCOUNT_ID) {
+        alert('公式LINEのアカウントIDを設定してください');
+        return;
+    }
+
+    const message = buildLineMessage(profile);
+    const lineUrl = `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OFFICIAL_ACCOUNT_ID)}/?${encodeURIComponent(message)}`;
+    window.location.href = lineUrl;
 }
 
 /* --- カード作成 --- */
@@ -65,9 +147,38 @@ function makeCard(item, pos = '') {
     // ============================
     // 表
     // ============================
-    // ★修正：frontDivの二重宣言エラーを修正
     const frontDiv = document.createElement('div');
     frontDiv.className = 'inner front';
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'card-actions';
+
+    const favoriteBtn = document.createElement('button');
+    favoriteBtn.type = 'button';
+    favoriteBtn.className = 'icon-btn favorite-btn';
+    favoriteBtn.setAttribute('aria-label', 'お気に入り');
+    favoriteBtn.textContent = '♡';
+
+    favoriteBtn.addEventListener('click', async event => {
+        event.stopPropagation();
+        favoriteBtn.disabled = true;
+        await toggleFavorite(item.raw, favoriteBtn);
+        favoriteBtn.disabled = false;
+    });
+
+    const lineBtn = document.createElement('button');
+    lineBtn.type = 'button';
+    lineBtn.className = 'icon-btn line-btn';
+    lineBtn.setAttribute('aria-label', '公式LINEへ送信');
+    lineBtn.textContent = '↗';
+
+    lineBtn.addEventListener('click', event => {
+        event.stopPropagation();
+        openOfficialLine(item.raw);
+    });
+
+    actionsDiv.appendChild(favoriteBtn);
+    actionsDiv.appendChild(lineBtn);
 
     const img = document.createElement('img');
     img.className = 'photo';
@@ -79,16 +190,22 @@ function makeCard(item, pos = '') {
     };
 
     frontDiv.appendChild(img);
+    frontDiv.appendChild(actionsDiv);
+
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'front-info';
 
     const kindDiv = document.createElement('div');
-    kindDiv.className = 'kind';
-    kindDiv.textContent = item.kind;
-    frontDiv.appendChild(kindDiv);
+    kindDiv.className = 'name';
+    kindDiv.textContent = item.name;
+    infoDiv.appendChild(kindDiv);
 
-    const breedDiv = document.createElement('div');
-    breedDiv.className = 'breed';
-    breedDiv.textContent = item.breed;
-    frontDiv.appendChild(breedDiv);
+    const coatColorDiv = document.createElement('div');
+    coatColorDiv.className = 'age';
+    coatColorDiv.textContent = item.age;
+    infoDiv.appendChild(coatColorDiv);
+
+    frontDiv.appendChild(infoDiv);
 
     // ============================
     // 裏
@@ -98,7 +215,20 @@ function makeCard(item, pos = '') {
 
     const plfDiv = document.createElement('div');
     plfDiv.className = 'plf';
-    plfDiv.innerHTML = escapeHtml(item.plf).replace(/\n/g, "<br>");
+
+    const dl = document.createElement('dl');
+    dl.className = 'plf-list';
+    item.plf.forEach(info => {
+        if (info.value) {
+            const dt = document.createElement('dt');
+            dt.textContent = `【${info.label}】`;
+            const dd = document.createElement('dd');
+            dd.textContent = info.value;
+            dl.appendChild(dt);
+            dl.appendChild(dd);
+        }
+    });
+    plfDiv.appendChild(dl);
 
     const uuidDiv = document.createElement('div');
     uuidDiv.className = 'uuid';
@@ -120,67 +250,67 @@ function makeCard(item, pos = '') {
 }
 
 /* --- ★修正：サーバーと直接やり取りしてお気に入り登録/解除を行う関数 --- */
-async function toggleFavorite(profile) {
-    if (!profile || !profile.uuid) return;
+async function toggleFavorite(profile, button) {
+    if (!profile || !profile.uuid || !button) return;
+
+    const isCurrentlySaved = button.classList.contains('active');
 
     try {
-        const isCurrentlySaved = saveBtn.classList.contains('active');
-
         if (!isCurrentlySaved) {
-            /* --- 登録要求 (POST) --- */
             const response = await fetch(API_FAVORITE_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ uuid: profile.uuid })
             });
 
             if (response.ok) {
-                saveBtn.classList.add('active');
-                alert("登録しました");
-            } else {
-                alert("登録に失敗しました");
+                button.classList.add('active');
+                button.textContent = '♥';
             }
         } else {
-            /* --- 削除要求 (DELETE) --- */
             const response = await fetch(`${API_FAVORITE_URL}/${profile.uuid}`, {
-                method: "DELETE"
+                method: 'DELETE'
             });
 
             if (response.ok) {
-                saveBtn.classList.remove('active');
-                alert("削除されました");
-            } else {
-                alert("削除に失敗しました");
+                button.classList.remove('active');
+                button.textContent = '♡';
             }
         }
     } catch (error) {
-        console.error("Favorite Error:", error);
-        alert("サーバーとの通信に失敗しました");
+        console.error('Favorite Error:', error);
+        alert('サーバーとの通信に失敗しました');
     }
 }
 
-/* --- ★修正：サーバーから現在のお気に入り状態を取得してボタン色を維持する関数 --- */
-async function updateSaveButtonState() {
-    if (!profiles || !profiles[index]) return;
+async function updateFavoriteButtonState() {
+    if (!currentCard || !profiles[index]) return;
 
-    // ★修正：currentProfileData の名前エラーを currentProfile に修正
     const currentProfile = profiles[index];
+    const activeButton = currentCard.querySelector('.favorite-btn');
+    if (!activeButton) return;
 
     try {
         const response = await fetch(`${API_FAVORITE_URL}/${currentProfile.uuid}`);
+        if (!currentCard || !profiles[index] || profiles[index].uuid !== currentProfile.uuid) return;
+
         if (response.ok) {
             const result = await response.json();
             if (result.is_favorite) {
-                saveBtn.classList.add('active');
+                activeButton.classList.add('active');
+                activeButton.textContent = '♥';
             } else {
-                saveBtn.classList.remove('active');
+                activeButton.classList.remove('active');
+                activeButton.textContent = '♡';
             }
         } else {
-            saveBtn.classList.remove('active');
+            activeButton.classList.remove('active');
+            activeButton.textContent = '♡';
         }
     } catch (error) {
-        console.error("Check Favorite Error:", error);
-        saveBtn.classList.remove('active');
+        console.error('Check Favorite Error:', error);
+        activeButton.classList.remove('active');
+        activeButton.textContent = '♡';
     }
 }
 
@@ -191,38 +321,26 @@ function renderInitial() {
     viewer.innerHTML = "";
     const card = makeCard(words[index]);
 
-    card.classList.add('current', 'enter');
+    card.classList.add('current');
     viewer.appendChild(card);
     currentCard = card;
 
-    updateButtons();
-    updateSaveButtonState();
+    updateFavoriteButtonState();
 }
 
 /* --- カード切り替え --- */
-function changeCard(newIndex, outClass, inClass) {
-    if (isAnimating) return;
-    isAnimating = true;
+function changeCard(newIndex) {
+    if (!words[newIndex]) return;
 
+    viewer.innerHTML = "";
     const newCard = makeCard(words[newIndex]);
+    newCard.classList.add('current');
+    viewer.appendChild(newCard);
 
-    requestAnimationFrame(() => {
-        currentCard.classList.add(outClass);
-        viewer.appendChild(newCard);
-        newCard.classList.add('enter');
-    });
+    currentCard = newCard;
+    index = newIndex;
 
-    setTimeout(() => {
-        currentCard.remove();
-        newCard.classList.remove(inClass, 'enter');
-        newCard.classList.add('current');
-        currentCard = newCard;
-        index = newIndex;
-        isAnimating = false;
-
-        updateButtons();
-        updateSaveButtonState();
-    }, 520);
+    updateFavoriteButtonState();
 }
 
 /* --- 次へ --- */
@@ -230,9 +348,9 @@ function goNext() {
     if (words.length === 0) return;
 
     if (index >= words.length - 1) {
-        changeCard(0, 'to-left', 'from-right');
+        changeCard(0);
     } else {
-        changeCard(index + 1, 'to-left', 'from-right');
+        changeCard(index + 1);
     }
 }
 
@@ -241,9 +359,9 @@ function goPrev() {
     if (words.length === 0) return;
 
     if (index <= 0) {
-        changeCard(words.length - 1, 'to-right', 'from-left');
+        changeCard(words.length - 1);
     } else {
-        changeCard(index - 1, 'to-right', 'from-left');
+        changeCard(index - 1);
     }
 }
 
@@ -252,21 +370,6 @@ function flip(card) {
     if (!card) return;
     card.classList.toggle('flipped');
 }
-
-/* --- ボタン更新 --- */
-function updateButtons() {
-    // 必要ならここに追加
-}
-
-/* --- お気に入りボタン --- */
-saveBtn.addEventListener('click', async () => {
-    if (!profiles || !profiles[index]) return;
-    const currentProfileData = profiles[index];
-
-    saveBtn.disabled = true;
-    await toggleFavorite(currentProfileData);
-    saveBtn.disabled = false;
-});
 
 /* --- ナビゲーションボタン --- */
 nextBtn.addEventListener('click', goNext);
