@@ -21,7 +21,8 @@ function escapeHtml(s){
 async function getFavoriteUUIDsFromStorage() {
     try {
         const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
-        return favs ? JSON.parse(favs) : [];
+        const parsed = favs ? JSON.parse(favs) : [];
+        return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
         console.error("お気に入り一覧の取得に失敗しました:", error);
         return [];
@@ -32,9 +33,15 @@ async function getFavoriteUUIDsFromStorage() {
    ★修正：お気に入り解除（ローカルストレージから削除）
 ========================= */
 async function removeFavorite(uuid){
+    if (!uuid) {
+        console.error("removeFavorite: uuid is missing or empty");
+        alert("削除エラー: 無効なIDです。");
+        return;
+    }
     try {
         const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
-        let favorites = favs ? JSON.parse(favs) : [];
+        const parsed = favs ? JSON.parse(favs) : [];
+        let favorites = Array.isArray(parsed) ? parsed : [];
         favorites = favorites.filter(id => id !== uuid);
         localStorage.setItem(STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
 

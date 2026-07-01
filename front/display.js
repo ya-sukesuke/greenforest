@@ -6,7 +6,8 @@ const STORAGE_FAVORITE_KEY = "favorites";
 function getFavoritesFromStorage() {
     try {
         const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
-        return favs ? JSON.parse(favs) : [];
+        const parsed = favs ? JSON.parse(favs) : [];
+        return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
         console.error("Failed to load favorites from localStorage", e);
         return [];
@@ -270,7 +271,19 @@ function makeCard(item, pos = '') {
 
 /* --- ★修正：ローカルストレージでお気に入り登録/解除を行う関数 --- */
 async function toggleFavorite(profile, button) {
-    if (!profile || !profile.uuid || !button) return;
+    if (!profile) {
+        console.error("toggleFavorite: profile is undefined or null");
+        return;
+    }
+    if (!profile.uuid) {
+        console.error("toggleFavorite: profile.uuid is missing or empty", profile);
+        alert("お気に入り機能エラー: 動物のID(UUID)が取得できません。");
+        return;
+    }
+    if (!button) {
+        console.error("toggleFavorite: button is undefined or null");
+        return;
+    }
 
     const isCurrentlySaved = button.classList.contains('active');
 
