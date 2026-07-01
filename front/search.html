@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>保護動物検索</title>
+
+    <link rel="stylesheet" href="header_style.css">
+    <link rel="stylesheet" href="scroll.css">
+    <link rel="stylesheet" href="search.css">
+</head>
+
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main class="page">
+
+        <section class="intro">
+            <h1>保護動物検索</h1>
+        </section>
+
+        <section class="search-area">
+
+            <div class="search-card">
+
+                <h2>検索条件</h2>
+
+                <!-- 種類 -->
+                <div class="search-group">
+                    <label>種類</label>
+
+                    <label>
+                        <input type="checkbox" id="typeDog">
+                        犬
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="typeCat">
+                        猫
+                    </label>
+                </div>
+
+                <!-- 性別 -->
+                <div class="search-group">
+                    <label>性別</label>
+
+                    <label>
+                        <input type="checkbox" id="genderMale">
+                        男の子
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="genderFemale">
+                        女の子
+                    </label>
+                </div>
+
+                <!-- 避妊去勢 -->
+                <div class="search-group">
+                    <label>避妊・去勢</label>
+
+                    <label>
+                        <input type="checkbox" id="sterDone">
+                        済
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="sterNotDone">
+                        未
+                    </label>
+                </div>
+
+                <!-- 病歴 -->
+                <div class="search-group">
+                    <label>病歴</label>
+
+                    <label>
+                        <input type="checkbox" id="diseaseFiv">
+                        エイズ
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="diseaseFelv">
+                        白血病
+                    </label>
+                </div>
+
+                <!-- 年齢 -->
+                <div class="search-group">
+                    <label>年齢</label>
+
+                    <div class="age-range">
+
+                        <select id="minAge"></select>
+
+                        <span>〜</span>
+
+                        <select id="maxAge"></select>
+
+                    </div>
+                </div>
+
+                <button id="searchBtn" class="search-btn">
+                    検索
+                </button>
+
+            </div>
+
+        </section>
+
+        <section class="result-area">
+
+            <div id="resultCount"></div>
+
+            <div id="scroll-viewer" class="scroll-viewer"></div>
+
+        </section>
+
+    </main>
+
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-placeholder').innerHTML = data;
+        });
+    </script>
+
+    <script src="search.js"></script>
+
+</body>
+</html>
