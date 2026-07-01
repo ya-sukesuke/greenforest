@@ -1,5 +1,25 @@
 const API_GET_URL = "/animals";
-const API_FAVORITE_URL = "/favorites";
+// ローカルストレージのお気に入りキー
+const STORAGE_FAVORITE_KEY = "favorites";
+
+function getFavoritesFromStorage() {
+    try {
+        const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
+        const parsed = favs ? JSON.parse(favs) : [];
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        console.error("Failed to load favorites from localStorage", e);
+        return [];
+    }
+}
+
+function saveFavoritesToStorage(favorites) {
+    try {
+        localStorage.setItem(STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
+    } catch (e) {
+        console.error("Failed to save favorites to localStorage", e);
+    }
+}
 
 // 公式LINEのアカウントIDを設定してください（例: @greenforest）
 const LINE_OFFICIAL_ACCOUNT_ID = "@889qbfcv";
@@ -107,47 +127,45 @@ function buildLineMessage(profile) {
     ].join('\n');
 }
 
-async function getFavoriteUUIDsFromServer() {
-    try {
-        const response = await fetch(API_FAVORITE_URL);
-        if (!response.ok) return [];
-        return await response.json();
-    } catch (error) {
-        console.error('お気に入り一覧の取得に失敗しました:', error);
-        return [];
-    }
+async function getFavoriteUUIDsFromStorage() {
+    return getFavoritesFromStorage();
 }
 
 async function toggleFavorite(profile, button) {
-    if (!profile || !profile.uuid) return;
+    if (!profile) {
+        console.error("toggleFavorite: profile is undefined or null");
+        return;
+    }
+    if (!profile.uuid) {
+        console.error("toggleFavorite: profile.uuid is missing or empty", profile);
+        alert("お気に入り機能エラー: 動物のID(UUID)が取得できません。");
+        return;
+    }
+    if (!button) {
+        console.error("toggleFavorite: button is undefined or null");
+        return;
+    }
 
     const isActive = button.classList.contains('active');
 
     try {
+        let favorites = getFavoritesFromStorage();
         if (!isActive) {
-            const response = await fetch(API_FAVORITE_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uuid: profile.uuid })
-            });
-
-            if (response.ok) {
-                button.classList.add('active');
-                button.textContent = '♥';
+            if (!favorites.includes(profile.uuid)) {
+                favorites.push(profile.uuid);
+                saveFavoritesToStorage(favorites);
             }
+            button.classList.add('active');
+            button.textContent = '♥';
         } else {
-            const response = await fetch(`${API_FAVORITE_URL}/${profile.uuid}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                button.classList.remove('active');
-                button.textContent = '♡';
-            }
+            favorites = favorites.filter(id => id !== profile.uuid);
+            saveFavoritesToStorage(favorites);
+            button.classList.remove('active');
+            button.textContent = '♡';
         }
     } catch (error) {
         console.error('Favorite Error:', error);
-        alert('サーバーとの通信に失敗しました');
+        alert('お気に入りの保存に失敗しました');
     }
 }
 
@@ -267,7 +285,7 @@ async function fetchAnimals() {
     try {
         const [animalResponse, favoriteUUIDs] = await Promise.all([
             fetch(API_GET_URL),
-            getFavoriteUUIDsFromServer()
+            getFavoriteUUIDsFromStorage()
         ]);
 
         if (!animalResponse.ok) {
