@@ -1,5 +1,5 @@
 const API_GET_URL = "/animals";
-const API_FAVORITE_URL = "/favorites"; // ★お気に入り用のURLを追加
+const STORAGE_FAVORITE_KEY = "favorites"; // ローカルストレージのお気に入りキー
 
 const favoriteContainer = document.getElementById("favoriteContainer");
 const emptyMessage = document.getElementById("emptyMessage");
@@ -16,16 +16,12 @@ function escapeHtml(s){
 }
 
 /* =========================
-   ★修正：サーバーからお気に入りUUID一覧をまとめて取得する関数
+   ★修正：ローカルストレージからお気に入りUUID一覧をまとめて取得する関数
 ========================= */
-async function getFavoriteUUIDsFromServer() {
+async function getFavoriteUUIDsFromStorage() {
     try {
-        const response = await fetch(API_FAVORITE_URL);
-        if (response.ok) {
-            // サーバーから ["uuid1", "uuid2"] 形式の配列を取得
-            return await response.json(); 
-        }
-        return [];
+        const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
+        return favs ? JSON.parse(favs) : [];
     } catch (error) {
         console.error("お気に入り一覧の取得に失敗しました:", error);
         return [];
@@ -33,25 +29,21 @@ async function getFavoriteUUIDsFromServer() {
 }
 
 /* =========================
-   ★修正：お気に入り解除（サーバーと直接やり取り）
+   ★修正：お気に入り解除（ローカルストレージから削除）
 ========================= */
 async function removeFavorite(uuid){
     try {
-        // サーバーに DELETE 要求を送信して削除
-        const response = await fetch(`${API_FAVORITE_URL}/${uuid}`, {
-            method: "DELETE"
-        });
+        const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
+        let favorites = favs ? JSON.parse(favs) : [];
+        favorites = favorites.filter(id => id !== uuid);
+        localStorage.setItem(STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
 
-        if (response.ok) {
-            alert("削除されました");
-            // 削除が成功したら、画面上の該当カードを再描画（リロードなしで反映）
-            renderFavorites();
-        } else {
-            alert("削除に失敗しました");
-        }
+        alert("削除されました");
+        // 削除が成功したら、画面上の該当カードを再描画（リロードなしで反映）
+        renderFavorites();
     } catch (error) {
         console.error("削除エラー:", error);
-        alert("サーバーとの通信に失敗しました");
+        alert("削除に失敗しました");
     }
 }
 
@@ -127,8 +119,8 @@ ${escapeHtml(profile.personality || profile.bio || "")}
 async function renderFavorites(){
     favoriteContainer.innerHTML = "";
 
-    // 1. サーバーからお気に入り登録されているUUID一覧を取得
-    const favoriteUUIDs = await getFavoriteUUIDsFromServer();
+    // 1. ローカルストレージからお気に入り登録されているUUID一覧を取得
+    const favoriteUUIDs = await getFavoriteUUIDsFromStorage();
 
     if(!favoriteUUIDs || favoriteUUIDs.length === 0){
         emptyMessage.style.display = "block";
@@ -144,6 +136,13 @@ async function renderFavorites(){
         const favoriteAnimals = allAnimals.filter(animal =>
             favoriteUUIDs.includes(animal.uuid)
         );
+
+        // クリーンアップ：サーバー上にすでに存在しない動物のUUIDがお気に入りにある場合、ローカルストレージから削除する
+        const allAnimalUUIDs = allAnimals.map(animal => animal.uuid);
+        const validFavoriteUUIDs = favoriteUUIDs.filter(uuid => allAnimalUUIDs.includes(uuid));
+        if (validFavoriteUUIDs.length !== favoriteUUIDs.length) {
+            localStorage.setItem(STORAGE_FAVORITE_KEY, JSON.stringify(validFavoriteUUIDs));
+        }
 
         if (favoriteAnimals.length === 0) {
             emptyMessage.style.display = "block";

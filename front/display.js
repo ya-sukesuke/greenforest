@@ -1,6 +1,25 @@
 // 【重要】FastAPIサーバーの GET エンドポイントURL
 const API_GET_URL = "/animals";
-const API_FAVORITE_URL = "/favorites"; 
+// ローカルストレージのお気に入りキー
+const STORAGE_FAVORITE_KEY = "favorites";
+
+function getFavoritesFromStorage() {
+    try {
+        const favs = localStorage.getItem(STORAGE_FAVORITE_KEY);
+        return favs ? JSON.parse(favs) : [];
+    } catch (e) {
+        console.error("Failed to load favorites from localStorage", e);
+        return [];
+    }
+}
+
+function saveFavoritesToStorage(favorites) {
+    try {
+        localStorage.setItem(STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
+    } catch (e) {
+        console.error("Failed to save favorites to localStorage", e);
+    }
+}
 
 // ================================
 // グローバル変数
@@ -249,37 +268,30 @@ function makeCard(item, pos = '') {
     return c;
 }
 
-/* --- ★修正：サーバーと直接やり取りしてお気に入り登録/解除を行う関数 --- */
+/* --- ★修正：ローカルストレージでお気に入り登録/解除を行う関数 --- */
 async function toggleFavorite(profile, button) {
     if (!profile || !profile.uuid || !button) return;
 
     const isCurrentlySaved = button.classList.contains('active');
 
     try {
+        let favorites = getFavoritesFromStorage();
         if (!isCurrentlySaved) {
-            const response = await fetch(API_FAVORITE_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uuid: profile.uuid })
-            });
-
-            if (response.ok) {
-                button.classList.add('active');
-                button.textContent = '♥';
+            if (!favorites.includes(profile.uuid)) {
+                favorites.push(profile.uuid);
+                saveFavoritesToStorage(favorites);
             }
+            button.classList.add('active');
+            button.textContent = '♥';
         } else {
-            const response = await fetch(`${API_FAVORITE_URL}/${profile.uuid}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                button.classList.remove('active');
-                button.textContent = '♡';
-            }
+            favorites = favorites.filter(id => id !== profile.uuid);
+            saveFavoritesToStorage(favorites);
+            button.classList.remove('active');
+            button.textContent = '♡';
         }
     } catch (error) {
         console.error('Favorite Error:', error);
-        alert('サーバーとの通信に失敗しました');
+        alert('お気に入りの保存に失敗しました');
     }
 }
 
@@ -291,18 +303,13 @@ async function updateFavoriteButtonState() {
     if (!activeButton) return;
 
     try {
-        const response = await fetch(`${API_FAVORITE_URL}/${currentProfile.uuid}`);
+        const favorites = getFavoritesFromStorage();
+        const isFavorite = favorites.includes(currentProfile.uuid);
         if (!currentCard || !profiles[index] || profiles[index].uuid !== currentProfile.uuid) return;
 
-        if (response.ok) {
-            const result = await response.json();
-            if (result.is_favorite) {
-                activeButton.classList.add('active');
-                activeButton.textContent = '♥';
-            } else {
-                activeButton.classList.remove('active');
-                activeButton.textContent = '♡';
-            }
+        if (isFavorite) {
+            activeButton.classList.add('active');
+            activeButton.textContent = '♥';
         } else {
             activeButton.classList.remove('active');
             activeButton.textContent = '♡';
