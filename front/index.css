@@ -21,18 +21,6 @@ nav a:hover{
     color: #3A8FB7;
 }
 
-
-/* ボタン */
-.button{
-    background-color: #3A8FB7;
-    color: white;
-}
-
-.button:hover{
-    background-color: #2F7598;
-}
-
-
 /* セクションタイトル */
 section h2{
     color: #3A8FB7;
@@ -60,4 +48,114 @@ section h2{
 footer{
     background-color: #3A8FB7;
     color: white;
+}
+/* ==========================
+   全体中央寄せ
+========================== */
+
+body{
+    margin: 0;
+    font-family: "Yu Gothic", sans-serif;
+    text-align: center;
+    line-height: 1.8;
+}
+
+main{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* ==========================
+   Hero
+========================== */
+
+.hero{
+    padding: 120px 20px;
+}
+
+.hero h2{
+    font-size: 3rem;
+    margin-bottom: 25px;
+}
+
+.hero p{
+    max-width: 700px;
+    margin: 0 auto 40px;
+    font-size: 1.2rem;
+}
+
+/* ==========================
+   ボタン（display.htmlと統一）
+========================== */
+
+.btn{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 40px;
+    background: #3A8FB7;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover{
+    background: #2F7598;
+    transform: translateY(-3px);
+}
+
+/* ==========================
+   セクション
+========================== */
+
+.content{
+    margin: 100px 0;
+}
+
+.content h2{
+    display: inline-block;
+    background: #EEF7FB;
+    padding: 12px 35px;
+    border-radius: 50px;
+    margin-bottom: 30px;
+}
+
+.content p{
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ==========================
+   フッター
+========================== */
+
+footer{
+    margin-top: 100px;
+    padding: 25px;
+}
+
+/* ==========================
+   スマホ対応
+========================== */
+
+@media (max-width:768px){
+
+    .hero{
+        padding: 80px 20px;
+    }
+
+    .hero h2{
+        font-size: 2.2rem;
+    }
+
+    .hero p{
+        font-size: 1rem;
+    }
+
+    .btn{
+        width: 240px;
+    }
+
 }
