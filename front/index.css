@@ -343,7 +343,7 @@ section{
 
 .accordion-button{
 
-    display:block;
+    display:none;
 
     margin:45px auto;
 
@@ -375,11 +375,11 @@ section{
 
 .accordion-content{
 
-    display:none;
+    display:block;
 
     max-width:850px;
 
-    margin:0 auto;
+    margin:35px auto 0;
 
     padding:35px;
 
