@@ -2,93 +2,489 @@
 <html lang="ja">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Green Forest</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="header_style.css">
     <link rel="stylesheet" href="index.css">
 
-    <title>Green Forest</title>
 </head>
 
 <body>
 
-    <!-- ヘッダー -->
-    <header>
-        <div id="header"></div>
-    </header>
+    <!-- ==========================
+         Header
+    =========================== -->
 
-    <!-- メイン -->
-    <main>
-
-        <section class="hero">
-
-            <h2>
-                きみと、あたらしい家族をつなぐ場所。
-            </h2>
-
-            <p>
-                やさしい出会いが、ここからはじまります。<br>
-                保護犬・保護猫と新しい家族をつなぐマッチングサイトです。
-            </p>
-
-            <a href="display.html" class="btn">
-                どうぶつをさがす
-            </a>
-
-        </section>
-
-
-        <section class="content">
-
-            <h2>私たちの想い</h2>
-
-            <p>
-                Green Forest は保護犬・保護猫と里親希望者をつなぐためのサイトです。
-                動物たちに新しい家族との出会いを提供することを目的としています。
-            </p>
-
-        </section>
-
-
-        <section class="content">
-
-            <h2>保護どうぶつが生まれる背景</h2>
-
-            <p>
-                飼育放棄や迷子、多頭飼育崩壊など、
-                様々な事情で保護される動物たちがいます。
-            </p>
-
-        </section>
-
-
-        <section class="content">
-
-            <h2>Green Forest × 手と手の森 × 旭川高専</h2>
-
-            <p>
-                高専生による開発と、
-                保護団体との連携によって進められているプロジェクトです。
-            </p>
-
-        </section>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Green Forest</p>
-    </footer>
-
+    <div id="header-placeholder"></div>
 
     <script>
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-                document.getElementById("header").innerHTML = data;
+                document.getElementById("header-placeholder").innerHTML = data;
             });
     </script>
+
+    <!-- ==========================
+         Main
+    =========================== -->
+
+    <main>
+
+        <!-- ==========================
+             Hero
+        =========================== -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="hero-subtitle">
+                    Green Forest
+                </p>
+
+                <h1 class="hero-title">
+                    きみと、<br>
+                    あたらしい家族をつなぐ場所。
+                </h1>
+
+                <p class="hero-description">
+
+                    やさしい出会いが、ここからはじまります。
+
+                    <br><br>
+
+                    Green Forest は、
+                    保護犬・保護猫と新しい家族をつなぐ
+                    マッチングサイトです。
+
+                    <br><br>
+
+                    掲載されているどうぶつたちは、
+                    保護団体・NPO法人によって
+                    大切にケアされています。
+
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="display.html" class="hero-button">
+                        どうぶつをさがす
+                    </a>
+
+                    <a href="#project" class="hero-button">
+                        私たちの想い・プロジェクトについて
+                    </a>
+
+                    <a href="https://midori-no-mori.jp/about"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="hero-button">
+
+                        公式ページ
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================
+             譲渡の流れ
+        =========================== -->
+
+        <section class="flow">
+
+            <h2 class="section-title">
+
+                譲渡の流れ
+
+            </h2>
+
+            <p class="section-description">
+
+                Green Forest は、
+                保護どうぶつと里親をつなぐ
+                「情報の入り口」となるWebサイトです。
+
+            </p>
+
+            <div class="flow-cards">
+
+                <!-- ① -->
+
+                <div class="flow-card">
+
+                    <div class="flow-number">
+                        01
+                    </div>
+
+                    <h3>
+
+                        どうぶつをさがす
+
+                    </h3>
+
+                    <p>
+
+                        紹介カードから
+                        気になるどうぶつを
+                        探すことができます。
+
+                    </p>
+
+                    <a href="display.html">
+
+                        どうぶつをさがす →
+
+                    </a>
+
+                </div>
+
+                <!-- ② -->
+
+                <div class="flow-card">
+
+                    <div class="flow-number">
+                        02
+                    </div>
+
+                    <h3>
+
+                        お気に入り登録
+
+                    </h3>
+
+                    <p>
+
+                        気になるどうぶつを
+                        お気に入り登録して、
+                        後から比較できます。
+
+                    </p>
+
+                </div>
+
+                <!-- ③ -->
+
+                <div class="flow-card">
+
+                    <div class="flow-number">
+                        03
+                    </div>
+
+                    <h3>
+
+                        公式LINEへ
+
+                    </h3>
+
+                    <p>
+
+                        保護団体スタッフと
+                        チャットでやり取りし、
+                        譲渡手続きを進めます。
+
+                    </p>
+
+                    <a href="#">
+
+                        公式LINE →
+
+                    </a>
+
+                </div>
+
+            </div>
+        <!-- ==========================
+             私たちの想い
+        =========================== -->
+
+        <section class="information-section" id="project">
+
+            <div class="section-header">
+
+                <p class="section-subtitle">
+                    Project
+                </p>
+
+                <h2 class="section-title">
+
+                    私たちの想い・プロジェクトについて
+
+                </h2>
+
+            </div>
+
+            <p class="section-text">
+
+                どうぶつを「所有物」ではなく、
+                「共に生きる命」として捉える。
+
+            </p>
+
+            <button class="accordion-button">
+
+                ▼ 詳しく見る
+
+            </button>
+
+            <div class="accordion-content">
+
+                <p>
+
+                    Green Forest は、
+
+                    保護どうぶつと里親希望者をつなぐ
+                    「情報の入り口」を目指した
+                    Webマッチングサービスです。
+
+                    <br><br>
+
+                    情報を分かりやすく整理し、
+                    安心して新しい家族との
+                    出会いを探せる環境を
+                    提供します。
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================
+             社会背景
+        =========================== -->
+
+        <section class="information-section">
+
+            <div class="section-header">
+
+                <p class="section-subtitle">
+
+                    Background
+
+                </p>
+
+                <h2 class="section-title">
+
+                    社会背景
+
+                </h2>
+
+            </div>
+
+            <p class="section-text">
+
+                保護どうぶつとの出会いには、
+                まだ多くの課題があります。
+
+            </p>
+
+            <button class="accordion-button">
+
+                ▼ 詳しく見る
+
+            </button>
+
+            <div class="accordion-content">
+
+                <p>
+
+                    保護犬・保護猫の情報は
+                    各団体ごとに公開されており、
+
+                    <br><br>
+
+                    初めて里親を考える人にとって
+                    情報が探しにくい状況です。
+
+                    <br><br>
+
+                    Green Forest は
+                    情報をまとめることで
+                    最初の一歩を踏み出しやすくします。
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================
+             手と手の森
+        =========================== -->
+
+        <section class="information-section forest">
+
+            <div class="section-header">
+
+                <p class="section-subtitle">
+
+                    NPO
+
+                </p>
+
+                <h2 class="section-title">
+
+                    手と手の森
+
+                </h2>
+
+            </div>
+
+            <p class="section-text">
+
+                保護どうぶつと人をつなぐ
+                NPO法人です。
+
+            </p>
+
+            <button class="accordion-button">
+
+                ▼ 詳しく見る
+
+            </button>
+
+            <div class="accordion-content">
+
+                <p>
+
+                    保護犬・保護猫の保護、
+                    健康管理、
+                    譲渡支援を行っています。
+
+                    <br><br>
+
+                    獣医師・愛玩動物看護師・
+                    しつけインストラクターなどが
+                    協力して活動しています。
+
+                </p>
+
+            </div>
+
+        </section>
+        <!-- ==========================
+             Collaboration
+        =========================== -->
+
+        <section class="information-section">
+
+            <div class="section-header">
+
+                <p class="section-subtitle">
+                    Collaboration
+                </p>
+
+               <h2 class="section-title collaboration-title">
+
+    <span>Green Forest</span>
+
+    <span class="cross">×</span>
+
+    <span>手と手の森</span>
+
+    <span class="cross">×</span>
+
+    <span>旭川高専</span>
+
+</h2>
+
+            </div>
+
+            <p class="section-text">
+
+                高専生と保護団体が協力して
+                開発を進めています。
+
+            </p>
+
+            <button class="accordion-button">
+
+                ▼ 詳しく見る
+
+            </button>
+
+            <div class="accordion-content">
+
+                <p>
+
+                    このプロジェクトは
+
+                    <br><br>
+
+                    ・株式会社 Green Forest
+
+                    <br>
+
+                    ・NPO法人 手と手の森
+
+                    <br>
+
+                    ・旭川工業高等専門学校
+
+                    <br><br>
+
+                    の連携によって進められています。
+
+                    <br><br>
+
+                    高専生がWebサイトやシステムを開発し、
+
+                    利用者・保護団体の双方にとって
+
+                    使いやすいサービスを目指しています。
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==========================
+         Footer
+    =========================== -->
+
+    <footer>
+
+        <div class="footer-container">
+
+            <h2 class="footer-title">
+
+                Green Forest
+
+            </h2>
+
+            <p class="footer-text">
+
+                保護どうぶつと新しい家族をつなぐ
+                マッチングサービス
+
+            </p>
+
+            <p class="footer-copy">
+
+                © 2026 Green Forest All Rights Reserved.
+
+            </p>
+
+        </div>
+
+    </footer>
+
+    <!-- JavaScript -->
+
+    <script src="index.js"></script>
 
 </body>
 
