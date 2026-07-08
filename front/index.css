@@ -1,161 +1,558 @@
+/* =========================================
+   Reset
+========================================= */
 
-/* 全体 */
-body{
-    background-color: #f8fbfd;
-    color: #333;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-
-/* ヘッダー */
-.logo h1{
-    color: #3A8FB7;
+html{
+    scroll-behavior:smooth;
 }
-
-nav a:hover{
-    color: #3A8FB7;
-}
-
-
-/* メインタイトル */
-.hero h2{
-    color: #3A8FB7;
-}
-
-/* セクションタイトル */
-section h2{
-    color: #3A8FB7;
-}
-
-
-/* カード */
-.card h3{
-    color: #3A8FB7;
-}
-
-.card{
-    background-color: white;
-    border: 2px solid rgba(58,143,183,0.15);
-}
-
-
-/* 手と手の森 */
-.forest{
-    background-color: #EEF7FB;
-}
-
-
-/* フッター */
-footer{
-    background-color: #3A8FB7;
-    color: white;
-}
-/* ==========================
-   全体中央寄せ
-========================== */
 
 body{
-    margin: 0;
-    font-family: "Yu Gothic", sans-serif;
-    text-align: center;
-    line-height: 1.8;
+
+    font-family:"Yu Gothic","Hiragino Sans",sans-serif;
+
+    background:#ffffff;
+
+    color:#555;
+
+    line-height:1.9;
+
 }
+
+/* =========================================
+   Main
+========================================= */
 
 main{
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 60px 20px;
+
+    width:100%;
+
 }
 
-/* ==========================
+section{
+
+    padding:120px 30px;
+
+}
+
+/* =========================================
+   共通
+========================================= */
+
+.section-header{
+
+    text-align:center;
+
+    margin-bottom:45px;
+
+}
+
+.section-subtitle{
+
+    color:#3A8FB7;
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
+
+    font-size:.95rem;
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+
+}
+
+.section-title{
+
+    color:#3A8FB7;
+
+    font-size:2.6rem;
+
+    font-weight:bold;
+
+}
+
+.section-text{
+
+    text-align:center;
+
+    max-width:850px;
+
+    margin:40px auto;
+
+    color:#666;
+
+    font-size:1.15rem;
+
+    line-height:2.2;
+
+}
+
+/* =========================================
    Hero
-========================== */
+========================================= */
 
 .hero{
-    padding: 120px 20px;
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
 }
 
-.hero h2{
-    font-size: 3rem;
-    margin-bottom: 25px;
+.hero-content{
+
+    max-width:900px;
+
+    text-align:center;
+
 }
 
-.hero p{
-    max-width: 700px;
-    margin: 0 auto 40px;
-    font-size: 1.2rem;
+.hero-subtitle{
+
+    color:#3A8FB7;
+
+    letter-spacing:6px;
+
+    font-size:1rem;
+
+    font-weight:bold;
+
+    margin-bottom:25px;
+
 }
 
-/* ==========================
-   ボタン（display.htmlと統一）
-========================== */
+.hero-title{
 
-.btn{
-    display: inline-block;
-    margin-top: 20px;
-    padding: 15px 40px;
-    background: #3A8FB7;
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: bold;
-    transition: 0.3s;
+    font-size:4rem;
+
+    color:#3A8FB7;
+
+    line-height:1.4;
+
+    margin-bottom:40px;
+
 }
 
-.btn:hover{
-    background: #2F7598;
-    transform: translateY(-3px);
+.hero-description{
+
+    color:#666;
+
+    font-size:1.15rem;
+
+    line-height:2.2;
+
+    margin-bottom:60px;
+
 }
 
-/* ==========================
-   セクション
-========================== */
+/* =========================================
+   Hero Buttons
+========================================= */
 
-.content{
-    margin: 100px 0;
+.hero-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
 }
 
-.content h2{
-    display: inline-block;
-    background: #EEF7FB;
-    padding: 12px 35px;
-    border-radius: 50px;
-    margin-bottom: 30px;
+.hero-button{
+
+    display:inline-block;
+
+    background:#3A8FB7;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:18px 38px;
+
+    border-radius:999px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
 }
 
-.content p{
-    max-width: 700px;
-    margin: 0 auto;
+.hero-button:hover{
+
+    background:#2F7598;
+
+    transform:translateY(-4px);
+
+}
+/* =========================================
+   Flow
+========================================= */
+
+.flow{
+
+    background:#F8FCFE;
+
 }
 
-/* ==========================
-   フッター
-========================== */
+.flow-cards{
+
+    max-width:1200px;
+
+    margin:70px auto 40px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:35px;
+
+    flex-wrap:wrap;
+
+}
+
+.flow-card{
+
+    width:320px;
+
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:40px 30px;
+
+    text-align:center;
+
+    box-shadow:0 12px 35px rgba(58,143,183,.10);
+
+    transition:.3s;
+
+}
+
+.flow-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.flow-number{
+
+    width:65px;
+
+    height:65px;
+
+    margin:0 auto 25px;
+
+    border-radius:50%;
+
+    background:#3A8FB7;
+
+    color:#fff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:1.2rem;
+
+    font-weight:bold;
+
+}
+
+.flow-card h3{
+
+    color:#3A8FB7;
+
+    margin-bottom:20px;
+
+}
+
+.flow-card p{
+
+    color:#666;
+
+    line-height:2;
+
+}
+
+.flow-card a{
+
+    display:inline-block;
+
+    margin-top:25px;
+
+    color:#3A8FB7;
+
+    font-weight:bold;
+
+    text-decoration:none;
+
+}
+
+.section-description{
+
+    max-width:850px;
+
+    margin:0 auto;
+
+    text-align:center;
+
+    color:#666;
+
+}
+
+/* =========================================
+   Information
+========================================= */
+
+.information-section{
+
+    max-width:1000px;
+
+    margin:0 auto;
+
+}
+
+.forest{
+
+    background:#EEF7FB;
+
+    border-radius:35px;
+
+}
+
+/* =========================================
+   Accordion
+========================================= */
+
+.accordion-button{
+
+    display:none;
+
+    margin:45px auto;
+
+    padding:16px 36px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:#3A8FB7;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:1rem;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.accordion-button:hover{
+
+    background:#2F7598;
+
+}
+
+.accordion-content{
+
+    display:block;
+
+    max-width:850px;
+
+    margin:35px auto 0;
+
+    padding:35px;
+
+    background:white;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    line-height:2;
+
+}
+
+/* =========================================
+   Footer
+========================================= */
 
 footer{
-    margin-top: 100px;
-    padding: 25px;
+
+    margin-top:120px;
+
+    background:#3A8FB7;
+
+    color:white;
+
 }
 
-/* ==========================
-   スマホ対応
-========================== */
+.footer-container{
 
-@media (max-width:768px){
+    max-width:1000px;
 
-    .hero{
-        padding: 80px 20px;
+    margin:0 auto;
+
+    padding:60px 20px;
+
+    text-align:center;
+
+}
+
+.footer-title{
+
+    font-size:2rem;
+
+    margin-bottom:20px;
+
+}
+
+.footer-text{
+
+    margin-bottom:25px;
+
+    opacity:.9;
+
+}
+
+.footer-copy{
+
+    font-size:.9rem;
+
+    opacity:.8;
+
+}
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media(max-width:768px){
+
+    section{
+
+        padding:80px 20px;
+
     }
 
-    .hero h2{
-        font-size: 2.2rem;
+    .hero-title{
+
+        font-size:2.5rem;
+
     }
 
-    .hero p{
-        font-size: 1rem;
+    .hero-buttons{
+
+        flex-direction:column;
+
+        align-items:center;
+
     }
 
-    .btn{
-        width: 240px;
+    .hero-button{
+
+        width:260px;
+
+        text-align:center;
+
+    }
+
+    .flow-card{
+
+        width:100%;
+
+    }
+
+    .section-title{
+
+        font-size:2rem;
+
+    }
+
+}
+/* =========================================
+   Scroll Animation
+========================================= */
+
+.hidden{
+
+    opacity:0;
+
+    transform:translateY(40px);
+
+    transition:all .8s ease;
+
+}
+
+.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+/* =========================================
+   Collaboration Title
+========================================= */
+
+.collaboration-title{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.cross{
+
+    color:#3A8FB7;
+
+    font-weight:bold;
+
+}
+
+/* スマホ */
+
+@media(max-width:768px){
+
+    .collaboration-title{
+
+        flex-direction:column;
+
+        gap:8px;
+
+    }
+
+    .cross{
+
+        display:none;
+
     }
 
 }
