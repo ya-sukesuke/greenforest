@@ -1,0 +1,16 @@
+{
+  "name": "わんにゃんりんく",
+  "short_name": "わんにゃん",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7EC8E3",
+  "icons": [
+    {
+      "src": "assets/app-logo.png",
+      "sizes": "1280x1280",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
