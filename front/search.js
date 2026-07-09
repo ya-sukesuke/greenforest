@@ -16,13 +16,16 @@ function initAgeSelect() {
     const minAge = document.getElementById("minAge");
     const maxAge = document.getElementById("maxAge");
 
+    minAge.add(new Option("下限なし", ""));
+    maxAge.add(new Option("上限なし", ""));
+
     for (let i = 0; i <= 30; i++) {
-        minAge.add(new Option(i, i));
-        maxAge.add(new Option(i, i));
+        minAge.add(new Option(`${i}歳`, i));
+        maxAge.add(new Option(`${i}歳`, i));
     }
 
-    minAge.value = 0;
-    maxAge.value = 30;
+    minAge.value = "";
+    maxAge.value = "";
 }
 
 /* -------------------------
@@ -341,15 +344,11 @@ function makeCard(item) {
 ------------------------- */
 async function searchAnimals() {
 
-    const minAge =
-        parseInt(
-            document.getElementById("minAge").value
-        );
+    const minAgeVal = document.getElementById("minAge").value;
+    const maxAgeVal = document.getElementById("maxAge").value;
 
-    const maxAge =
-        parseInt(
-            document.getElementById("maxAge").value
-        );
+    const minAge = minAgeVal !== "" ? parseInt(minAgeVal, 10) : null;
+    const maxAge = maxAgeVal !== "" ? parseInt(maxAgeVal, 10) : null;
 
     const result = allAnimals.filter(a => {
 
@@ -403,19 +402,28 @@ async function searchAnimals() {
             ) return false;
         }
 
-        if (
-            a.age !== -1 &&
-            a.age !== null &&
-            a.age !== undefined
-        ) {
-
-            const age =
-                parseInt(a.age);
-
+        // 年齢フィルタが適用されている場合（minAge または maxAge が指定されている場合）
+        if (minAge !== null || maxAge !== null) {
+            // 年齢が不詳（-1, "-1", null, undefined）の場合は、年齢フィルタが指定されているので除外する
             if (
-                age < minAge ||
-                age > maxAge
+                a.age === -1 ||
+                a.age === "-1" ||
+                a.age === null ||
+                a.age === undefined
             ) {
+                return false;
+            }
+
+            const age = parseInt(a.age, 10);
+            if (isNaN(age)) {
+                return false;
+            }
+
+            if (minAge !== null && age < minAge) {
+                return false;
+            }
+
+            if (maxAge !== null && age > maxAge) {
                 return false;
             }
         }
