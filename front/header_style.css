@@ -51,23 +51,32 @@
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .nav-item {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 20px;
   transition: all 0.2s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav-item:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
+}
+
+.nav-icon {
+  font-size: 17px;
+  line-height: 1;
+  display: inline-block;
 }
 
 /* ===== ホバー/タップで表示されるドロップダウンメニュー ===== */
@@ -90,9 +99,9 @@
 .dropdown-btn {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
@@ -238,7 +247,7 @@ body {
 @media (max-width: 768px) {
   .header {
     height: 65px;
-    padding: 0 16px;
+    padding: 0 14px;
   }
 
   body {
@@ -246,26 +255,33 @@ body {
   }
 
   .header h1 {
-    font-size: 18px;
-    letter-spacing: 0.5px;
-  }
-
-  .desktop-only {
-    display: none !important;
+    font-size: 17px;
+    letter-spacing: 0px;
   }
 
   .header-nav {
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .nav-item {
+    font-size: 13px;
+    padding: 6px 10px;
+    gap: 4px;
+  }
+
+  .nav-icon {
+    font-size: 16px;
   }
 
   .dropdown-btn {
-    font-size: 14px;
-    padding: 6px 14px;
+    font-size: 13px;
+    padding: 6px 12px;
+    gap: 4px;
   }
 
   .dropdown-content {
     right: -5px;
-    width: calc(100vw - 32px);
+    width: calc(100vw - 28px);
     max-width: 270px;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -285,17 +301,37 @@ body {
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 480px) {
   .header {
-    padding: 0 12px;
+    padding: 0 10px;
   }
 
   .header h1 {
-    font-size: 16px;
+    font-size: 15px;
+  }
+
+  .nav-item {
+    padding: 5px 8px;
+    font-size: 12px;
   }
 
   .dropdown-btn {
-    font-size: 13px;
-    padding: 5px 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  /* 超極小画面ではアイコン中心に表示して絶対に崩れないように保護 */
+  .nav-text {
+    display: none;
+  }
+  
+  .nav-item, .dropdown-btn {
+    padding: 6px 10px;
+  }
+
+  .dropdown-btn .arrow {
+    margin-left: 2px;
   }
 }

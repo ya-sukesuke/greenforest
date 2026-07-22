@@ -7,13 +7,20 @@
 
   <div class="header-center">
     <nav class="header-nav" aria-label="メインナビゲーション">
-      <a href="index.html" class="nav-item desktop-only">ホーム</a>
-      <a href="display.html" class="nav-item desktop-only">マッチング</a>
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">ホーム</span>
+      </a>
+      <a href="display.html" class="nav-item">
+        <span class="nav-icon">🐾</span>
+        <span class="nav-text">マッチング</span>
+      </a>
 
       <!-- ホバー/タップで全機能を表示するドロップダウン -->
       <div class="dropdown" id="header-dropdown">
         <button type="button" class="dropdown-btn" id="dropdown-toggle-btn" aria-haspopup="true" aria-expanded="false">
-          メニュー <span class="arrow">▾</span>
+          <span class="nav-icon">☰</span>
+          <span class="nav-text">メニュー</span> <span class="arrow">▾</span>
         </button>
         <div class="dropdown-content">
           <a href="index.html" class="dropdown-item">
