@@ -130,7 +130,7 @@ function buildLineMessage(profile) {
     const diseases = diseaseList.length > 0 ? diseaseList.join(' / ') : '特になし';
 
     return [
-        '契約について問い合わせしたいです。',
+        'マッチングについて問い合わせしたいです。',
         `UUID: ${profile.uuid || '不明'}`,
         `名前: ${profile.name || '不明'}`,
         `年齢: ${ageStr}`,

@@ -177,7 +177,7 @@ async function toggleFavorite(profile,button){
 function buildLineMessage(profile){
 
     return `
-契約について問い合わせしたいです。
+マッチングについて問い合わせしたいです。
 
 UUID:${profile.uuid}
 名前:${profile.name}

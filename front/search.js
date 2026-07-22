@@ -116,7 +116,7 @@ function formatDataForDisplay(data) {
 ------------------------- */
 function buildLineMessage(profile) {
     return [
-        '契約について問い合わせしたいです。',
+        'マッチングについて問い合わせしたいです。',
         `UUID: ${profile.uuid || '不明'}`,
         `名前: ${profile.name || '不明'}`
     ].join('\n');
