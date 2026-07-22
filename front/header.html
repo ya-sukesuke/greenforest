@@ -1,87 +1,40 @@
 <div class="header">
-<<<<<<< HEAD
-  <div class="header-left">
-    <a href="index.html" class="logo-link">
-      <h1>わんにゃんりんく</h1>
-    </a>
-  </div>
-
-  <div class="header-center">
-    <nav class="header-nav">
-      <a href="index.html" class="nav-item">ホーム</a>
-      <a href="display.html" class="nav-item">マッチング</a>
-      
-      <!-- カーソルを合わせると全機能が一覧表示される親メニュー -->
-      <div class="dropdown">
-        <a href="#" class="dropdown-btn" onclick="return false;">
-          メニュー <span class="arrow">▾</span>
-        </a>
-        <div class="dropdown-content">
-          <a href="index.html" class="dropdown-item">
-            <span class="item-icon">🏠</span>
-            <div class="item-text">
-              <span class="item-title">ホーム</span>
-              <span class="item-desc">トップページへ戻る</span>
-            </div>
-          </a>
-          <a href="display.html" class="dropdown-item">
-            <span class="item-icon">🐾</span>
-            <div class="item-text">
-              <span class="item-title">マッチング</span>
-              <span class="item-desc">新しい家族を探す</span>
-            </div>
-          </a>
-          <a href="scroll.html" class="dropdown-item">
-            <span class="item-icon">📱</span>
-            <div class="item-text">
-              <span class="item-title">スクロール</span>
-              <span class="item-desc">ペット動画・写真を見る</span>
-            </div>
-          </a>
-          <a href="search.html" class="dropdown-item">
-            <span class="item-icon">🔍</span>
-            <div class="item-text">
-              <span class="item-title">検索</span>
-              <span class="item-desc">条件を指定して探す</span>
-            </div>
-          </a>
-          <a href="account.html" class="dropdown-item">
-            <span class="item-icon">⭐</span>
-            <div class="item-text">
-              <span class="item-title">お気に入り</span>
-              <span class="item-desc">気になるペット一覧</span>
-            </div>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="admin.html" class="dropdown-item admin-link">
-            <span class="item-icon">⚙️</span>
-            <div class="item-text">
-              <span class="item-title">管理者用</span>
-              <span class="item-desc">管理パネル・設定</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </nav>
-  </div>
-</div>
-=======
     <div class="header-left">
-        <div class="site-logo">
+        <a href="index.html" class="site-logo" aria-label="わんにゃんりんくのトップページを開く">
             <img src="assets/app-logo.png" alt="わんにゃんりんく">
             <span class="site-name">わんにゃんりんく</span>
-        </div>
+        </a>
     </div>
 
     <div class="header-center">
-        <nav>
-            <a href="index.html">ホーム</a>
-            <a href="display.html">マッチング</a>
-            <a href="scroll.html">スクロール</a>
-            <a href="search.html">検索</a>
-            <a href="account.html">お気に入り</a>
-            <a href="admin.html">管理者用</a>
+        <nav class="header-nav" aria-label="メインメニュー">
+            <a href="index.html" class="nav-item">ホーム</a>
+            <a href="display.html" class="nav-item">マッチング</a>
+
+            <div class="dropdown">
+                <button type="button" class="dropdown-btn" aria-haspopup="true">
+                    メニュー <span class="arrow">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <a href="scroll.html" class="dropdown-item">
+                        <span class="item-icon">📱</span>
+                        <span class="item-text"><span class="item-title">スクロール</span><span class="item-desc">ペット動画・写真を見る</span></span>
+                    </a>
+                    <a href="search.html" class="dropdown-item">
+                        <span class="item-icon">🔍</span>
+                        <span class="item-text"><span class="item-title">検索</span><span class="item-desc">条件を指定して探す</span></span>
+                    </a>
+                    <a href="account.html" class="dropdown-item">
+                        <span class="item-icon">⭐</span>
+                        <span class="item-text"><span class="item-title">お気に入り</span><span class="item-desc">気になるペット一覧</span></span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="admin.html" class="dropdown-item admin-link">
+                        <span class="item-icon">⚙️</span>
+                        <span class="item-text"><span class="item-title">管理者用</span><span class="item-desc">管理パネル・設定</span></span>
+                    </a>
+                </div>
+            </div>
         </nav>
     </div>
 </div>
->>>>>>> 356c83f8a7c41291c2f3fbf1c6a8c219e5c09b18
