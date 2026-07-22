@@ -1,92 +1,223 @@
 /* ===== ヘッダー全体 ===== */
-.header{
-  background-color: #7EC8E3;
+.header {
+  background: linear-gradient(135deg, #7EC8E3 0%, #5AB3D5 100%);
   color: white;
-
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 80px;
-
   box-sizing: border-box;
   padding: 0 40px;
   z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
   /* レイアウト */
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
 /* ===== 左：ロゴ ===== */
-.header h1{
-  margin: 0;
-  width: 100%;
-  font-size: 2vw;
-  font-family: "MS Mincho", sans-serif;
-  text-align: left;
-}
-
-/* ===== 中央：タイトル ===== */
-.header-center{
-  grid-column: 2;
-  text-align: center;
-  font-size: 1vw;
-}
-
-
-.header .login{
-  background-color: white;
-  color: #a5eb9c;
-  padding: 5px 10px;
-  border-radius: 5px;
+.logo-link {
   text-decoration: none;
-}
-    
-.header .login:hover{
-  background-color: #e0e0e0;
-}
-
-.header nav a{
   color: white;
 }
 
-.header nav{
-  display: flex;
-  gap: 20px;
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-family: "MS Mincho", "Hiragino Mincho ProN", serif, sans-serif;
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease;
 }
 
+.logo-link:hover h1 {
+  opacity: 0.9;
+}
 
-/* ===== LOGIN（画面右端ピッタリ） ===== */
-.header .login{
+/* ===== 中央：ナビゲーション ===== */
+.header-center {
+  display: flex;
+  align-items: center;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ===== ホバーで複数表示されるドロップダウンメニュー ===== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  padding: 10px 0; /* マウスが移動する際のマージンギャップ保護 */
+}
+
+/* ホバー判定を安定させる隙間埋め */
+.dropdown::after {
+  content: "";
   position: absolute;
-  right: 40px;          /* ← 画面右端 */
-  top: 50%;
-  transform: translateY(-50%);
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 15px;
+}
 
+.dropdown-btn {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dropdown:hover .dropdown-btn {
   background-color: white;
   color: #0078d7;
-  padding: 6px 12px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.header .login:hover{
-  background-color: #e0e0e0;
+.dropdown-btn .arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .dropdown-btn .arrow {
+  transform: rotate(180deg);
+}
+
+/* ===== ドロップダウンメニューのコンテンツ本体 ===== */
+.dropdown-content {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 250px;
+  background-color: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  padding: 10px 0;
+  z-index: 1001;
+
+  /* 非表示状態（アニメーション準備） */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.98);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.25s;
+}
+
+/* ホバー時に表示 */
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* メニュー各項目 */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  text-decoration: none;
+  color: #333333;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f2f7fc;
+  transform: translateX(4px);
+}
+
+.item-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: #f0f4f8;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover .item-icon {
+  background-color: #e1eeff;
+}
+
+.item-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.dropdown-item:hover .item-title {
+  color: #0078d7;
+}
+
+.item-desc {
+  font-size: 11px;
+  color: #7f8c8d;
+  margin-top: 2px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 6px 0;
+}
+
+.admin-link:hover {
+  background-color: #fff5f5;
+}
+
+.admin-link:hover .item-title {
+  color: #e53e3e;
+}
+
+.admin-link:hover .item-icon {
+  background-color: #fed7d7;
 }
 
 /* ===== 本文がヘッダーに隠れないように ===== */
-body{
+body {
   margin: 0;
   padding-top: 80px;
-}
-
-.header h1 {
-  text-align: left;
-}
-
-.header h1 {
-  color: white;
 }
