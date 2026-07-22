@@ -6,39 +6,21 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
+  min-height: 80px;
+  padding: 7px 40px;
   box-sizing: border-box;
-  padding: 0 40px;
   z-index: 1000;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
-  /* レイアウト */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 24px;
 }
 
-/* ===== 左：ロゴ ===== */
-<<<<<<< HEAD
-.logo-link {
-=======
-.header-left{
-  display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
-.site-logo{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
-  width: auto;
-  height: auto;
-  overflow: visible;
-}
-
-.site-logo img{
+/* ===== 左：ロゴ（リンクなし） ===== */
+.header-left { display: flex; align-items: center; min-width: 0; }
+.site-logo { display: inline-flex; align-items: center; gap: 10px; }
+.site-logo img {
   display: block;
   width: 66px;
   height: 66px;
@@ -47,263 +29,74 @@
   background: white;
   object-fit: contain;
 }
+.site-name { white-space: nowrap; font-size: 22px; font-weight: bold; }
 
-.site-name{
-  white-space: nowrap;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-/* ===== 中央：タイトル ===== */
-.header-center{
-  grid-column: 2;
-  text-align: center;
-  font-size: 1vw;
-}
-
-
-.header .login{
-  background-color: white;
-  color: #a5eb9c;
-  padding: 5px 10px;
-  border-radius: 5px;
->>>>>>> 356c83f8a7c41291c2f3fbf1c6a8c219e5c09b18
-  text-decoration: none;
+/* ===== ナビゲーション ===== */
+.header-center, .header-nav { display: flex; align-items: center; }
+.header-nav { gap: 15px; }
+.nav-item, .dropdown-btn {
   color: white;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 24px;
-  font-family: "MS Mincho", "Hiragino Mincho ProN", serif, sans-serif;
-  text-align: left;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.2s ease;
-}
-
-.logo-link:hover h1 {
-  opacity: 0.9;
-}
-
-/* ===== 中央：ナビゲーション ===== */
-.header-center {
-  display: flex;
-  align-items: center;
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.nav-item {
-  color: white;
-  text-decoration: none;
   font-size: 16px;
   font-weight: 600;
   padding: 8px 16px;
+  border: 0;
   border-radius: 20px;
-  transition: all 0.2s ease;
-}
-
-.nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-/* ===== ホバーで複数表示されるドロップダウンメニュー ===== */
-.dropdown {
-  position: relative;
-  display: inline-block;
-  padding: 10px 0; /* マウスが移動する際のマージンギャップ保護 */
-}
-
-/* ホバー判定を安定させる隙間埋め */
-.dropdown::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 15px;
-}
-
-.dropdown-btn {
-  color: white;
   text-decoration: none;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 8px 18px;
-  border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(4px);
+  background: transparent;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.nav-item:hover { background-color: rgba(255, 255, 255, .2); transform: translateY(-1px); }
+
+.dropdown { position: relative; padding: 10px 0; }
+.dropdown::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 15px; }
+.dropdown-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: rgba(255, 255, 255, .25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
 }
-
-.dropdown:hover .dropdown-btn {
-  background-color: white;
-  color: #0078d7;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.dropdown-btn .arrow {
-  font-size: 12px;
-  transition: transform 0.3s ease;
-}
-
-.dropdown:hover .dropdown-btn .arrow {
-  transform: rotate(180deg);
-}
-
-/* ===== ドロップダウンメニューのコンテンツ本体 ===== */
+.dropdown:hover .dropdown-btn, .dropdown-btn:focus { background: white; color: #0078d7; }
+.arrow { font-size: 12px; transition: transform .3s ease; }
+.dropdown:hover .arrow { transform: rotate(180deg); }
 .dropdown-content {
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
   width: 250px;
-  background-color: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   padding: 10px 0;
-  z-index: 1001;
-
-  /* 非表示状態（アニメーション準備） */
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(12px) scale(0.98);
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.25s;
+  transform: translateY(12px) scale(.98);
+  transition: opacity .25s ease, transform .25s ease, visibility .25s;
 }
-
-/* ホバー時に表示 */
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: translateY(0) scale(1);
 }
+.dropdown-item { display: flex; align-items: center; gap: 14px; padding: 10px 18px; color: #333; text-decoration: none; }
+.dropdown-item:hover { background: #f2f7fc; }
+.item-icon { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #f0f4f8; font-size: 20px; }
+.item-text { display: flex; flex-direction: column; }
+.item-title { color: #2c3e50; font-size: 14px; font-weight: 700; }
+.item-desc { margin-top: 2px; color: #7f8c8d; font-size: 11px; }
+.dropdown-divider { height: 1px; margin: 6px 0; background: #eee; }
+.admin-link:hover { background: #fff5f5; }
 
-/* メニュー各項目 */
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
-  text-decoration: none;
-  color: #333333;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+body { margin: 0; padding-top: 80px; }
+
+@media (max-width: 768px) {
+  .header { min-height: 80px; padding: 8px 16px; gap: 12px; }
+  .site-logo { gap: 8px; }
+  .site-logo img { width: 56px; height: 56px; }
+  .site-name { font-size: 18px; }
+  .header-nav { gap: 6px; }
+  .nav-item, .dropdown-btn { padding: 7px 10px; font-size: 13px; }
 }
-
-.dropdown-item:hover {
-  background-color: #f2f7fc;
-  transform: translateX(4px);
-}
-
-.item-icon {
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background-color: #f0f4f8;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-}
-
-.dropdown-item:hover .item-icon {
-  background-color: #e1eeff;
-}
-
-.item-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.item-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #2c3e50;
-}
-
-.dropdown-item:hover .item-title {
-  color: #0078d7;
-}
-
-.item-desc {
-  font-size: 11px;
-  color: #7f8c8d;
-  margin-top: 2px;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background-color: #eee;
-  margin: 6px 0;
-}
-
-.admin-link:hover {
-  background-color: #fff5f5;
-}
-
-.admin-link:hover .item-title {
-  color: #e53e3e;
-}
-
-.admin-link:hover .item-icon {
-  background-color: #fed7d7;
-}
-
-/* ===== 本文がヘッダーに隠れないように ===== */
-body {
-  margin: 0;
-  padding-top: 80px;
-<<<<<<< HEAD
-}
-=======
-}
-
-@media(max-width: 768px){
-  .header{
-    grid-template-columns: auto 1fr;
-    gap: 16px;
-    height: auto;
-    min-height: 80px;
-    padding: 8px 16px;
-  }
-
-  .site-logo{
-    gap: 8px;
-  }
-
-  .site-logo img{
-    width: 56px;
-    height: 56px;
-  }
-
-  .site-name{
-    font-size: 18px;
-  }
-
-  .header-center{
-    grid-column: 2;
-    font-size: 12px;
-  }
-
-  .header nav{
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
->>>>>>> 356c83f8a7c41291c2f3fbf1c6a8c219e5c09b18
