@@ -205,21 +205,21 @@ section{
 
 .flow{
 
-    background:#F8FCFE;
+    text-align:center;
 
 }
 
 .flow-cards{
 
-    max-width:1200px;
+    max-width:940px;
 
-    margin:70px auto 40px;
+    margin:45px auto 0;
 
     display:flex;
 
     justify-content:center;
 
-    gap:35px;
+    gap:20px;
 
     flex-wrap:wrap;
 
@@ -227,13 +227,14 @@ section{
 
 .flow-card{
 
-    width:320px;
+    flex:1 1 280px;
+    max-width:300px;
 
     background:#fff;
 
     border-radius:25px;
 
-    padding:40px 30px;
+    padding:36px 26px;
 
     text-align:center;
 
