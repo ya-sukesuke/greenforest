@@ -186,6 +186,7 @@ function openOfficialLine(profile) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+}
 
 function makeCard(item) {
     const card = document.createElement('div');
