@@ -21,7 +21,7 @@ function saveFavoritesToStorage(favorites) {
     }
 }
 
-// 公式LINEのアカウントIDを設定してください（例: @greenforest）
+
 const LINE_OFFICIAL_ACCOUNT_ID = "@889qbfcv";
 
 const viewer = document.getElementById('scroll-viewer');
@@ -178,9 +178,14 @@ function openOfficialLine(profile) {
     }
 
     const message = buildLineMessage(profile);
-    const lineUrl = `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OFFICIAL_ACCOUNT_ID)}/?${encodeURIComponent(message)}`;
-    window.location.href = lineUrl;
-}
+    const lineUrl = `https://line.me/R/oaMessage/${LINE_OFFICIAL_ACCOUNT_ID}/?${encodeURIComponent(message)}`;
+
+    const a = document.createElement('a');
+    a.href = lineUrl;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 
 function makeCard(item) {
     const card = document.createElement('div');
