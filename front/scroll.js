@@ -178,14 +178,8 @@ function openOfficialLine(profile) {
     }
 
     const message = buildLineMessage(profile);
-    const lineUrl = `https://line.me/R/oaMessage/${LINE_OFFICIAL_ACCOUNT_ID}/?${encodeURIComponent(message)}`;
-
-    const a = document.createElement('a');
-    a.href = lineUrl;
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const lineUrl = `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OFFICIAL_ACCOUNT_ID)}/?${encodeURIComponent(message)}`;
+    window.location.href = lineUrl;
 }
 
 function makeCard(item) {
