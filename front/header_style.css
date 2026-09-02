@@ -130,8 +130,7 @@
   white-space: nowrap;
 }
 
-.dropdown:hover .dropdown-btn,
-.dropdown.is-open .dropdown-btn {
+.dropdown[open] .dropdown-btn {
   background-color: white;
   color: #0078d7;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -143,8 +142,7 @@
   display: inline-block;
 }
 
-.dropdown:hover .dropdown-btn .arrow,
-.dropdown.is-open .dropdown-btn .arrow {
+.dropdown[open] .dropdown-btn .arrow {
   transform: rotate(180deg);
 }
 
@@ -171,8 +169,7 @@
 }
 
 /* ホバーまたはJS開閉クラス指定で表示 */
-.dropdown:hover .dropdown-content,
-.dropdown.is-open .dropdown-content {
+.dropdown[open] .dropdown-content {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -251,6 +248,14 @@
   background-color: #fed7d7;
 }
 
+.dropdown-btn {
+  list-style: none;
+}
+
+.dropdown-btn::-webkit-details-marker {
+  display: none;
+}
+
 /* ===== 本文がヘッダーに隠れないように ===== */
 body {
   margin: 0;
@@ -284,6 +289,10 @@ body {
 
   .header-nav {
     gap: 6px;
+  }
+
+  .header-nav > .nav-item .nav-text {
+    display: none;
   }
 
   .nav-item {
@@ -335,7 +344,7 @@ body {
 
   .header h1.site-name,
   .header h1 {
-    font-size: 14.5px;
+    font-size: 13px;
   }
 
   .nav-item {
@@ -346,6 +355,10 @@ body {
   .dropdown-btn {
     padding: 5px 10px;
     font-size: 12px;
+  }
+
+  .dropdown-btn .nav-text {
+    display: none;
   }
 }
 

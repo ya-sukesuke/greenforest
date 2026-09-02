@@ -17,12 +17,12 @@
         <span class="nav-text">スクロール</span>
       </a>
 
-      <!-- ホバー/タップで全機能を表示するドロップダウン -->
-      <div class="dropdown" id="header-dropdown">
-        <button type="button" class="dropdown-btn" id="dropdown-toggle-btn" aria-haspopup="true" aria-expanded="false">
+      <!-- タップで開閉できるメニュー -->
+      <details class="dropdown">
+        <summary class="dropdown-btn">
           <span class="nav-icon">☰</span>
           <span class="nav-text">メニュー</span> <span class="arrow">▾</span>
-        </button>
+        </summary>
         <div class="dropdown-content">
           <a href="index.html" class="dropdown-item">
             <span class="item-icon">🏠</span>
@@ -61,29 +61,7 @@
             </span>
           </a>
         </div>
-      </div>
+      </details>
     </nav>
   </div>
 </div>
-
-<script>
-  (function() {
-    // スマホ等のタッチデバイスでタップによる開閉に対応
-    const dropdown = document.getElementById('header-dropdown');
-    const toggleBtn = document.getElementById('dropdown-toggle-btn');
-    if (!dropdown || !toggleBtn) return;
-
-    toggleBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const isActive = dropdown.classList.toggle('is-open');
-      toggleBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('is-open');
-        toggleBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  })();
-</script>
